@@ -6,7 +6,7 @@ from core.security import hash_password, verify_password
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
-@router.get("/user/{email}")
+@router.get("/User/{email}")
 def get_user(email: str):
     user = get_user_by_email(email)
     if not user:

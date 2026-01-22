@@ -13,6 +13,7 @@ class Welcome extends StatefulWidget {
 
 class _WelcomeState extends State<Welcome> {
   Map<String, dynamic>? data;
+  String? error;
 
   @override
   void initState() {
@@ -21,13 +22,23 @@ class _WelcomeState extends State<Welcome> {
   }
 
   void fetchUserData() async {
-    var url = Uri.parse("http://127.0.0.1:8000/auth/user/${widget.email}");
-    var response = await http.get(url);
-    if (response.statusCode == 200) {
-      data = jsonDecode(response.body);
-      print("User Data: $data");
-    } else {
-      print("Failed to fetch user data");
+    try {
+      var encodedEmail = Uri.encodeComponent(widget.email);
+      var url = Uri.parse("http://192.168.1.9:8000/auth/User/$encodedEmail");
+      var response = await http.get(url);
+      if (response.statusCode == 200) {
+        setState(() {
+          data = jsonDecode(response.body);
+        });
+      } else {
+        setState(() {
+          error = "Failed to load user data";
+        });
+      }
+    } catch (e) {
+      setState(() {
+        error = e.toString();
+      });
     }
   }
 
@@ -35,14 +46,26 @@ class _WelcomeState extends State<Welcome> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text("Welcome, ${data!["username"]}", style: TextStyle(fontSize: 24)),
+          Text("Welcome Page", style: TextStyle(fontSize: 24)),
           SizedBox(height: 20),
-          data != null
-              ? Text("User Info: ${data.toString()}")
-              : Text("No user data fetched yet."),
+          if (data != null) ...[
+            Text(
+              "Username: ${data!['username']}",
+              style: TextStyle(fontSize: 18),
+            ),
+            Text("Email: ${data!['email']}", style: TextStyle(fontSize: 18)),
+            Text("Age: ${data!['age']}", style: TextStyle(fontSize: 18)),
+          ] else if (error != null) ...[
+            Text(
+              "Error: $error",
+              style: TextStyle(fontSize: 18, color: Colors.red),
+            ),
+          ] else ...[
+            CircularProgressIndicator(),
+          ],
         ],
       ),
     );
