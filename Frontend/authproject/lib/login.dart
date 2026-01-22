@@ -27,14 +27,48 @@ class _LoginState extends State<login> {
     );
     if (response.statusCode == 200) {
       print("Login Successful");
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Welcome(email: emailController.text),
-        ),
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Success"),
+            content: Text("Login Successful!"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          Welcome(email: emailController.text),
+                    ),
+                  );
+                },
+                child: Text("OK"),
+              ),
+            ],
+          );
+        },
       );
     } else {
       print("Login Failed");
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Error"),
+            content: Text("Login Failed! Please check your credentials."),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text("OK"),
+              ),
+            ],
+          );
+        },
+      );
     }
   }
 

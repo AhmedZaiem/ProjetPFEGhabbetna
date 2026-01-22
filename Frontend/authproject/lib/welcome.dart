@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:authproject/login.dart';
 
 class Welcome extends StatefulWidget {
   final String email;
@@ -93,7 +94,10 @@ class _WelcomeState extends State<Welcome> {
 
                     ElevatedButton(
                       onPressed: () {
-                        Navigator.pop(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => login()),
+                        );
                       },
                       child: Text("Logout"),
                     ),

@@ -18,22 +18,84 @@ class _RegisterState extends State<Register> {
   var ageController = TextEditingController();
 
   void RegisterUser() async {
+    String username = usernameController.text.trim();
+    String email = emailController.text.trim();
+    String password = passwordController.text.trim();
+    int? age = int.tryParse(ageController.text.trim());
+
+    if (username.isEmpty || email.isEmpty || password.isEmpty || age == null) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Error"),
+            content: Text("Please fill all fields correctly."),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("OK"),
+              ),
+            ],
+          );
+        },
+      );
+      return;
+    }
+
     var url = Uri.parse("http://192.168.1.9:8000/auth/register");
     var response = await http.post(
       url,
       headers: {"Content-Type": "application/json"},
       body: jsonEncode({
-        'username': usernameController.text,
-        'email': emailController.text,
-        'password': passwordController.text,
-        'age': int.parse(ageController.text),
+        'username': username,
+        'email': email,
+        'password': password,
+        'age': age,
       }),
     );
     if (response.statusCode == 200) {
       print("Registration Successful");
-      Navigator.push(context, MaterialPageRoute(builder: (context) => login()));
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Success"),
+            content: Text("Registration Successful! Please login."),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => login()),
+                  );
+                },
+                child: Text("OK"),
+              ),
+            ],
+          );
+        },
+      );
     } else {
       print("Registration Failed");
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Error"),
+            content: Text("Registration Failed! Please try again."),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("OK"),
+              ),
+            ],
+          );
+        },
+      );
     }
   }
 
