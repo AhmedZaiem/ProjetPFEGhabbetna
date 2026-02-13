@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:authproject/login.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-
+import 'config.dart' as config;
 
 import 'dart:convert';
 
@@ -19,7 +18,7 @@ class _RegisterState extends State<Register> {
   var passwordController = TextEditingController();
   var ageController = TextEditingController();
 
-  final String baseUrl = dotenv.env['URL']!;
+  final String baseUrl = config.baseUrl;
 
   void RegisterUser() async {
     String username = usernameController.text.trim();

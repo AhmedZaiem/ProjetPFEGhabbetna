@@ -7,8 +7,7 @@ import 'package:authproject/login.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http_parser/http_parser.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-
+import 'config.dart' as config;
 
 class Welcome extends StatefulWidget {
   const Welcome({super.key});
@@ -21,7 +20,7 @@ class _WelcomeState extends State<Welcome> {
   Map<String, dynamic>? data;
   String? error;
 
-  final String baseUrl = dotenv.env['URL']!;
+  final String baseUrl = config.baseUrl;
 
   final storage = FlutterSecureStorage();
 
