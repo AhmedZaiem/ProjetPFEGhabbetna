@@ -5,28 +5,30 @@ import 'config.dart' as config;
 
 import 'dart:convert';
 
-class Register extends StatefulWidget {
-  const Register({super.key});
+class Create_User extends StatefulWidget {
+  const Create_User({super.key});
 
   @override
-  State<Register> createState() => _RegisterState();
+  State<Create_User> createState() => _CreateUserState();
 }
 
-class _RegisterState extends State<Register> {
+class _CreateUserState extends State<Create_User> {
   var usernameController = TextEditingController();
   var emailController = TextEditingController();
-  var passwordController = TextEditingController();
   var ageController = TextEditingController();
+  String selectedRole = "agent";
 
   final String baseUrl = config.baseUrl;
 
-  void RegisterUser() async {
+  void CreateUserAcc() async {
     String username = usernameController.text.trim();
     String email = emailController.text.trim();
-    String password = passwordController.text.trim();
     int? age = int.tryParse(ageController.text.trim());
 
-    if (username.isEmpty || email.isEmpty || password.isEmpty || age == null) {
+    if (username.isEmpty ||
+        email.isEmpty ||
+        age == null ||
+        selectedRole.isEmpty) {
       showDialog(
         context: context,
         builder: (context) {
@@ -54,12 +56,12 @@ class _RegisterState extends State<Register> {
       body: jsonEncode({
         'username': username,
         'email': email,
-        'password': password,
         'age': age,
+        'role': selectedRole,
       }),
     );
     if (response.statusCode == 200) {
-      print("Registration Successful");
+      print("User Created Successful");
       showDialog(
         context: context,
         builder: (context) {
@@ -111,7 +113,7 @@ class _RegisterState extends State<Register> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text("Register Page", style: TextStyle(fontSize: 24)),
+            Text("Create Account Page", style: TextStyle(fontSize: 24)),
             SizedBox(height: 20),
             TextField(
               decoration: InputDecoration(labelText: 'Username'),
@@ -124,32 +126,37 @@ class _RegisterState extends State<Register> {
             ),
             SizedBox(height: 20),
             TextField(
-              decoration: InputDecoration(labelText: 'Password'),
-              obscureText: true,
-              controller: passwordController,
-            ),
-            SizedBox(height: 20),
-            TextField(
               decoration: InputDecoration(labelText: 'Age'),
               keyboardType: TextInputType.number,
               controller: ageController,
             ),
             SizedBox(height: 40),
+            DropdownButtonFormField<String>(
+              value: selectedRole,
+              decoration: InputDecoration(
+                labelText: "Role",
+                border: OutlineInputBorder(),
+              ),
+              items: const [
+                DropdownMenuItem(value: "agent", child: Text("Agent")),
+
+                DropdownMenuItem(
+                  value: "superviseur",
+                  child: Text("Superviseur"),
+                ),
+              ],
+              onChanged: (value) {
+                setState(() {
+                  selectedRole = value!;
+                });
+              },
+            ),
+            SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                RegisterUser();
+                CreateUserAcc();
               },
-              child: Text('Register'),
-            ),
-            SizedBox(height: 10),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => login()),
-                );
-              },
-              child: Text('Already have an account? Login'),
+              child: Text('Create Account'),
             ),
           ],
         ),

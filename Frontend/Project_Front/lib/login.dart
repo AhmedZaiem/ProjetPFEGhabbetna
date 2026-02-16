@@ -1,6 +1,6 @@
 import 'package:authproject/welcome.dart';
 import 'package:flutter/material.dart';
-import 'package:authproject/register.dart';
+import 'package:authproject/create_user.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -92,7 +92,7 @@ class _LoginState extends State<login> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Register()),
+                  MaterialPageRoute(builder: (context) => Create_User()),
                 );
               },
               child: const Text('Don t have an account? Register'),

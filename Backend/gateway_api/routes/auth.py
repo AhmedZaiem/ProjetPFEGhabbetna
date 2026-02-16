@@ -19,6 +19,18 @@ async def register(request: Request):
         response = await client.post(f"{Auth_SERVICE_URL}/auth/register", json=body)
     return response.json()
 
+@router.post("/activate")
+async def activate(request: Request):
+    body = await request.json()
+    async with httpx.AsyncClient() as client:
+        response = await client.post(f"{Auth_SERVICE_URL}/auth/activate", json=body)
+        
+    return Response(
+        content=response.content,
+        status_code=response.status_code,
+        media_type="application/json"
+    )
+
 @router.get("/me")
 async def read_current_user(request: Request):
     headers = {

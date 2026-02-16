@@ -28,8 +28,8 @@ def get_current_user(
 def get_user_by_email(db: Session, email: str):
     return db.query(User).filter(User.email == email).first()
     
-def create_user(db:Session,username:str, email: str, password: str, age: int):
-    new_user = User(username=username, email=email, password=password, age=age)
+def create_user(db:Session,username:str, email: str,role, age: int,activation_token: str):
+    new_user = User(username=username, email=email,role=role ,age=age,activation_token=activation_token)
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
