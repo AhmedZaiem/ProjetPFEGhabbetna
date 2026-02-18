@@ -5,23 +5,22 @@ import 'package:http/http.dart' as http;
 import 'config.dart' as config;
 
 class Activation extends StatefulWidget {
-  const Activation({super.key});
+  final String token;
+  const Activation({super.key, required this.token});
 
   @override
   State<Activation> createState() => _ActivationState();
 }
 
 class _ActivationState extends State<Activation> {
-  var activationTokenController = TextEditingController();
   var passwordController = TextEditingController();
 
   final String baseUrl = config.baseUrl;
 
   void ActiviateAccount() async {
-    String token = activationTokenController.text.trim();
     String password = passwordController.text.trim();
 
-    if (token.isEmpty || password.isEmpty) {
+    if (widget.token.isEmpty || password.isEmpty) {
       showDialog(
         context: context,
         builder: (context) {
@@ -46,7 +45,7 @@ class _ActivationState extends State<Activation> {
     var response = await http.post(
       url,
       headers: {"Content-Type": "application/json"},
-      body: jsonEncode({'token': token, 'password': password}),
+      body: jsonEncode({'token': widget.token, 'password': password}),
     );
     if (response.statusCode == 200) {
       print("User Activated Successful");
@@ -102,10 +101,6 @@ class _ActivationState extends State<Activation> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text("Activation Page", style: TextStyle(fontSize: 24)),
-            TextField(
-              decoration: InputDecoration(labelText: "token activation"),
-              controller: activationTokenController,
-            ),
             SizedBox(height: 20),
             TextField(
               decoration: InputDecoration(labelText: "Password"),

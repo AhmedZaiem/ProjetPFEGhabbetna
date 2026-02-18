@@ -132,7 +132,7 @@ class _CreateUserState extends State<Create_User> {
             ),
             SizedBox(height: 40),
             DropdownButtonFormField<String>(
-              value: selectedRole,
+              initialValue: selectedRole,
               decoration: InputDecoration(
                 labelText: "Role",
                 border: OutlineInputBorder(),

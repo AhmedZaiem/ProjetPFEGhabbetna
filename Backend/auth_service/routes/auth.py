@@ -1,7 +1,7 @@
 from models.user import User
 from fastapi import APIRouter, HTTPException, Depends
 from schemas.userSchema import UserCreate, UserLogin, UserActivate
-from services.user_service import get_user_by_email, create_user,get_current_user
+from services.user_service import get_user_by_email, create_user,get_current_user,send_activation_email
 from core.security import hash_password, verify_password,create_access_token
 from sqlalchemy.orm import Session
 from db.database import get_db
@@ -15,7 +15,7 @@ def read_current_user(current_user: User = Depends(get_current_user)):
     return current_user
 
 @router.post("/register")
-def register(user: UserCreate, db: Session = Depends(get_db)):
+async def register(user: UserCreate, db: Session = Depends(get_db)):
     if get_user_by_email(db, user.email):
         raise HTTPException(status_code=400, detail="Email already registered")
 
@@ -23,6 +23,8 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
     new_user=create_user(db, user.username,user.email, user.role, user.age,activation_token=activation_token)
 
     #publish_user_event("REGISTER", new_user)
+    await send_activation_email(new_user.email,activation_token)
+
     return {"message": "User registered successfully","token":new_user.activation_token}
 
 @router.post("/login")

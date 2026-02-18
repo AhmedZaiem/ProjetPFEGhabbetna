@@ -4,6 +4,9 @@ from sqlalchemy.orm import Session
 from core.security import decode_access_token
 from fastapi import HTTPException, Depends
 from fastapi.security import OAuth2PasswordBearer,HTTPBearer
+from fastapi_mail import MessageSchema
+from core.email import fastMail
+import os
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
@@ -34,4 +37,22 @@ def create_user(db:Session,username:str, email: str,role, age: int,activation_to
     db.commit()
     db.refresh(new_user)
     return new_user
+
+async def send_activation_email(email: str, token:str):
+    activation_link = f"{os.getenv('FRONTEND_URL')}/activate?token={token}"
+
+    message = MessageSchema(
+        subject="Activate your account",
+        recipients=[email],
+        body=f"""
+        hello,
+
+        Please activate your account by clicking the link below:
+
+        {activation_link}
+        """,
+        subtype="plain"
+    )
+
+    await fastMail.send_message(message)
     
