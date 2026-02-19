@@ -39,20 +39,46 @@ def create_user(db:Session,username:str, email: str,role, age: int,activation_to
     return new_user
 
 async def send_activation_email(email: str, token:str):
-    activation_link = f"{os.getenv('FRONTEND_URL')}/activate?token={token}"
-
+    web_activation_link = f"{os.getenv('FRONTEND_URL')}/activate?token={token}"
     message = MessageSchema(
         subject="Activate your account",
         recipients=[email],
         body=f"""
-        hello,
+        <html>
+        <body>
+            <p>Hello,</p>
+            <p>Please activate your account by clicking the link below:</p>
 
-        Please activate your account by clicking the link below:
+            <p>Web (clickable in all clients): 
+                <a href="{web_activation_link}">{web_activation_link}</a>
+            </p>
 
-        {activation_link}
+        </body>
+        </html>
         """,
-        subtype="plain"
+        subtype="html"
     )
+    await fastMail.send_message(message)
 
+async def send_password_reset_email(email: str, token:str):
+    web_reset_link = f"{os.getenv('FRONTEND_URL')}/reset-password?token={token}"
+    message = MessageSchema(
+        subject="Reset your password",
+        recipients=[email],
+        body=f"""
+        <html>
+        <body>
+            <p>Hello,</p>
+            <p>You can reset your password by clicking the link below:</p>
+
+            <p>Web (clickable in all clients): 
+                <a href="{web_reset_link}">{web_reset_link}</a>
+            </p>
+
+        </body>
+        </html>
+        """,
+        subtype="html"
+    )
     await fastMail.send_message(message)
     

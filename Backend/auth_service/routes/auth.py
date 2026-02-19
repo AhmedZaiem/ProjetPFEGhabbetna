@@ -1,7 +1,7 @@
 from models.user import User
 from fastapi import APIRouter, HTTPException, Depends
-from schemas.userSchema import UserCreate, UserLogin, UserActivate
-from services.user_service import get_user_by_email, create_user,get_current_user,send_activation_email
+from schemas.userSchema import UserCreate, UserLogin, UserActivate, PasswordResetRequest, PasswordReset
+from services.user_service import get_user_by_email, create_user,get_current_user,send_activation_email,send_password_reset_email
 from core.security import hash_password, verify_password,create_access_token
 from sqlalchemy.orm import Session
 from db.database import get_db
@@ -60,3 +60,34 @@ def activate_account(data:UserActivate,db: Session = Depends(get_db)):
     db.commit()
 
     return {"message": "Account activated successfully"}
+
+
+@router.post("/forgot-password")
+async def forgot_password(data:PasswordResetRequest, db: Session = Depends(get_db)):
+    user = get_user_by_email(db, data.email)
+
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    if not user.is_verified:
+        raise HTTPException(status_code=403, detail="Account not activated")
+
+    reset_token = str(uuid.uuid4())
+    user.activation_token = reset_token  # Reusing activation_token for simplicity
+    db.commit()
+
+    await send_password_reset_email(user.email, reset_token)
+
+    return {"message": "Password reset email sent", "reset_token": reset_token}
+
+@router.post("/reset-password")
+def reset_password(data: PasswordReset, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.activation_token == data.token).first()
+
+    if not user:
+        raise HTTPException(status_code=400, detail="Invalid reset token")
+
+    user.password_hash = hash_password(data.new_password)
+    user.activation_token = None  # Clear the token after use
+    db.commit()
+
+    return {"message": "Password reset successfully"}
