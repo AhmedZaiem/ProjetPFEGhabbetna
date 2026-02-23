@@ -1,4 +1,5 @@
 import 'package:authproject/welcome.dart';
+import 'package:authproject/forgot_password.dart';
 import 'package:flutter/material.dart';
 import 'package:authproject/create_user.dart';
 import 'package:http/http.dart' as http;
@@ -96,6 +97,16 @@ class _LoginState extends State<login> {
                 );
               },
               child: const Text('Don t have an account? Register'),
+            ),
+            SizedBox(height: 10),
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ForgetPassword()),
+                );
+              },
+              child: const Text('Forget Password ?'),
             ),
           ],
         ),
