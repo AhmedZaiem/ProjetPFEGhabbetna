@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:authproject/login.dart';
+import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
-import 'config.dart' as config;
+import '../../../config.dart' as config;
 
 import 'dart:convert';
 
@@ -31,75 +31,86 @@ class _CreateUserState extends State<Create_User> {
         selectedRole.isEmpty) {
       showDialog(
         context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text("Error"),
-            content: Text("Please fill all fields correctly."),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text("OK"),
-              ),
-            ],
-          );
-        },
+        builder: (_) => AlertDialog(
+          title: const Text("Error"),
+          content: const Text("Please fill all fields correctly."),
+          actions: [
+            TextButton(onPressed: () => context.pop(), child: const Text("OK")),
+          ],
+        ),
       );
       return;
     }
 
-    var url = Uri.parse("$baseUrl/auth/register");
-    var response = await http.post(
-      url,
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode({
-        'username': username,
-        'email': email,
-        'age': age,
-        'role': selectedRole,
-      }),
-    );
-    if (response.statusCode == 200) {
-      print("User Created Successful");
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text("Success"),
-            content: Text("Registration Successful! Please login."),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => login()),
-                  );
-                },
-                child: Text("OK"),
-              ),
-            ],
-          );
-        },
+    try {
+      var url = Uri.parse("$baseUrl/auth/register");
+      var response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          'username': username,
+          'email': email,
+          'age': age,
+          'role': selectedRole,
+        }),
       );
-    } else {
-      print("Registration Failed");
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text("Error"),
-            content: Text("Registration Failed! Please try again."),
+
+      final data = jsonDecode(response.body);
+      final message =
+          (data['message'] as String?) ??
+          "Registration failed. Please check your input.";
+
+      final bool success;
+      if (data.containsKey('success')) {
+        success = data['success'] == true;
+      } else {
+        success =
+            message.toLowerCase().contains("created") ||
+            message.toLowerCase().contains("success");
+      }
+
+      if (success) {
+        showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+            title: const Text("Success"),
+            content: Text(message),
             actions: [
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  context.pop();
+                  context.replace('/');
                 },
-                child: Text("OK"),
+                child: const Text("OK"),
               ),
             ],
-          );
-        },
+          ),
+        );
+      } else {
+        showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+            title: const Text("Error"),
+            content: Text(message),
+            actions: [
+              TextButton(
+                onPressed: () => context.pop(),
+                child: const Text("OK"),
+              ),
+            ],
+          ),
+        );
+      }
+    } catch (e) {
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: const Text("Error"),
+          content: Text("An error occurred: $e"),
+          actions: [
+            TextButton(onPressed: () => context.pop(), child: const Text("OK")),
+          ],
+        ),
       );
     }
   }

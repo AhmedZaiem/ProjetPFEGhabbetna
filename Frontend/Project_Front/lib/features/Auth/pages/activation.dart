@@ -1,8 +1,8 @@
 import 'dart:convert';
-import 'package:authproject/login.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
-import 'config.dart' as config;
+import '../../../config.dart' as config;
 
 class Activation extends StatefulWidget {
   final String token;
@@ -30,7 +30,7 @@ class _ActivationState extends State<Activation> {
             actions: [
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  context.pop();
                 },
                 child: Text("OK"),
               ),
@@ -58,10 +58,8 @@ class _ActivationState extends State<Activation> {
             actions: [
               TextButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => login()),
-                  );
+                  context.pop();
+                  context.replace('/');
                 },
                 child: Text("OK"),
               ),
@@ -80,7 +78,7 @@ class _ActivationState extends State<Activation> {
             actions: [
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  context.pop();
                 },
                 child: Text("OK"),
               ),

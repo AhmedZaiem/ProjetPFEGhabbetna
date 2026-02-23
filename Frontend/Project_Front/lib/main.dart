@@ -1,33 +1,14 @@
-import 'package:authproject/activation.dart';
+import 'package:authproject/features/Auth/core/auth_routes.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
-import 'login.dart';
 import 'package:app_links/app_links.dart';
-import 'core/mobile_url_strategy.dart'
-    if (dart.library.html) 'core/web_url_strategy.dart';
+import 'features/Auth/core/mobile_url_strategy.dart'
+    if (dart.library.html) 'features/Auth/core/web_url_strategy.dart';
 
 void main() {
   configureUrlStrategy();
 
-  final router = GoRouter(
-    routes: [
-      GoRoute(path: '/', builder: (context, state) => login()),
-      GoRoute(
-        path: '/activate',
-        builder: (context, state) {
-          final token = state.uri.queryParameters['token'] ?? '';
-          if (token == null || token.isEmpty) {
-            return const Scaffold(
-              body: Center(child: Text("Invalid activation link")),
-            );
-          }
-          return Activation(token: token);
-        },
-      ),
-    ],
-  );
-
-  runApp(MainApp(router: router));
+  runApp(MainApp(router: authRouter));
 }
 
 class MainApp extends StatefulWidget {

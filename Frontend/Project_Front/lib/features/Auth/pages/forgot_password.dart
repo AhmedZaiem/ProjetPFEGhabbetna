@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'config.dart' as config;
+import 'package:go_router/go_router.dart';
+import '../../../config.dart' as config;
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -16,25 +17,20 @@ class _ForgetPasswordState extends State<ForgetPassword> {
   final String baseUrl = config.baseUrl;
 
   void ForgetPassword() async {
-    
     if (emailController.text.isEmpty) {
-    // Quick validation
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text("Error"),
-        content: Text("Please enter your email."),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text("OK"),
-          ),
-        ],
-      ),
-    );
-    return;
-  }
-
+      // Quick validation
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text("Error"),
+          content: Text("Please enter your email."),
+          actions: [
+            TextButton(onPressed: () => context.pop(), child: Text("OK")),
+          ],
+        ),
+      );
+      return;
+    }
 
     var url = Uri.parse("$baseUrl/auth/forgot-password");
     var response = await http.post(
@@ -53,7 +49,8 @@ class _ForgetPasswordState extends State<ForgetPassword> {
             actions: [
               TextButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  context.pop();
+                  context.replace('/');
                 },
                 child: Text("OK"),
               ),
@@ -71,7 +68,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
             actions: [
               TextButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  context.pop();
                 },
                 child: Text("OK"),
               ),
@@ -82,7 +79,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
     }
   }
 
-@override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
@@ -91,23 +88,21 @@ class _ForgetPasswordState extends State<ForgetPassword> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text('Froget-Password Page', style: TextStyle(fontSize: 24)),
+            Text('Forgot-Password Page', style: TextStyle(fontSize: 24)),
             TextField(
               decoration: InputDecoration(labelText: "Email"),
               controller: emailController,
             ),
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed:()
-              {
+              onPressed: () {
                 ForgetPassword();
               },
               child: const Text("Send Email"),
-              ),
+            ),
           ],
         ),
       ),
     );
   }
 }
-

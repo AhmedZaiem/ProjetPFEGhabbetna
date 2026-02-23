@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'config.dart' as config;
+import 'package:go_router/go_router.dart';
+import '../../../config.dart' as config;
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -25,10 +26,7 @@ class _ResetPasswordState extends State<ResetPassword> {
           title: Text("Error"),
           content: Text("Please enter your new password."),
           actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text("OK"),
-            ),
+            TextButton(onPressed: () => context.pop(), child: Text("OK")),
           ],
         ),
       );
@@ -40,7 +38,7 @@ class _ResetPasswordState extends State<ResetPassword> {
       url,
       headers: {"Content-Type": "application/json"},
       body: jsonEncode({
-        'token': token,
+        'token': widget.token,
         'new_password': PasswordController.text,
       }),
     );
@@ -55,7 +53,8 @@ class _ResetPasswordState extends State<ResetPassword> {
             actions: [
               TextButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  context.pop(); // Close the dialog
+                  context.replace('/'); // Navigate to login page
                 },
                 child: Text("OK"),
               ),
@@ -73,7 +72,7 @@ class _ResetPasswordState extends State<ResetPassword> {
             actions: [
               TextButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  context.pop();
                 },
                 child: Text("OK"),
               ),

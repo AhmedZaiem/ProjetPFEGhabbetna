@@ -1,13 +1,13 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:authproject/login.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http_parser/http_parser.dart';
-import 'config.dart' as config;
+import '../../../config.dart' as config;
 
 class Welcome extends StatefulWidget {
   const Welcome({super.key});
@@ -188,12 +188,7 @@ class _WelcomeState extends State<Welcome> {
                           ElevatedButton(
                             onPressed: () async {
                               await storage.delete(key: "access_token");
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => login(),
-                                ),
-                              );
+                              context.replace('/');
                             },
                             child: Text("Logout"),
                           ),
