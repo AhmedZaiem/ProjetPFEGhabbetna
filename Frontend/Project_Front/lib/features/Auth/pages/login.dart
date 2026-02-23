@@ -16,6 +16,8 @@ class _LoginState extends State<login> {
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
 
+  final _formKey = GlobalKey<FormState>();
+
   final storage = FlutterSecureStorage();
   final String baseUrl = config.baseUrl;
 
@@ -97,43 +99,80 @@ class _LoginState extends State<login> {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text("Login Page", style: TextStyle(fontSize: 24)),
-            TextField(
-              decoration: InputDecoration(labelText: "Email"),
-              controller: emailController,
-            ),
-            SizedBox(height: 20),
-            TextField(
-              decoration: InputDecoration(labelText: "Password"),
-              obscureText: true,
-              controller: passwordController,
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                LoginUser();
-              },
-              child: const Text('Login'),
-            ),
-            SizedBox(height: 10),
-            TextButton(
-              onPressed: () {
-                context.push('/create_user');
-              },
-              child: const Text('Don t have an account? Register'),
-            ),
-            SizedBox(height: 10),
-            TextButton(
-              onPressed: () {
-                context.push('/forgot_password');
-              },
-              child: const Text('Forget Password ?'),
-            ),
-          ],
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text("Login Page", style: TextStyle(fontSize: 24)),
+
+              
+              TextFormField(
+                decoration: InputDecoration(labelText: "Email"),
+                controller: emailController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Email is required';
+                  }
+                  if (!RegExp(
+                    r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                  ).hasMatch(value)) {
+                    return 'Enter valid email';
+                  }
+                  return null;
+                },
+              ),
+
+              SizedBox(height: 20),
+
+         
+              TextFormField(
+                decoration: InputDecoration(labelText: "Password"),
+                obscureText: true,
+                controller: passwordController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Password is required';
+                  }
+                  if (value.length < 8) {
+                    return 'Password must be at least 8 characters';
+                  }
+                  return null;
+                },
+              ),
+
+              SizedBox(height: 20),
+
+             
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    LoginUser();
+                  }
+                },
+                child: const Text('Login'),
+              ),
+
+              SizedBox(height: 10),
+
+              TextButton(
+                onPressed: () {
+                  context.push('/create_user');
+                },
+                child: const Text('Don t have an account? Register'),
+              ),
+
+              SizedBox(height: 10),
+
+              TextButton(
+                onPressed: () {
+                  context.push('/forgot_password');
+                },
+                child: const Text('Forget Password ?'),
+              ),
+            ],
+          ),
         ),
       ),
     );

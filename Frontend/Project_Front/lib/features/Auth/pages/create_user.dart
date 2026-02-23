@@ -18,6 +18,8 @@ class _CreateUserState extends State<Create_User> {
   var ageController = TextEditingController();
   String selectedRole = "agent";
 
+  final _formKey = GlobalKey<FormState>();
+
   final String baseUrl = config.baseUrl;
 
   void CreateUserAcc() async {
@@ -120,56 +122,106 @@ class _CreateUserState extends State<Create_User> {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text("Create Account Page", style: TextStyle(fontSize: 24)),
-            SizedBox(height: 20),
-            TextField(
-              decoration: InputDecoration(labelText: 'Username'),
-              controller: usernameController,
-            ),
-            SizedBox(height: 20),
-            TextField(
-              decoration: InputDecoration(labelText: 'Email'),
-              controller: emailController,
-            ),
-            SizedBox(height: 20),
-            TextField(
-              decoration: InputDecoration(labelText: 'Age'),
-              keyboardType: TextInputType.number,
-              controller: ageController,
-            ),
-            SizedBox(height: 40),
-            DropdownButtonFormField<String>(
-              initialValue: selectedRole,
-              decoration: InputDecoration(
-                labelText: "Role",
-                border: OutlineInputBorder(),
-              ),
-              items: const [
-                DropdownMenuItem(value: "agent", child: Text("Agent")),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text("Create Account Page", style: TextStyle(fontSize: 24)),
+              SizedBox(height: 20),
 
-                DropdownMenuItem(
-                  value: "superviseur",
-                  child: Text("Superviseur"),
+            
+              TextFormField(
+                decoration: InputDecoration(labelText: 'Username'),
+                controller: usernameController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Username is required';
+                  }
+                  if (!RegExp(r'^[a-zA-Z0-9]+$').hasMatch(value)) {
+                    return 'Only letters and numbers allowed';
+                  }
+                  return null;
+                },
+              ),
+
+              SizedBox(height: 20),
+
+              
+              TextFormField(
+                decoration: InputDecoration(labelText: 'Email'),
+                controller: emailController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Email is required';
+                  }
+                  if (!RegExp(
+                    r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                  ).hasMatch(value)) {
+                    return 'Enter valid email';
+                  }
+                  return null;
+                },
+              ),
+
+              SizedBox(height: 20),
+
+  
+              TextFormField(
+                decoration: InputDecoration(labelText: 'Age'),
+                keyboardType: TextInputType.number,
+                controller: ageController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Age is required';
+                  }
+                  final age = int.tryParse(value);
+                  if (age == null) {
+                    return 'Enter valid number';
+                  }
+                  if (age <= 18) {
+                    return 'Age must be greater than 18';
+                  }
+                  return null;
+                },
+              ),
+
+              SizedBox(height: 40),
+
+            
+              DropdownButtonFormField<String>(
+                initialValue: selectedRole,
+                decoration: InputDecoration(
+                  labelText: "Role",
+                  border: OutlineInputBorder(),
                 ),
-              ],
-              onChanged: (value) {
-                setState(() {
-                  selectedRole = value!;
-                });
-              },
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                CreateUserAcc();
-              },
-              child: Text('Create Account'),
-            ),
-          ],
+                items: const [
+                  DropdownMenuItem(value: "agent", child: Text("Agent")),
+                  DropdownMenuItem(
+                    value: "superviseur",
+                    child: Text("Superviseur"),
+                  ),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    selectedRole = value!;
+                  });
+                },
+              ),
+
+              SizedBox(height: 20),
+
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    CreateUserAcc();
+                  }
+                },
+                child: Text('Create Account'),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -14,6 +14,8 @@ class ForgetPassword extends StatefulWidget {
 class _ForgetPasswordState extends State<ForgetPassword> {
   var emailController = TextEditingController();
 
+  final _formKey = GlobalKey<FormState>();
+
   final String baseUrl = config.baseUrl;
 
   void ForgetPassword() async {
@@ -84,23 +86,45 @@ class _ForgetPasswordState extends State<ForgetPassword> {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text('Forgot-Password Page', style: TextStyle(fontSize: 24)),
-            TextField(
-              decoration: InputDecoration(labelText: "Email"),
-              controller: emailController,
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                ForgetPassword();
-              },
-              child: const Text("Send Email"),
-            ),
-          ],
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text('Forgot-Password Page', style: TextStyle(fontSize: 24)),
+              SizedBox(height: 20),
+
+              /// EMAIL
+              TextFormField(
+                decoration: InputDecoration(labelText: "Email"),
+                controller: emailController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Email is required';
+                  }
+                  if (!RegExp(
+                    r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                  ).hasMatch(value)) {
+                    return 'Enter valid email';
+                  }
+                  return null;
+                },
+              ),
+
+              SizedBox(height: 20),
+
+              /// BUTTON
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    ForgetPassword();
+                  }
+                },
+                child: const Text("Send Email"),
+              ),
+            ],
+          ),
         ),
       ),
     );

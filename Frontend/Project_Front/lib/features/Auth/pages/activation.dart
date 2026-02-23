@@ -15,6 +15,8 @@ class Activation extends StatefulWidget {
 class _ActivationState extends State<Activation> {
   var passwordController = TextEditingController();
 
+  final _formKey = GlobalKey<FormState>();
+
   final String baseUrl = config.baseUrl;
 
   void ActiviateAccount() async {
@@ -94,25 +96,42 @@ class _ActivationState extends State<Activation> {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text("Activation Page", style: TextStyle(fontSize: 24)),
-            SizedBox(height: 20),
-            TextField(
-              decoration: InputDecoration(labelText: "Password"),
-              obscureText: true,
-              controller: passwordController,
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                ActiviateAccount();
-              },
-              child: const Text('Activiate'),
-            ),
-          ],
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text("Activation Page", style: TextStyle(fontSize: 24)),
+              SizedBox(height: 20),
+
+              TextFormField(
+                decoration: InputDecoration(labelText: "Password"),
+                obscureText: true,
+                controller: passwordController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Password is required';
+                  }
+                  if (value.length < 8) {
+                    return 'Password must be at least 8 characters';
+                  }
+                  return null;
+                },
+              ),
+
+              SizedBox(height: 20),
+
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    ActiviateAccount();
+                  }
+                },
+                child: const Text('Activiate'),
+              ),
+            ],
+          ),
         ),
       ),
     );

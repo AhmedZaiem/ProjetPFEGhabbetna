@@ -16,6 +16,8 @@ class ResetPassword extends StatefulWidget {
 class _ResetPasswordState extends State<ResetPassword> {
   var PasswordController = TextEditingController();
 
+  final _formKey = GlobalKey<FormState>();
+
   final String baseUrl = config.baseUrl;
 
   void ResetPassword() async {
@@ -88,23 +90,44 @@ class _ResetPasswordState extends State<ResetPassword> {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text('Reset-Password Page', style: TextStyle(fontSize: 24)),
-            TextField(
-              decoration: InputDecoration(labelText: "New Password"),
-              controller: PasswordController,
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                ResetPassword();
-              },
-              child: const Text("Update Password"),
-            ),
-          ],
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text('Reset-Password Page', style: TextStyle(fontSize: 24)),
+              SizedBox(height: 20),
+
+              /// NEW PASSWORD
+              TextFormField(
+                decoration: InputDecoration(labelText: "New Password"),
+                obscureText: true,
+                controller: PasswordController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Password is required';
+                  }
+                  if (value.length < 8) {
+                    return 'Password must be at least 8 characters';
+                  }
+                  return null;
+                },
+              ),
+
+              SizedBox(height: 20),
+
+              /// BUTTON
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    ResetPassword();
+                  }
+                },
+                child: const Text("Update Password"),
+              ),
+            ],
+          ),
         ),
       ),
     );
