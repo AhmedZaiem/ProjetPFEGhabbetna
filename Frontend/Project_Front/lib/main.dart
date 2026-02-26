@@ -54,9 +54,44 @@ class _MainAppState extends State<MainApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: "Ghabbetna",
+      title: "Ghabetna",
       routerConfig: widget.router,
       debugShowCheckedModeBanner: false,
+
+      theme: ThemeData(
+        scaffoldBackgroundColor: const Color(
+          0xFFF2EFEA,
+        ),
+
+        primaryColor: const Color(0xFF1B5E20), 
+
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF1B5E20)),
+
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Color(0xFF1B5E20),
+          foregroundColor: Colors.white,
+          centerTitle: true,
+        ),
+
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFF1B5E20),
+            foregroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+          ),
+        ),
+
+        inputDecorationTheme: InputDecorationTheme(
+          focusedBorder: OutlineInputBorder(
+            borderSide: const BorderSide(color: Color(0xFF1B5E20), width: 2),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+      ),
     );
   }
 }

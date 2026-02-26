@@ -73,3 +73,54 @@ async def reset_password(request:Request):
         status_code=response.status_code,
         media_type="application/json"
     )
+
+
+@router.get("/users")
+async def get_all_users(request: Request):
+    headers = {
+        "Authorization": request.headers.get("Authorization")
+    }
+    async with httpx.AsyncClient() as client:
+        response = await client.get(f"{Auth_SERVICE_URL}/auth/users", headers=headers)
+    return Response(
+        content=response.content,
+        status_code=response.status_code,
+        media_type="application/json"
+    )
+
+@router.post("/users/{user_id}/block")
+async def block_user(user_id: int, request: Request):
+    headers = {
+        "Authorization": request.headers.get("Authorization")
+    }
+
+    async with httpx.AsyncClient() as client:
+        response = await client.post(
+            f"{Auth_SERVICE_URL}/auth/users/{user_id}/block",
+            headers=headers
+        )
+
+    return Response(
+        content=response.content,
+        status_code=response.status_code,
+        media_type="application/json"
+    )
+
+
+@router.post("/users/{user_id}/unblock")
+async def unblock_user(user_id: int, request: Request):
+    headers = {
+        "Authorization": request.headers.get("Authorization")
+    }
+
+    async with httpx.AsyncClient() as client:
+        response = await client.post(
+            f"{Auth_SERVICE_URL}/auth/users/{user_id}/unblock",
+            headers=headers
+        )
+
+    return Response(
+        content=response.content,
+        status_code=response.status_code,
+        media_type="application/json"
+    )

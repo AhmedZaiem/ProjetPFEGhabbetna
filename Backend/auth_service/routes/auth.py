@@ -1,8 +1,9 @@
-from models.user import User
+from models.user import User , UserRole
 from fastapi import APIRouter, HTTPException, Depends
 from schemas.userSchema import UserCreate, UserLogin, UserActivate, PasswordResetRequest, PasswordReset
-from services.user_service import get_user_by_email, create_user,get_current_user,send_activation_email,send_password_reset_email
+from services.user_service import get_user_by_email, create_user,get_current_user,send_activation_email,send_password_reset_email,get_all_users,block_user,unblock_user
 from core.security import hash_password, verify_password,create_access_token
+
 from sqlalchemy.orm import Session
 from db.database import get_db
 import uuid
@@ -91,3 +92,23 @@ def reset_password(data: PasswordReset, db: Session = Depends(get_db)):
     db.commit()
 
     return {"message": "Password reset successfully"}
+
+@router.get("/users")
+def read_users(
+    db: Session = Depends(get_db)
+):
+    return get_all_users(db)
+
+@router.post("/users/{user_id}/block")
+def block_user_route(user_id: int, db: Session = Depends(get_db)):
+    user = block_user(db, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
+
+@router.post("/users/{user_id}/unblock")
+def unblock_user_route(user_id: int, db: Session = Depends(get_db)):
+    user = unblock_user(db, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user

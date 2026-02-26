@@ -81,4 +81,26 @@ async def send_password_reset_email(email: str, token:str):
         subtype="html"
     )
     await fastMail.send_message(message)
-    
+
+
+def get_all_users(db: Session):
+    return db.query(User).all()
+
+
+def block_user(db: Session, user_id: int):
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        return None
+    user.is_verified = False
+    db.commit()
+    db.refresh(user)
+    return user
+
+def unblock_user(db: Session, user_id: int):
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        return None
+    user.is_verified = True
+    db.commit()
+    db.refresh(user)
+    return user
