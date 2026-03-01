@@ -84,14 +84,14 @@ async def send_password_reset_email(email: str, token:str):
 
 
 def get_all_users(db: Session):
-    return db.query(User).all()
+    return db.query(User).filter(User.role != "ADMIN").all()
 
 
 def block_user(db: Session, user_id: int):
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         return None
-    user.is_verified = False
+    user.is_blocked = True
     db.commit()
     db.refresh(user)
     return user
@@ -100,7 +100,7 @@ def unblock_user(db: Session, user_id: int):
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         return None
-    user.is_verified = True
+    user.is_blocked = False
     db.commit()
     db.refresh(user)
     return user

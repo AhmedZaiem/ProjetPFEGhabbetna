@@ -21,4 +21,16 @@ class PasswordResetRequest(BaseModel):
 class PasswordReset(BaseModel):
     token: str
     new_password: str = Field(min_length=8)
+
+class UserOut(BaseModel):
+    id: int
+    username: str
+    email: EmailStr
+    age: int
+    role: UserRole
+    is_verified: bool
+    is_blocked: bool
+
+    class Config:
+        orm_mode = True
     

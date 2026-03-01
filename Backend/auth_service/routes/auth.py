@@ -1,6 +1,6 @@
 from models.user import User , UserRole
 from fastapi import APIRouter, HTTPException, Depends
-from schemas.userSchema import UserCreate, UserLogin, UserActivate, PasswordResetRequest, PasswordReset
+from schemas.userSchema import UserCreate, UserLogin, UserActivate, PasswordResetRequest, PasswordReset, UserOut
 from services.user_service import get_user_by_email, create_user,get_current_user,send_activation_email,send_password_reset_email,get_all_users,block_user,unblock_user
 from core.security import hash_password, verify_password,create_access_token
 
@@ -37,6 +37,9 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
     
     if not db_user.is_verified or not db_user.password_hash:
         raise HTTPException(status_code=403,detail="Account not activated")
+    
+    if db_user.is_blocked:
+        raise HTTPException(status_code=403, detail="Account is blocked")
     
     #publish_user_event("LOGIN", db_user)
 
@@ -93,7 +96,7 @@ def reset_password(data: PasswordReset, db: Session = Depends(get_db)):
 
     return {"message": "Password reset successfully"}
 
-@router.get("/users")
+@router.get("/users", response_model=list[UserOut])
 def read_users(
     db: Session = Depends(get_db)
 ):

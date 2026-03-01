@@ -77,9 +77,10 @@ async def reset_password(request:Request):
 
 @router.get("/users")
 async def get_all_users(request: Request):
-    headers = {
-        "Authorization": request.headers.get("Authorization")
-    }
+    headers = {}
+    auth = request.headers.get("Authorization")
+    if auth:
+        headers["Authorization"] = auth
     async with httpx.AsyncClient() as client:
         response = await client.get(f"{Auth_SERVICE_URL}/auth/users", headers=headers)
     return Response(

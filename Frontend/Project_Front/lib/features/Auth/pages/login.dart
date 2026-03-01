@@ -107,7 +107,6 @@ class _LoginState extends State<login> {
             children: [
               Text("Login Page", style: TextStyle(fontSize: 24)),
 
-              
               TextFormField(
                 decoration: InputDecoration(labelText: "Email"),
                 controller: emailController,
@@ -126,7 +125,6 @@ class _LoginState extends State<login> {
 
               SizedBox(height: 20),
 
-         
               TextFormField(
                 decoration: InputDecoration(labelText: "Password"),
                 obscureText: true,
@@ -144,7 +142,6 @@ class _LoginState extends State<login> {
 
               SizedBox(height: 20),
 
-             
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
@@ -155,13 +152,6 @@ class _LoginState extends State<login> {
               ),
 
               SizedBox(height: 10),
-
-              TextButton(
-                onPressed: () {
-                  context.push('/create_user');
-                },
-                child: const Text('Don t have an account? Register'),
-              ),
 
               SizedBox(height: 10),
 

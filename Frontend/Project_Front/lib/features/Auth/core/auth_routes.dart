@@ -1,5 +1,5 @@
 import 'package:authproject/features/Auth/pages/activation.dart';
-import 'package:authproject/features/Auth/pages/create_user.dart';
+import 'package:authproject/features/Auth/pages/admin_pages/admin_dashboard.dart';
 import 'package:authproject/features/Auth/pages/forgot_password.dart';
 import 'package:authproject/features/Auth/pages/login.dart';
 import 'package:authproject/features/Auth/pages/reset_password.dart';
@@ -10,7 +10,6 @@ import 'package:go_router/go_router.dart';
 final authRouter = GoRouter(
   routes: [
     GoRoute(path: '/', builder: (context, state) => login()),
-    GoRoute(path: '/create_user', builder: (context, state) => Create_User()),
     GoRoute(path: '/welcome', builder: (context, state) => Welcome()),
     GoRoute(
       path: '/forgot_password',
@@ -39,6 +38,10 @@ final authRouter = GoRouter(
         }
         return ResetPassword(token: token);
       },
+    ),
+    GoRoute(
+      path: '/admin_dashboard',
+      builder: (context, state) => AdminDashboard(),
     ),
   ],
 );

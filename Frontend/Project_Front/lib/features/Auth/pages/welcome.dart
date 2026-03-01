@@ -132,6 +132,20 @@ class _WelcomeState extends State<Welcome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text("Welcome"),
+            ElevatedButton(
+              onPressed: () async {
+                context.push('/admin_dashboard');
+              },
+              child: Text("Admin Dashboard"),
+            ),
+          ],
+        ),
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
