@@ -16,19 +16,18 @@ class AdminDashboard extends StatefulWidget {
 class _AdminDashboardState extends State<AdminDashboard> {
   int _selectedIndex = 0;
 
-  // Optional: map index to title/content
+
   final List<Widget> _contentWidgets = [
-    UserList(), // Users List
-    const ForestList(), // Forest List
-    const Create_User(), // Create Users
-    const AddForest(), // Add Forests
-    const AddRole(), // Add Roles
+    UserList(),
+    const ForestList(), 
+    const Create_User(), 
+    const AddForest(), 
+    const AddRole(), 
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Admin Dashboard")),
       body: Row(
         children: [
           // NavigationRail on the left

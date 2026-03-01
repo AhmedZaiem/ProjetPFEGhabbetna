@@ -22,4 +22,54 @@ class UserService {
       throw Exception("Error fetching users");
     }
   }
+
+  Future<void> blockUser(int userId) async {
+    try {
+      var url = Uri.parse("$baseUrl/auth/users/$userId/block");
+      var response = await http.post(
+        url,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print("User $userId blocked successfully");
+      } else if (response.statusCode == 404) {
+        throw Exception("User not found");
+      } else {
+        throw Exception(
+          "Failed to block user: ${response.statusCode} - ${response.body}",
+        );
+      }
+    } catch (e) {
+      print("Error blocking user: $e");
+      throw Exception("Error blocking user: $e");
+    }
+  }
+
+  Future<void> unblockUser(int userId) async {
+    try {
+      var url = Uri.parse("$baseUrl/auth/users/$userId/unblock");
+      var response = await http.post(
+        url,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print("User $userId unblocked successfully");
+      } else if (response.statusCode == 404) {
+        throw Exception("User not found");
+      } else {
+        throw Exception(
+          "Failed to unblock user: ${response.statusCode} - ${response.body}",
+        );
+      }
+    } catch (e) {
+      print("Error unblocking user: $e");
+      throw Exception("Error unblocking user: $e");
+    }
+  }
 }

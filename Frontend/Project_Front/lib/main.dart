@@ -68,7 +68,7 @@ class _MainAppState extends State<MainApp> {
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF1B5E20)),
 
         appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFF1B5E20),
+          backgroundColor: Color.fromARGB(255, 14, 43, 16),
           foregroundColor: Colors.white,
           centerTitle: true,
         ),

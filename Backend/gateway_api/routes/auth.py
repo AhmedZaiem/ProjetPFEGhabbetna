@@ -1,5 +1,6 @@
 from fastapi import APIRouter,Request,Response
 import httpx
+from fastapi.responses import JSONResponse
 
 router = APIRouter()
 
@@ -89,11 +90,12 @@ async def get_all_users(request: Request):
         media_type="application/json"
     )
 
+
+
 @router.post("/users/{user_id}/block")
 async def block_user(user_id: int, request: Request):
-    headers = {
-        "Authorization": request.headers.get("Authorization")
-    }
+    auth_header = request.headers.get("Authorization")
+    headers = {"Authorization": auth_header} if auth_header else {}
 
     async with httpx.AsyncClient() as client:
         response = await client.post(
@@ -101,18 +103,13 @@ async def block_user(user_id: int, request: Request):
             headers=headers
         )
 
-    return Response(
-        content=response.content,
-        status_code=response.status_code,
-        media_type="application/json"
-    )
+    return JSONResponse(content=response.json(), status_code=response.status_code)
 
 
 @router.post("/users/{user_id}/unblock")
 async def unblock_user(user_id: int, request: Request):
-    headers = {
-        "Authorization": request.headers.get("Authorization")
-    }
+    auth_header = request.headers.get("Authorization")
+    headers = {"Authorization": auth_header} if auth_header else {}
 
     async with httpx.AsyncClient() as client:
         response = await client.post(
@@ -120,8 +117,4 @@ async def unblock_user(user_id: int, request: Request):
             headers=headers
         )
 
-    return Response(
-        content=response.content,
-        status_code=response.status_code,
-        media_type="application/json"
-    )
+    return JSONResponse(content=response.json(), status_code=response.status_code)
