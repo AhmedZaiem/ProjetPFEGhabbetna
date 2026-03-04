@@ -136,3 +136,29 @@ def create_role(db: Session, name: str):
 
 def get_roles(db: Session):
     return db.query(Role).filter(Role.name != "Admin").all()
+
+
+def delete_role(db: Session, name: str):
+    role_selected = db.query(Role).filter(Role.name == name).first()
+    if not role_selected:
+        return None
+    db.delete(role_selected)
+    db.commit()
+    return role_selected
+
+
+def modify_role(db: Session, old_name: str, new_name: str):
+    role_selected = db.query(Role).filter(Role.name == old_name).first()
+
+    if not role_selected:
+        return None
+
+    existing_role = db.query(Role).filter(Role.name == new_name).first()
+    if existing_role:
+        return "exists"
+
+    role_selected.name = new_name
+    db.commit()
+    db.refresh(role_selected)
+
+    return role_selected

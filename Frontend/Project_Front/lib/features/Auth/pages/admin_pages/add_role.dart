@@ -14,6 +14,7 @@ class _AddRoleState extends State<AddRole> {
   late Future<List<RoleModel>> _rolesFuture;
 
   final TextEditingController _roleController = TextEditingController();
+  final TextEditingController _newRoleController = TextEditingController();
 
   @override
   void initState() {
@@ -45,33 +46,119 @@ class _AddRoleState extends State<AddRole> {
     }
   }
 
+  Future<void> _deleteRole() async {
+    final roleName = _roleController.text.trim();
+    if (roleName.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please enter a role name to delete")),
+      );
+      return;
+    }
+
+    try {
+      await userService.deleteRole(roleName);
+      _roleController.clear();
+      await _refreshRoles();
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Role deleted successfully")),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Error: $e")));
+    }
+  }
+
+  Future<void> _modifyRole() async {
+    final oldName = _roleController.text.trim();
+    final newName = _newRoleController.text.trim();
+
+    if (oldName.isEmpty || newName.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Please enter both old and new role names"),
+        ),
+      );
+      return;
+    }
+
+    try {
+      await userService.modifyRole(oldName, newName);
+      _roleController.clear();
+      _newRoleController.clear();
+      await _refreshRoles();
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Role modified successfully")),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Error: $e")));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Add Role")),
       body: Column(
         children: [
-          /// 🔹 Add Role Section
+          /// Role Management Section
           Padding(
             padding: const EdgeInsets.all(16),
-            child: Row(
+            child: Column(
               children: [
-                Expanded(
-                  child: TextField(
-                    controller: _roleController,
-                    decoration: const InputDecoration(
-                      labelText: "Role Name",
-                      border: OutlineInputBorder(),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _roleController,
+                        decoration: const InputDecoration(
+                          labelText: "Role Name",
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
                     ),
-                  ),
+                    const SizedBox(width: 10),
+                    ElevatedButton(
+                      onPressed: _addRole,
+                      child: const Text("Add"),
+                    ),
+                    const SizedBox(width: 10),
+                    ElevatedButton(
+                      onPressed: _deleteRole,
+                      child: const Text("Delete"),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 10),
-                ElevatedButton(onPressed: _addRole, child: const Text("Add")),
+
+                const SizedBox(height: 10),
+
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _newRoleController,
+                        decoration: const InputDecoration(
+                          labelText: "New Role Name",
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    ElevatedButton(
+                      onPressed: _modifyRole,
+                      child: const Text("Modify"),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
 
-          /// 🔹 Roles List
+          /// Roles List
           Expanded(
             child: FutureBuilder<List<RoleModel>>(
               future: _rolesFuture,

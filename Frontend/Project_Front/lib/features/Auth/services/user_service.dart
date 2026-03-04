@@ -95,21 +95,61 @@ class UserService {
     }
   }
 
- Future<List<RoleModel>> getRoles() async {
-  try {
-    var url = Uri.parse("$baseUrl/auth/roles");
+  Future<List<RoleModel>> getRoles() async {
+    try {
+      var url = Uri.parse("$baseUrl/auth/roles");
 
-    var response = await http.get(url);
+      var response = await http.get(url);
 
-    if (response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(response.body);
-      return data.map((json) => RoleModel.fromJson(json)).toList();
-    } else {
-      throw Exception("Failed to load roles");
+      if (response.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(response.body);
+        return data.map((json) => RoleModel.fromJson(json)).toList();
+      } else {
+        throw Exception("Failed to load roles");
+      }
+    } catch (e) {
+      print("Error fetching roles: $e");
+      throw Exception("Error fetching roles: $e");
     }
-  } catch (e) {
-    print("Error fetching roles: $e");
-    throw Exception("Error fetching roles: $e");
+  }
+
+ Future<void> deleteRole(String name) async {
+  final url = Uri.parse("$baseUrl/auth/delete-role?name=$name");
+  final response = await http.delete(url);
+
+  if (response.statusCode != 200) {
+    throw Exception(
+      "Failed to delete role: ${response.statusCode} - ${response.body}"
+    );
+  } else {
+    print("Role deleted successfully");
   }
 }
+
+  Future<void> modifyRole(String oldName, String newName) async {
+    try {
+      var url = Uri.parse("$baseUrl/auth/modify-role");
+
+      var response = await http.put(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({"old_name": oldName, "new_name": newName}),
+      );
+
+      if (response.statusCode == 200) {
+        print("Role modified successfully");
+      } else if (response.statusCode == 404) {
+        throw Exception("Original role not found");
+      } else if (response.statusCode == 400) {
+        throw Exception("New role name already exists");
+      } else {
+        throw Exception(
+          "Failed to modify role: ${response.statusCode} - ${response.body}",
+        );
+      }
+    } catch (e) {
+      print("Error modifying role: $e");
+      throw Exception("Error modifying role: $e");
+    }
+  }
 }

@@ -2,8 +2,8 @@ from models.user import User
 from models.role import Role
 from fastapi import APIRouter, HTTPException, Depends
 from schemas.userSchema import UserCreate, UserLogin, UserActivate, PasswordResetRequest, PasswordReset, UserOut
-from schemas.role_schema import RoleCreate
-from services.user_service import get_user_by_email, create_user,get_current_user,send_activation_email,send_password_reset_email,get_all_users,block_user,unblock_user,create_role,get_roles
+from schemas.role_schema import RoleCreate , RoleDelete , RoleModify
+from services.user_service import get_user_by_email, create_user,get_current_user,send_activation_email,send_password_reset_email,get_all_users,block_user,unblock_user,create_role,get_roles,delete_role,modify_role
 from core.security import hash_password, verify_password,create_access_token
 
 from sqlalchemy.orm import Session
@@ -132,3 +132,23 @@ def create_role_route(role: RoleCreate, db: Session = Depends(get_db)):
 def get_roles_route(db: Session = Depends(get_db)):
     return get_roles(db)
     
+
+@router.delete("/delete-role")
+def delete_role_route(name: str, db: Session = Depends(get_db)):
+    deleted = delete_role(db, name)
+    if not deleted:
+        raise HTTPException(status_code=404, detail="Role not found")
+    return {"message": "Role deleted successfully", "role": deleted.name}
+
+    
+
+@router.put("/modify-role")
+def modify_role_route(role: RoleModify, db: Session = Depends(get_db)):
+    result = modify_role(db, role.old_name, role.new_name)
+
+    if result is None:
+        raise HTTPException(status_code=404, detail="Original role not found")
+    elif result == "exists":
+        raise HTTPException(status_code=400, detail="New role name already exists")
+
+    return {"message": "Role updated successfully", "role": result.name}

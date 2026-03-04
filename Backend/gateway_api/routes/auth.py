@@ -1,6 +1,7 @@
 from fastapi import APIRouter,Request,Response
 import httpx
 from fastapi.responses import JSONResponse
+import json
 
 router = APIRouter()
 
@@ -162,3 +163,46 @@ async def get_roles(request: Request):
         status_code=response.status_code,
         media_type="application/json"
     )
+
+
+@router.delete("/delete-role")
+async def delete_role(name: str, request: Request):
+    headers = {}
+    auth = request.headers.get("Authorization")
+    if auth:
+        headers["Authorization"] = auth
+
+    async with httpx.AsyncClient() as client:
+        response = await client.delete(
+            f"{Auth_SERVICE_URL}/auth/delete-role?name={name}",
+            headers=headers
+        )
+
+    return Response(
+        content=response.content,
+        status_code=response.status_code,
+        media_type="application/json"
+    )
+
+@router.put("/modify-role")
+async def modify_role(request: Request):
+    body = await request.json()  
+
+    headers = {}
+    auth = request.headers.get("Authorization")
+    if auth:
+        headers["Authorization"] = auth
+
+    async with httpx.AsyncClient() as client:
+        response = await client.put(
+            f"{Auth_SERVICE_URL}/auth/modify-role",
+            headers=headers,
+            json=body
+        )
+
+    return Response(
+        content=response.content,
+        status_code=response.status_code,
+        media_type="application/json"
+    )
+
