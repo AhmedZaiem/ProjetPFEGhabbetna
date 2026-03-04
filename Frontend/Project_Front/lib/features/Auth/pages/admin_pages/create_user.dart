@@ -16,7 +16,7 @@ class _CreateUserState extends State<Create_User> {
   var usernameController = TextEditingController();
   var emailController = TextEditingController();
   var ageController = TextEditingController();
-  String selectedRole = "agent";
+  String selectedRole = "Agent";
 
   final _formKey = GlobalKey<FormState>();
 
@@ -53,7 +53,7 @@ class _CreateUserState extends State<Create_User> {
           'username': username,
           'email': email,
           'age': age,
-          'role': selectedRole,
+          'role_name': selectedRole,
         }),
       );
 
@@ -192,9 +192,9 @@ class _CreateUserState extends State<Create_User> {
                   border: OutlineInputBorder(),
                 ),
                 items: const [
-                  DropdownMenuItem(value: "agent", child: Text("Agent")),
+                  DropdownMenuItem(value: "Agent", child: Text("Agent")),
                   DropdownMenuItem(
-                    value: "superviseur",
+                    value: "Supervisor",
                     child: Text("Superviseur"),
                   ),
                 ],

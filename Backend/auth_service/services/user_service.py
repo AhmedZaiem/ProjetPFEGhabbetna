@@ -1,5 +1,6 @@
 from db.database import get_db
 from models.user import User
+from models.role import Role
 from sqlalchemy.orm import Session
 from core.security import decode_access_token
 from fastapi import HTTPException, Depends
@@ -31,8 +32,11 @@ def get_current_user(
 def get_user_by_email(db: Session, email: str):
     return db.query(User).filter(User.email == email).first()
     
-def create_user(db:Session,username:str, email: str,role, age: int,activation_token: str):
-    new_user = User(username=username, email=email,role=role ,age=age,activation_token=activation_token)
+def create_user(db:Session,username:str, email: str,role_name: str, age: int,activation_token: str):
+    role = db.query(Role).filter(Role.name == role_name).first()
+    if not role:
+        raise HTTPException(status_code=400, detail="Invalid role")
+    new_user = User(username=username, email=email,role_id=role.id, age=age,activation_token=activation_token)
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
@@ -84,7 +88,19 @@ async def send_password_reset_email(email: str, token:str):
 
 
 def get_all_users(db: Session):
-    return db.query(User).filter(User.role != "ADMIN").all()
+    users = db.query(User).join(Role).filter(Role.name != "Admin").all()
+    return [
+        {
+            "id": u.id,
+            "username": u.username,
+            "email": u.email,
+            "age": u.age,
+            "role_name": u.role.name,
+            "is_verified": u.is_verified,
+            "is_blocked": u.is_blocked
+        }
+        for u in users
+    ]
 
 
 def block_user(db: Session, user_id: int):

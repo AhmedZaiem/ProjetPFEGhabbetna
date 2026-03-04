@@ -1,4 +1,5 @@
-from models.user import User , UserRole
+from models.user import User 
+from models.role import Role
 from fastapi import APIRouter, HTTPException, Depends
 from schemas.userSchema import UserCreate, UserLogin, UserActivate, PasswordResetRequest, PasswordReset, UserOut
 from services.user_service import get_user_by_email, create_user,get_current_user,send_activation_email,send_password_reset_email,get_all_users,block_user,unblock_user
@@ -21,7 +22,7 @@ async def register(user: UserCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Email already registered")
 
     activation_token = str(uuid.uuid4())
-    new_user=create_user(db, user.username,user.email, user.role, user.age,activation_token=activation_token)
+    new_user=create_user(db, user.username,user.email, user.role_name, user.age,activation_token=activation_token)
 
     #publish_user_event("REGISTER", new_user)
     await send_activation_email(new_user.email,activation_token)
@@ -115,3 +116,22 @@ def unblock_user_route(user_id: int, db: Session = Depends(get_db)):
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user
+
+@router.post("/roles")
+def create_role(name: str, db: Session = Depends(get_db)):
+    existing_role = db.query(Role).filter(Role.name == name).first()
+    if existing_role:
+        raise HTTPException(status_code=400, detail="Role already exists")
+    
+    new_role = Role(name=name)
+    db.add(new_role)
+    db.commit()
+    db.refresh(new_role)
+
+    return {"message": "Role created successfully", "role": new_role}
+
+@router.get("/roles")
+def get_roles(db: Session = Depends(get_db)):
+    roles = db.query(Role).filter(Role.name != "Admin").all()
+    return roles
+    

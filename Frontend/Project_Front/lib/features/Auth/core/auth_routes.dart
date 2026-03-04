@@ -1,19 +1,17 @@
 import 'package:authproject/features/Auth/pages/activation.dart';
 import 'package:authproject/features/Auth/pages/admin_pages/admin_dashboard.dart';
-import 'package:authproject/features/Auth/pages/admin_pages/create_user.dart';
 
 import 'package:authproject/features/Auth/pages/forgot_password.dart';
 import 'package:authproject/features/Auth/pages/login.dart';
 import 'package:authproject/features/Auth/pages/reset_password.dart';
 import 'package:authproject/features/Auth/pages/welcome.dart';
 
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 final authRouter = GoRouter(
   routes: [
-    GoRoute(path: '/', builder: (context, state) => AdminDashboard()),
+    GoRoute(path: '/', builder: (context, state) => login()),
     GoRoute(path: '/welcome', builder: (context, state) => Welcome()),
     GoRoute(
       path: '/forgot_password',

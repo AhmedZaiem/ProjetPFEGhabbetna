@@ -114,7 +114,7 @@ class _UserListState extends State<UserList> {
                             children: [
                               Expanded(flex: 2, child: Text(user.username)),
                               Expanded(flex: 3, child: Text(user.email)),
-                              Expanded(flex: 2, child: Text(user.role)),
+                              Expanded(flex: 2, child: Text(user.role_name)),
                               Expanded(
                                 flex: 1,
                                 child: Text(user.age.toString()),

@@ -3,7 +3,7 @@ class UserModel {
   final String username;
   final String email;
   final int age;
-  final String role;
+  final String role_name;
   final bool isVerified;
   final bool isBlocked;
 
@@ -12,7 +12,7 @@ class UserModel {
     required this.username,
     required this.email,
     required this.age,
-    required this.role,
+    required this.role_name,
     required this.isVerified,
     required this.isBlocked,
   });
@@ -23,7 +23,7 @@ class UserModel {
       username: json['username'],
       email: json['email'],
       age: json['age'],
-      role: json['role'],
+      role_name: json['role_name'],
       isVerified: json['is_verified'],
       isBlocked: json['is_blocked'],
     );

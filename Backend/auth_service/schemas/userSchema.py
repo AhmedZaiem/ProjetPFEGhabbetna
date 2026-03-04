@@ -1,11 +1,10 @@
 from pydantic import BaseModel, EmailStr, Field
-from models.enums import UserRole
 
 class UserCreate(BaseModel):
     username: str = Field(min_length=3, max_length=50)
     email: EmailStr
     age: int
-    role: UserRole
+    role_name: str
 
 class UserLogin(BaseModel):
     email: EmailStr
@@ -27,7 +26,7 @@ class UserOut(BaseModel):
     username: str
     email: EmailStr
     age: int
-    role: UserRole
+    role_name: str
     is_verified: bool
     is_blocked: bool
 
