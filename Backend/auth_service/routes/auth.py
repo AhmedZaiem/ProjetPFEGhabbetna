@@ -2,7 +2,8 @@ from models.user import User
 from models.role import Role
 from fastapi import APIRouter, HTTPException, Depends
 from schemas.userSchema import UserCreate, UserLogin, UserActivate, PasswordResetRequest, PasswordReset, UserOut
-from services.user_service import get_user_by_email, create_user,get_current_user,send_activation_email,send_password_reset_email,get_all_users,block_user,unblock_user
+from schemas.role_schema import RoleCreate
+from services.user_service import get_user_by_email, create_user,get_current_user,send_activation_email,send_password_reset_email,get_all_users,block_user,unblock_user,create_role,get_roles
 from core.security import hash_password, verify_password,create_access_token
 
 from sqlalchemy.orm import Session
@@ -117,21 +118,17 @@ def unblock_user_route(user_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
-@router.post("/roles")
-def create_role(name: str, db: Session = Depends(get_db)):
-    existing_role = db.query(Role).filter(Role.name == name).first()
-    if existing_role:
+@router.post("/create-role")
+def create_role_route(role: RoleCreate, db: Session = Depends(get_db)):
+    new_role = create_role(db,role.name)
+
+    if new_role is None:
         raise HTTPException(status_code=400, detail="Role already exists")
-    
-    new_role = Role(name=name)
-    db.add(new_role)
-    db.commit()
-    db.refresh(new_role)
 
     return {"message": "Role created successfully", "role": new_role}
 
+
 @router.get("/roles")
-def get_roles(db: Session = Depends(get_db)):
-    roles = db.query(Role).filter(Role.name != "Admin").all()
-    return roles
+def get_roles_route(db: Session = Depends(get_db)):
+    return get_roles(db)
     

@@ -118,3 +118,47 @@ async def unblock_user(user_id: int, request: Request):
         )
 
     return JSONResponse(content=response.json(), status_code=response.status_code)
+
+
+
+@router.post("/create-role")
+async def create_role(request: Request):
+    body = await request.json()
+
+    headers = {}
+    auth = request.headers.get("Authorization")
+    if auth:
+        headers["Authorization"] = auth
+
+    async with httpx.AsyncClient() as client:
+        response = await client.post(
+            f"{Auth_SERVICE_URL}/auth/create-role",
+            json=body,
+            headers=headers
+        )
+
+    return Response(
+        content=response.content,
+        status_code=response.status_code,
+        media_type="application/json"
+    )
+
+
+@router.get("/roles")
+async def get_roles(request: Request):
+    headers = {}
+    auth = request.headers.get("Authorization")
+    if auth:
+        headers["Authorization"] = auth
+
+    async with httpx.AsyncClient() as client:
+        response = await client.get(
+            f"{Auth_SERVICE_URL}/auth/roles",
+            headers=headers
+        )
+
+    return Response(
+        content=response.content,
+        status_code=response.status_code,
+        media_type="application/json"
+    )

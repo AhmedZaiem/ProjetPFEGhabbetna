@@ -120,3 +120,19 @@ def unblock_user(db: Session, user_id: int):
     db.commit()
     db.refresh(user)
     return user
+
+
+def create_role(db: Session, name: str):
+    existing_role = db.query(Role).filter(Role.name == name).first()
+    if existing_role:
+        return None
+
+    new_role = Role(name=name)
+    db.add(new_role)
+    db.commit()
+    db.refresh(new_role)
+
+    return new_role
+
+def get_roles(db: Session):
+    return db.query(Role).filter(Role.name != "Admin").all()
