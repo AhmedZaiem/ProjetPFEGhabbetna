@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import '../../../../config.dart' as config;
+import 'package:authproject/features/Auth/models/role_model.dart';
+import 'package:authproject/features/Auth/services/user_service.dart';
 
 import 'dart:convert';
 
@@ -16,11 +18,21 @@ class _CreateUserState extends State<Create_User> {
   var usernameController = TextEditingController();
   var emailController = TextEditingController();
   var ageController = TextEditingController();
-  String selectedRole = "Agent";
+
+  late Future<List<RoleModel>> _rolesFuture;
+  final UserService userService = UserService();
 
   final _formKey = GlobalKey<FormState>();
 
   final String baseUrl = config.baseUrl;
+  
+  String selectedRole = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _rolesFuture = userService.getRoles();
+  }
 
   void CreateUserAcc() async {
     String username = usernameController.text.trim();
@@ -185,23 +197,29 @@ class _CreateUserState extends State<Create_User> {
 
               SizedBox(height: 40),
 
-              DropdownButtonFormField<String>(
-                initialValue: selectedRole,
-                decoration: InputDecoration(
-                  labelText: "Role",
-                  border: OutlineInputBorder(),
-                ),
-                items: const [
-                  DropdownMenuItem(value: "Agent", child: Text("Agent")),
-                  DropdownMenuItem(
-                    value: "Supervisor",
-                    child: Text("Superviseur"),
-                  ),
-                ],
-                onChanged: (value) {
-                  setState(() {
-                    selectedRole = value!;
-                  });
+              FutureBuilder<List<RoleModel>>(
+                future: _rolesFuture,
+                builder: (context, snapshot) {
+                  return DropdownButtonFormField<String>(
+                    decoration: InputDecoration(labelText: 'Select Role'),
+                    items: (snapshot.data ?? []).map((role) {
+                      return DropdownMenuItem<String>(
+                        value: role.name,
+                        child: Text(role.name),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        selectedRole = value ?? '';
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Role is required';
+                      }
+                      return null;
+                    },
+                  );
                 },
               ),
 
