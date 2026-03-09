@@ -1,5 +1,4 @@
 from models.user import User 
-from models.role import Role
 from fastapi import APIRouter, HTTPException, Depends
 from schemas.userSchema import UserCreate, UserLogin, UserActivate, PasswordResetRequest, PasswordReset, UserOut
 from schemas.role_schema import RoleCreate , RoleDelete , RoleModify
@@ -98,57 +97,3 @@ def reset_password(data: PasswordReset, db: Session = Depends(get_db)):
 
     return {"message": "Password reset successfully"}
 
-@router.get("/users", response_model=list[UserOut])
-def read_users(
-    db: Session = Depends(get_db)
-):
-    return get_all_users(db)
-
-@router.post("/users/{user_id}/block")
-def block_user_route(user_id: int, db: Session = Depends(get_db)):
-    user = block_user(db, user_id)
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    return user
-
-@router.post("/users/{user_id}/unblock")
-def unblock_user_route(user_id: int, db: Session = Depends(get_db)):
-    user = unblock_user(db, user_id)
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    return user
-
-@router.post("/create-role")
-def create_role_route(role: RoleCreate, db: Session = Depends(get_db)):
-    new_role = create_role(db,role.name)
-
-    if new_role is None:
-        raise HTTPException(status_code=400, detail="Role already exists")
-
-    return {"message": "Role created successfully", "role": new_role}
-
-
-@router.get("/roles")
-def get_roles_route(db: Session = Depends(get_db)):
-    return get_roles(db)
-    
-
-@router.delete("/delete-role")
-def delete_role_route(name: str, db: Session = Depends(get_db)):
-    deleted = delete_role(db, name)
-    if not deleted:
-        raise HTTPException(status_code=404, detail="Role not found")
-    return {"message": "Role deleted successfully", "role": deleted.name}
-
-    
-
-@router.put("/modify-role")
-def modify_role_route(role: RoleModify, db: Session = Depends(get_db)):
-    result = modify_role(db, role.old_name, role.new_name)
-
-    if result is None:
-        raise HTTPException(status_code=404, detail="Original role not found")
-    elif result == "exists":
-        raise HTTPException(status_code=400, detail="New role name already exists")
-
-    return {"message": "Role updated successfully", "role": result.name}

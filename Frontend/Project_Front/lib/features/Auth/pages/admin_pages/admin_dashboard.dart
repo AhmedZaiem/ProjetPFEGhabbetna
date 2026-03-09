@@ -16,13 +16,12 @@ class AdminDashboard extends StatefulWidget {
 class _AdminDashboardState extends State<AdminDashboard> {
   int _selectedIndex = 0;
 
-
   final List<Widget> _contentWidgets = [
     UserList(),
-    const ForestList(), 
-    const Create_User(), 
-    const AddForest(), 
-    const AddRole(), 
+    const ForestList(),
+    const Create_User(),
+    const AddForest(),
+    const AddRole(),
   ];
 
   @override
@@ -76,7 +75,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
               ),
               NavigationRailDestination(
                 icon: Icon(Icons.add),
-                label: Text("Add Roles"),
+                label: Text("Manage Roles"),
               ),
             ],
           ),

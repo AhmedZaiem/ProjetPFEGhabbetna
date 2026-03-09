@@ -84,7 +84,7 @@ async def get_all_users(request: Request):
     if auth:
         headers["Authorization"] = auth
     async with httpx.AsyncClient() as client:
-        response = await client.get(f"{Auth_SERVICE_URL}/auth/users", headers=headers)
+        response = await client.get(f"{Auth_SERVICE_URL}/users/users", headers=headers)
     return Response(
         content=response.content,
         status_code=response.status_code,
@@ -100,7 +100,7 @@ async def block_user(user_id: int, request: Request):
 
     async with httpx.AsyncClient() as client:
         response = await client.post(
-            f"{Auth_SERVICE_URL}/auth/users/{user_id}/block",
+            f"{Auth_SERVICE_URL}/users/users/{user_id}/block",
             headers=headers
         )
 
@@ -114,7 +114,7 @@ async def unblock_user(user_id: int, request: Request):
 
     async with httpx.AsyncClient() as client:
         response = await client.post(
-            f"{Auth_SERVICE_URL}/auth/users/{user_id}/unblock",
+            f"{Auth_SERVICE_URL}/users/users/{user_id}/unblock",
             headers=headers
         )
 
@@ -133,7 +133,7 @@ async def create_role(request: Request):
 
     async with httpx.AsyncClient() as client:
         response = await client.post(
-            f"{Auth_SERVICE_URL}/auth/create-role",
+            f"{Auth_SERVICE_URL}/users/create-role",
             json=body,
             headers=headers
         )
@@ -154,7 +154,7 @@ async def get_roles(request: Request):
 
     async with httpx.AsyncClient() as client:
         response = await client.get(
-            f"{Auth_SERVICE_URL}/auth/roles",
+            f"{Auth_SERVICE_URL}/users/roles",
             headers=headers
         )
 
@@ -174,7 +174,7 @@ async def delete_role(name: str, request: Request):
 
     async with httpx.AsyncClient() as client:
         response = await client.delete(
-            f"{Auth_SERVICE_URL}/auth/delete-role?name={name}",
+            f"{Auth_SERVICE_URL}/users/delete-role?name={name}",
             headers=headers
         )
 
@@ -195,7 +195,7 @@ async def modify_role(request: Request):
 
     async with httpx.AsyncClient() as client:
         response = await client.put(
-            f"{Auth_SERVICE_URL}/auth/modify-role",
+            f"{Auth_SERVICE_URL}/users/modify-role",
             headers=headers,
             json=body
         )

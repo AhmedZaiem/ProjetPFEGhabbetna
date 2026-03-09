@@ -1,5 +1,8 @@
 from fastapi import FastAPI
 from routes.auth import router as auth_router
+from routes.user_routes import router as user_router
+from routes.forest_routes import router as forest_router
+from routes.parcelle_routes import router as parcelle_router
 from fastapi.middleware.cors import CORSMiddleware
 from db.database import Base, engine
 from dotenv import load_dotenv
@@ -16,6 +19,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 Base.metadata.create_all(bind=engine)
 
 app.include_router(auth_router)
+app.include_router(user_router)
+app.include_router(forest_router)
+app.include_router(parcelle_router)

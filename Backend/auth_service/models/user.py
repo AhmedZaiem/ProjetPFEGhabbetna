@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String , Boolean ,ForeignKey
+import datetime
+from sqlalchemy import Column, Integer, String , Boolean ,ForeignKey, DateTime
 from db.database import Base
 from sqlalchemy.orm import relationship
 
@@ -11,12 +12,17 @@ class User(Base):
     password_hash = Column(String, nullable=True)
     age = Column(Integer,nullable=False)
 
-    role = relationship("Role", back_populates="users")
     role_id = Column(Integer, ForeignKey("roles.id"), nullable=False)
-    
+    role = relationship("Role", back_populates="users")
+
+    supervised_forests = relationship("Forest", back_populates="supervisor")
+    parcelle = relationship("Parcelle", back_populates="agent", uselist=False)
+
     is_verified = Column(Boolean, default=False, nullable=False)
     is_blocked = Column(Boolean, default=False, nullable=False)
     activation_token = Column(String, unique=True, index=True, nullable=True)
 
-    class config:
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+    class Config:
         orm_mode = True
