@@ -6,6 +6,7 @@ from schemas.parcelle_schema import ParcelleCreate, Coordinates
 from shapely.geometry import Polygon
 from geoalchemy2.shape import from_shape, to_shape
 from typing import List
+from sqlalchemy import func
 
 def create_parcelle(db: Session, parcelle_in: ParcelleCreate) -> Parcelle:
     coords = [(p.lng, p.lat) for p in parcelle_in.boundary]
@@ -16,6 +17,9 @@ def create_parcelle(db: Session, parcelle_in: ParcelleCreate) -> Parcelle:
     outside_forest_id = find_forest_for_parcelle(db, geom)
     if not outside_forest_id:
         raise ValueError("Parcelle boundary must be within an existing forest")
+    
+    if parcell_overlap(db, geom):
+        raise ValueError("Parcelle boundary overlaps with an existing parcelle")
 
     parcelle = Parcelle(
         name=parcelle_in.name,
@@ -55,3 +59,11 @@ def find_forest_for_parcelle(db: Session, parcelle_boundary_geom) -> int | None:
         if forest_polygon.contains(parcel_polygon):
             return forest.id
     return None
+
+def parcell_overlap(db: Session, polygon):
+    existing = db.query(Parcelle).filter(
+        func.ST_Overlaps(Parcelle.boundary, polygon) |
+        func.ST_Within(polygon , Parcelle.boundary) |
+        func.ST_Equals(Parcelle.boundary, polygon)
+    ).first()
+    return existing is not None

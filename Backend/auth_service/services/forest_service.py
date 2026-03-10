@@ -7,12 +7,16 @@ from typing import List
 from shapely.ops import transform
 from shapely.geometry import Polygon
 import pyproj
+from sqlalchemy import func
 
 def create_forest(db: Session, forest_in: ForestCreate) -> Forest:
     coords = [(p.lng, p.lat) for p in forest_in.boundary]
     if coords[0] != coords[-1]:
         coords.append(coords[0])
     geom = from_shape(Polygon(coords), srid=4326)
+
+    if forest_overlap(db, geom):
+        raise ValueError("Forest boundary overlaps with an existing forest")
 
     forest = Forest(
         name=forest_in.name,
@@ -54,3 +58,11 @@ def calculate_area_hectares(boundary_geom) -> float:
     area_sqm = polygon_m.area
     area_hectares = area_sqm / 10000
     return area_hectares
+
+def forest_overlap(db: Session,  polygon):
+    existing = db.query(Forest).filter(
+        func.ST_Overlaps(Forest.boundary, polygon) |
+        func.ST_Within(polygon, Forest.boundary) |
+        func.ST_Equals(Forest.boundary, polygon)
+    ).first()
+    return existing is not None
