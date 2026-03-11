@@ -135,15 +135,7 @@ class _WelcomeState extends State<Welcome> {
       appBar: AppBar(
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text("Welcome"),
-            ElevatedButton(
-              onPressed: () async {
-                context.push('/admin_dashboard');
-              },
-              child: Text("Admin Dashboard"),
-            ),
-          ],
+          children: [Text("Welcome")],
         ),
       ),
       body: SingleChildScrollView(

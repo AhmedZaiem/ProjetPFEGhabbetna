@@ -2,6 +2,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routes.auth import router as auth_router
 from routes.incidentUpload import router as incident_router
+from routes.forest import router as forest_router
+from routes.parcelle import router as parcelle_router
 
 app = FastAPI(title="Gateway API")
 
@@ -15,4 +17,6 @@ app.add_middleware(
 
 app.include_router(auth_router, prefix="/auth")
 app.include_router(incident_router, prefix="/incidents")
+app.include_router(forest_router, prefix="/forest")
+app.include_router(parcelle_router, prefix="/parcelles")
 

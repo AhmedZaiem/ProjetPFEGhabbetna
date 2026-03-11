@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import '../../../config.dart' as config;
 
 class login extends StatefulWidget {
@@ -21,7 +22,7 @@ class _LoginState extends State<login> {
   final storage = FlutterSecureStorage();
   final String baseUrl = config.baseUrl;
 
-  void LoginUser() async {
+  void loginUser() async {
     try {
       var url = Uri.parse("$baseUrl/auth/login");
       var response = await http.post(
@@ -37,9 +38,18 @@ class _LoginState extends State<login> {
         final data = jsonDecode(response.body) as Map<String, dynamic>?;
 
         final accessToken = data?['access_token'] as String?;
+
         if (accessToken != null && accessToken.isNotEmpty) {
+          Map<String, dynamic> decoded = JwtDecoder.decode(accessToken);
+          int roleId = decoded['role_id'];
           await storage.write(key: "access_token", value: accessToken);
-          context.replace('/welcome');
+          if (roleId == 1) {
+            context.replace("/admin_dashboard");
+          } else if (roleId == 2) {
+            context.replace("/supervisor_home");
+          } else {
+            context.replace("/welcome");
+          }
         } else {
           final message = data?['message'] ?? "Login failed. Please try again.";
           showDialog(
@@ -145,7 +155,7 @@ class _LoginState extends State<login> {
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    LoginUser();
+                    loginUser();
                   }
                 },
                 child: const Text('Login'),
