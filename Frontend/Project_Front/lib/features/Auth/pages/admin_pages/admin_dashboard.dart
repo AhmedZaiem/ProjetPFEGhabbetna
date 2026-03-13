@@ -1,4 +1,4 @@
-import 'package:authproject/features/Auth/pages/admin_pages/add_forest.dart';
+import 'package:authproject/features/Auth/pages/admin_pages/add_polygon.dart';
 import 'package:authproject/features/Auth/pages/admin_pages/add_role.dart';
 import 'package:authproject/features/Auth/pages/admin_pages/create_user.dart';
 import 'package:authproject/features/Auth/pages/admin_pages/forest_list.dart';
@@ -20,7 +20,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
     UserList(),
     const ForestList(),
     const Create_User(),
-    const AddForest(),
+    const AddPolygonPage(),
     const AddRole(),
   ];
 
