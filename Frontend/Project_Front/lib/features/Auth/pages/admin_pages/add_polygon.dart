@@ -24,6 +24,8 @@ class _AddPolygonPageState extends State<AddPolygonPage> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
 
+  final MapController mapController = MapController();
+
   final List<LatLng> points = [];
 
   final ForestService forestService = ForestService();
@@ -171,6 +173,8 @@ class _AddPolygonPageState extends State<AddPolygonPage> {
                   ),
                 ),
 
+                SizedBox(height: 20),
+
                 TextField(
                   controller: descriptionController,
                   decoration: const InputDecoration(labelText: "Description"),
@@ -182,75 +186,130 @@ class _AddPolygonPageState extends State<AddPolygonPage> {
           const SizedBox(height: 10),
 
           Expanded(
-            child: FlutterMap(
-              options: MapOptions(
-                initialCenter: LatLng(36.8, 10.18),
-                initialZoom: 13,
-
-                onTap: (tapPosition, point) {
-                  addPoint(point);
-                },
-              ),
-              children: [
-                TileLayer(
-                  urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+            child: Center(
+              child: Container(
+                margin: const EdgeInsets.symmetric(
+                  horizontal: 40,
+                  vertical: 20,
                 ),
-
-                if (points.length >= 3)
-                  PolygonLayer(
-                    polygons: [
-                      Polygon(
-                        points: points,
-                        color: mode == PolygonMode.forest
-                            ? Colors.green.withOpacity(0.4)
-                            : Colors.orange.withOpacity(0.4),
-                        borderColor: mode == PolygonMode.forest
-                            ? Colors.green
-                            : Colors.orange,
-                        borderStrokeWidth: 3,
+                constraints: const BoxConstraints(maxWidth: 1000),
+                clipBehavior: Clip.hardEdge,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Stack(
+                  children: [
+                    FlutterMap(
+                      mapController: mapController,
+                      options: MapOptions(
+                        initialCenter: LatLng(36.8, 10.18),
+                        initialZoom: 13,
+                        onTap: (tapPosition, point) {
+                          addPoint(point);
+                        },
                       ),
-                    ],
-                  ),
+                      children: [
+                        TileLayer(
+                          urlTemplate:
+                              "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                        ),
 
-                MarkerLayer(
-                  markers: points.map((p) {
-                    return Marker(
-                      point: p,
-                      width: 30,
-                      height: 30,
-                      child: const Icon(Icons.location_on, color: Colors.red),
-                    );
-                  }).toList(),
-                ),
+                        if (points.length >= 3)
+                          PolygonLayer(
+                            polygons: [
+                              Polygon(
+                                points: points,
+                                color: mode == PolygonMode.forest
+                                    ? Colors.green.withOpacity(0.4)
+                                    : Colors.orange.withOpacity(0.4),
+                                borderColor: mode == PolygonMode.forest
+                                    ? Colors.green
+                                    : Colors.orange,
+                                borderStrokeWidth: 3,
+                              ),
+                            ],
+                          ),
 
-                PolygonLayer(
-                  polygons: forests.map((forest) {
-                    return Polygon(
-                      points: forest.boundary
-                          .map((c) => LatLng(c.lat, c.lng))
-                          .toList(),
-                      color: Colors.green.withOpacity(0.2),
-                      borderColor: Colors.green,
-                      borderStrokeWidth: 2,
-                    );
-                  }).toList(),
-                ),
+                        MarkerLayer(
+                          markers: points.map((p) {
+                            return Marker(
+                              point: p,
+                              width: 30,
+                              height: 30,
+                              child: const Icon(
+                                Icons.location_on,
+                                color: Colors.red,
+                              ),
+                            );
+                          }).toList(),
+                        ),
 
-                PolygonLayer(
-                  polygons: parcels.map((parcel) {
-                    return Polygon(
-                      points: parcel.boundary
-                          .map((c) => LatLng(c.lat, c.lng))
-                          .toList(),
-                      color: Colors.orange.withOpacity(0.3),
-                      borderColor: Colors.orange,
-                      borderStrokeWidth: 2,
-                    );
-                  }).toList(),
+                        PolygonLayer(
+                          polygons: forests.map((forest) {
+                            return Polygon(
+                              points: forest.boundary
+                                  .map((c) => LatLng(c.lat, c.lng))
+                                  .toList(),
+                              color: Colors.green.withOpacity(0.2),
+                              borderColor: Colors.green,
+                              borderStrokeWidth: 2,
+                            );
+                          }).toList(),
+                        ),
+
+                        PolygonLayer(
+                          polygons: parcels.map((parcel) {
+                            return Polygon(
+                              points: parcel.boundary
+                                  .map((c) => LatLng(c.lat, c.lng))
+                                  .toList(),
+                              color: Colors.orange.withOpacity(0.3),
+                              borderColor: Colors.orange,
+                              borderStrokeWidth: 2,
+                            );
+                          }).toList(),
+                        ),
+                      ],
+                    ),
+
+                    Positioned(
+                      right: 15,
+                      bottom: 20,
+                      child: Column(
+                        children: [
+                          FloatingActionButton(
+                            heroTag: "zoomIn",
+                            mini: true,
+                            onPressed: () {
+                              mapController.move(
+                                mapController.camera.center,
+                                mapController.camera.zoom + 1,
+                              );
+                            },
+                            child: const Icon(Icons.add),
+                          ),
+                          const SizedBox(height: 10),
+                          FloatingActionButton(
+                            heroTag: "zoomOut",
+                            mini: true,
+                            onPressed: () {
+                              mapController.move(
+                                mapController.camera.center,
+                                mapController.camera.zoom - 1,
+                              );
+                            },
+                            child: const Icon(Icons.remove),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
+
+          SizedBox(height: 5),
 
           Padding(
             padding: const EdgeInsets.all(10),
