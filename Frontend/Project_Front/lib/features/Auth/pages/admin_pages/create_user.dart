@@ -197,7 +197,7 @@ class _CreateUserState extends State<Create_User> {
                 },
               ),
 
-              SizedBox(height: 40),
+              SizedBox(height: 20),
 
               FutureBuilder<List<RoleModel>>(
                 future: _rolesFuture,
