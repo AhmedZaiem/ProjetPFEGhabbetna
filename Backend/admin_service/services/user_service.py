@@ -32,59 +32,18 @@ def get_current_user(
 def get_user_by_email(db: Session, email: str):
     return db.query(User).filter(User.email == email).first()
     
-def create_user(db:Session,username:str, email: str,role_name: str, age: int,activation_token: str):
+def create_user(db:Session,username:str, email: str,role_name: str, age: int):
     role = db.query(Role).filter(Role.name == role_name).first()
     if not role:
         raise HTTPException(status_code=400, detail="Invalid role")
-    new_user = User(username=username, email=email,role_id=role.id, age=age,activation_token=activation_token)
+    new_user = User(username=username, email=email,role_id=role.id, age=age)
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
     return new_user
 
-async def send_activation_email(email: str, token:str):
-    web_activation_link = f"{os.getenv('FRONTEND_URL')}/activate?token={token}"
-    message = MessageSchema(
-        subject="Activate your account",
-        recipients=[email],
-        body=f"""
-        <html>
-        <body>
-            <p>Hello,</p>
-            <p>Please activate your account by clicking the link below:</p>
 
-            <p>Web (clickable in all clients): 
-                <a href="{web_activation_link}">{web_activation_link}</a>
-            </p>
 
-        </body>
-        </html>
-        """,
-        subtype="html"
-    )
-    await fastMail.send_message(message)
-
-async def send_password_reset_email(email: str, token:str):
-    web_reset_link = f"{os.getenv('FRONTEND_URL')}/reset-password?token={token}"
-    message = MessageSchema(
-        subject="Reset your password",
-        recipients=[email],
-        body=f"""
-        <html>
-        <body>
-            <p>Hello,</p>
-            <p>You can reset your password by clicking the link below:</p>
-
-            <p>Web (clickable in all clients): 
-                <a href="{web_reset_link}">{web_reset_link}</a>
-            </p>
-
-        </body>
-        </html>
-        """,
-        subtype="html"
-    )
-    await fastMail.send_message(message)
 
 
 def get_all_users(db: Session):

@@ -10,5 +10,5 @@ class Role(Base):
 
     users = relationship("User", back_populates="role")
 
-    class config:
+    class Config:
         orm_mode = True

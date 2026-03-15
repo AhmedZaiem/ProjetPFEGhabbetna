@@ -5,7 +5,7 @@ import json
 
 router = APIRouter()
 
-Auth_SERVICE_URL = "http://localhost:8001"
+Auth_SERVICE_URL = "http://localhost:8002"
 
 @router.post("/")
 async def create_parcelle(request: Request):

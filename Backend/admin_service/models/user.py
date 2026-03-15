@@ -20,7 +20,6 @@ class User(Base):
 
     is_verified = Column(Boolean, default=False, nullable=False)
     is_blocked = Column(Boolean, default=False, nullable=False)
-    activation_token = Column(String, unique=True, index=True, nullable=True)
 
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 

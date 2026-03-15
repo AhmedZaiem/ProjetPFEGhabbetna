@@ -1,4 +1,5 @@
 from fastapi_mail import FastMail, MessageSchema, ConnectionConfig
+from pydantic  import EmailStr
 import os
 from dotenv import load_dotenv
 

@@ -6,20 +6,6 @@ class UserCreate(BaseModel):
     age: int
     role_name: str
 
-class UserLogin(BaseModel):
-    email: EmailStr
-    password: str = Field(min_length=8)
-
-class UserActivate(BaseModel):
-    token: str
-    password: str = Field(min_length=8)
-
-class PasswordResetRequest(BaseModel):
-    email: EmailStr
-
-class PasswordReset(BaseModel):
-    token: str
-    new_password: str = Field(min_length=8)
 
 class UserOut(BaseModel):
     id: int

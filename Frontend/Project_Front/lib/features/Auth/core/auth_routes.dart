@@ -22,7 +22,7 @@ final authRouter = GoRouter(
       path: '/activate',
       builder: (context, state) {
         final token = state.uri.queryParameters['token'] ?? '';
-        if (token == null || token.isEmpty) {
+        if (token.isEmpty) {
           return const Scaffold(
             body: Center(child: Text("Invalid activation link")),
           );
