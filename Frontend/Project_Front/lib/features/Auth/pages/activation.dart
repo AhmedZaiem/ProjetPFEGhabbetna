@@ -128,7 +128,7 @@ class _ActivationState extends State<Activation> {
                     ActiviateAccount();
                   }
                 },
-                child: const Text('Activiate'),
+                child: const Text('Activate'),
               ),
             ],
           ),

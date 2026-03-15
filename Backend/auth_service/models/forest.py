@@ -22,7 +22,7 @@ class Forest(Base):
     supervisor_id = Column(Integer, ForeignKey("users.id"), nullable=True, default=None)
     supervisor = relationship("User", back_populates="supervised_forests", foreign_keys=[supervisor_id])
 
-    parcelles = relationship("Parcelle", back_populates="forest")
+    parcelles = relationship("Parcelle", back_populates="forest", cascade="all, delete")
 
     class Config:
         orm_mode = True
