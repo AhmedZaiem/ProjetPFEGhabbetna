@@ -3,7 +3,6 @@ import 'coordinates.dart';
 class Parcel {
   final int id;
   final String name;
-  final String? description;
   final double areaHectares;
   final int forestId;
   final List<Coordinates> boundary;
@@ -11,7 +10,6 @@ class Parcel {
   Parcel({
     required this.id,
     required this.name,
-    this.description,
     required this.areaHectares,
     required this.forestId,
     required this.boundary,
@@ -21,7 +19,6 @@ class Parcel {
     return Parcel(
       id: json["id"],
       name: json["name"],
-      description: json["description"],
       areaHectares: json["area_hectares"],
       forestId: json["forest_id"],
       boundary: (json["boundary"] as List)
@@ -33,15 +30,13 @@ class Parcel {
 
 class ParcelCreate {
   final String name;
-  final String? description;
   final List<Coordinates> boundary;
 
-  ParcelCreate({required this.name, this.description, required this.boundary});
+  ParcelCreate({required this.name, required this.boundary});
 
   Map<String, dynamic> toJson() {
     return {
       "name": name,
-      "description": description,
       "boundary": boundary.map((c) => c.toJson()).toList(),
     };
   }

@@ -97,11 +97,7 @@ class _AddPolygonPageState extends State<AddPolygonPage> {
         );
       } else {
         await parcelService.createParcel(
-          ParcelCreate(
-            name: nameController.text,
-            description: descriptionController.text,
-            boundary: coords,
-          ),
+          ParcelCreate(name: nameController.text, boundary: coords),
         );
       }
 
@@ -175,10 +171,11 @@ class _AddPolygonPageState extends State<AddPolygonPage> {
 
                 SizedBox(height: 20),
 
-                TextField(
-                  controller: descriptionController,
-                  decoration: const InputDecoration(labelText: "Description"),
-                ),
+                if (mode == PolygonMode.forest)
+                  TextField(
+                    controller: descriptionController,
+                    decoration: const InputDecoration(labelText: "Description"),
+                  ),
               ],
             ),
           ),

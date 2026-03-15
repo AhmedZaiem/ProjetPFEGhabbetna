@@ -41,6 +41,23 @@ class _ForestListState extends State<ForestList> {
     }
   }
 
+  Future<void> deleteParcel(int id) async {
+    try {
+      await parcelService.deleteParcel(id);
+      await loadData();
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Parcel deleted")));
+
+      Navigator.pop(context);
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Error: $e")));
+    }
+  }
+
   void showParcels(Forest forest) {
     final relatedParcels = parcels
         .where((p) => p.forestId == forest.id)
@@ -62,7 +79,11 @@ class _ForestListState extends State<ForestList> {
                     return ListTile(
                       title: Text(parcel.name),
                       subtitle: Text(
-                        "Area: ${parcel.areaHectares} ha\n${parcel.description ?? ""}",
+                        "Area: ${parcel.areaHectares} ha",
+                      ),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.red),
+                        onPressed: () => deleteParcel(parcel.id),
                       ),
                     );
                   },
