@@ -65,3 +65,18 @@ async def delete_parcelle(parcelle_id: int, request: Request):
         status_code=response.status_code,
         media_type="application/json"
     )
+
+@router.post("/{parcelle_id}/assign-agent/{user_id}")
+async def assign_supervisor(request: Request,parcelle_id:int,user_id:int):
+    headers = {}
+
+    auth = request.headers.get("Authorization")
+    if auth:
+        headers["Authorization"] = auth
+    async with httpx.AsyncClient() as client:
+        response = await client.post(f"{Auth_SERVICE_URL}/parcelles/{parcelle_id}/assign-agent/{user_id}")
+    return Response(
+        content=response.content,
+        status_code=response.status_code,
+        media_type="application/json"
+    )

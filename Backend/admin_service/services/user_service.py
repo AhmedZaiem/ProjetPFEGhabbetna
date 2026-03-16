@@ -122,12 +122,11 @@ def modify_role(db: Session, old_name: str, new_name: str):
     return role_selected
 
 def get_non_assigned_agents(db: Session):
-    assigned_agents = db.query(Parcelle.agent_id)
+    assigned_agents = db.query(Parcelle.agent_id).filter(Parcelle.agent_id != None)
 
     agents = (
         db.query(User)
         .join(Role)
-        .filter(User.is_verified == True)
         .filter(Role.name == "Agent")
         .filter(User.id.notin_(assigned_agents))
         .all()

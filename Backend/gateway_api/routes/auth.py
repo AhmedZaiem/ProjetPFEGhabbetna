@@ -208,3 +208,21 @@ async def modify_role(request: Request):
         media_type="application/json"
     )
 
+@router.get("agents/unassigned")
+async def get_unassigned_agents(request: Request):
+    headers = {}
+    auth = request.headers.get("Authorization")
+    if auth:
+        headers["Authorization"] = auth
+
+    async with httpx.AsyncClient() as client:
+        response = await client.get(
+            f"{Admin_SERVICE_URL}/users/agents/unassigned",
+            headers=headers
+        )
+
+    return Response(
+        content=response.content,
+        status_code=response.status_code,
+        media_type="application/json"
+    )
