@@ -66,3 +66,8 @@ def forest_overlap(db: Session,  polygon):
         func.ST_Equals(Forest.boundary, polygon)
     ).first()
     return existing is not None
+
+def assign_supervisor(db: Session, supervisor_id:int,forest: Forest):
+    forest.supervisor_id = supervisor_id
+    db.commit()    
+    return True

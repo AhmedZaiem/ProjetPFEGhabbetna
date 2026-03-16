@@ -199,7 +199,7 @@ class _AddPolygonPageState extends State<AddPolygonPage> {
                     FlutterMap(
                       mapController: mapController,
                       options: MapOptions(
-                        initialCenter: LatLng(36.8, 10.18),
+                        initialCenter: LatLng(37.2, 10.12),
                         initialZoom: 13,
                         onTap: (tapPosition, point) {
                           addPoint(point);

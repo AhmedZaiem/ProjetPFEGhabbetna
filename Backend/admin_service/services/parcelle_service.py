@@ -67,3 +67,8 @@ def parcell_overlap(db: Session, polygon):
         func.ST_Equals(Parcelle.boundary, polygon)
     ).first()
     return existing is not None
+
+def assign_agent(db: Session, agent_id:int,parcelle:Parcelle):
+    parcelle.agent_id = agent_id
+    db.commit()    
+    return True

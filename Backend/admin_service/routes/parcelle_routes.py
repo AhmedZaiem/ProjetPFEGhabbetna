@@ -4,9 +4,10 @@ from db.database import get_db
 from schemas.parcelle_schema import ParcelleCreate, ParcelleOut
 from services.parcelle_service import (
     create_parcelle, convert_parcelle_boundary, delete_parcelle,
-    get_all_parcelles, get_parcelle_by_id
+    get_all_parcelles, get_parcelle_by_id,assign_agent
 )
 from services.forest_service import calculate_area_hectares
+from services.user_service import get_user_by_id
 
 router = APIRouter(prefix="/parcelles", tags=["Parcelles"])
 
@@ -53,3 +54,20 @@ def delete_parcelle_route(parcelle_id: int, db: Session = Depends(get_db)):
     if not success:
         raise HTTPException(status_code=404, detail="Parcelle not found")
     return {"message": "Parcelle deleted successfully"}
+
+@router.post("/{parcelle_id}/assign-agent/{user_id}")
+def assign_agent_route(parcelle_id: int,user_id: int ,db: Session = Depends(get_db)):
+    parcelle = get_parcelle_by_id(db,parcelle_id)
+    if not parcelle:
+        raise HTTPException(404, "parcelle not found")
+    
+    user = get_user_by_id(db,user_id)
+    if not user:
+        raise HTTPException(404, "Agent not found")
+    
+    if user.role.name != "Agent":
+        raise HTTPException(400, "User is Not Agent")
+    
+    assign_agent(db,user.id,parcelle)
+
+    return {"message": "Agent assigned"}

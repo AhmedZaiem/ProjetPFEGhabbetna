@@ -2,7 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from db.database import get_db
 from schemas.forest_schema import ForestCreate, ForestOut
-from services.forest_service import create_forest, delete_forest, get_all_forests, get_forest_by_id, convert_forest_boundary
+from services.forest_service import create_forest, delete_forest, get_all_forests, get_forest_by_id, convert_forest_boundary,assign_supervisor
+from services.user_service import get_user_by_id
 
 router = APIRouter(prefix="/forest", tags=["Forest"])
 
@@ -52,3 +53,21 @@ def delete_forest_route(forest_id: int, db: Session = Depends(get_db)):
     if not success:
         raise HTTPException(status_code=404, detail="Forest not found")
     return {"message": "Forest deleted successfully"}
+
+@router.post("/{forest_id}/assign-supervisor/{user_id}")
+def assign_supervisor_route(forest_id: int,user_id: int ,db: Session = Depends(get_db)):
+    forest = get_forest_by_id(db,forest_id)
+    if not forest:
+        raise HTTPException(404, "Forest not found")
+    
+    user = get_user_by_id(db,user_id)
+    if not user:
+        raise HTTPException(404, "Supervisor not found")
+    
+    assign_supervisor(db,user.id,forest)
+
+    if user.role.name != "Superviseur":
+        raise HTTPException(400, "User is Not Supervisor")
+
+    return {"message": "Supervisor assigned"}
+        

@@ -32,6 +32,9 @@ def get_current_user(
 def get_user_by_email(db: Session, email: str):
     return db.query(User).filter(User.email == email).first()
     
+def get_user_by_id(db: Session,user_id: int):
+    return db.query(User).filter(User.id == user_id).first()
+
 def create_user(db:Session,username:str, email: str,role_name: str, age: int):
     role = db.query(Role).filter(Role.name == role_name).first()
     if not role:
@@ -41,10 +44,6 @@ def create_user(db:Session,username:str, email: str,role_name: str, age: int):
     db.commit()
     db.refresh(new_user)
     return new_user
-
-
-
-
 
 def get_all_users(db: Session):
     users = db.query(User).join(Role).filter(Role.name != "Admin").all()
@@ -60,7 +59,6 @@ def get_all_users(db: Session):
         }
         for u in users
     ]
-
 
 def block_user(db: Session, user_id: int):
     user = db.query(User).filter(User.id == user_id).first()
