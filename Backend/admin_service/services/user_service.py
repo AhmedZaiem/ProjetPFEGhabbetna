@@ -1,6 +1,7 @@
 from db.database import get_db
 from models.user import User
 from models.role import Role
+from models.parcelle import Parcelle
 from sqlalchemy.orm import Session
 from core.security import decode_access_token
 from fastapi import HTTPException, Depends
@@ -119,3 +120,28 @@ def modify_role(db: Session, old_name: str, new_name: str):
     db.refresh(role_selected)
 
     return role_selected
+
+def get_non_assigned_agents(db: Session):
+    assigned_agents = db.query(Parcelle.agent_id)
+
+    agents = (
+        db.query(User)
+        .join(Role)
+        .filter(User.is_verified == True)
+        .filter(Role.name == "Agent")
+        .filter(User.id.notin_(assigned_agents))
+        .all()
+    )
+
+    return [
+        {
+            "id": a.id,
+            "username": a.username,
+            "email": a.email,
+            "age": a.age,
+            "role_name": a.role.name,
+            "is_verified": a.is_verified,
+            "is_blocked": a.is_blocked
+        }
+        for a in agents
+    ]

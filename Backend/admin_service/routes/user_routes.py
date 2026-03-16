@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from db.database import get_db
 from schemas.userSchema import UserOut
 from schemas.role_schema import RoleCreate , RoleDelete , RoleModify
-from services.user_service import get_user_by_email, create_user,get_current_user,get_all_users,block_user,unblock_user,create_role,get_roles,delete_role,modify_role
+from services.user_service import get_user_by_email, create_user,get_current_user,get_all_users,block_user,unblock_user,create_role,get_roles,delete_role,modify_role,get_non_assigned_agents
 from core.security import hash_password, verify_password,create_access_token
 
 router = APIRouter(prefix="/users", tags=["User"])
@@ -62,3 +62,8 @@ def modify_role_route(role: RoleModify, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="New role name already exists")
 
     return {"message": "Role updated successfully", "role": result.name}
+
+@router.get("/agents/unassigned")
+def get_free_agents(db: Session = Depends(get_db)):
+    agents = get_non_assigned_agents(db)
+    return agents
