@@ -6,9 +6,7 @@ from sqlalchemy.orm import Session
 from core.security import decode_access_token
 from fastapi import HTTPException, Depends
 from fastapi.security import OAuth2PasswordBearer,HTTPBearer
-from fastapi_mail import MessageSchema
-from core.email import fastMail
-import os
+
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 

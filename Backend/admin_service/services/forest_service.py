@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from models.forest import Forest
-from schemas.forest_schema import ForestCreate, ForestOut, Coordinates
+from schemas.forest_schema import ForestCreate, Coordinates
 from shapely.geometry import Polygon
 from geoalchemy2.shape import from_shape,to_shape
 from typing import List

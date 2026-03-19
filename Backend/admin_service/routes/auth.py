@@ -1,14 +1,11 @@
 from models.user import User 
 from fastapi import APIRouter, HTTPException, Depends
-from schemas.userSchema import UserCreate, UserOut
-from schemas.role_schema import RoleCreate , RoleDelete , RoleModify
-from services.user_service import get_user_by_email, create_user,get_current_user,get_all_users,block_user,unblock_user,create_role,get_roles,delete_role,modify_role
-from core.security import hash_password, verify_password,create_access_token
+from schemas.userSchema import UserCreate
+from services.user_service import get_user_by_email, create_user,get_current_user
+from core.security import hash_password
 
 from sqlalchemy.orm import Session
 from db.database import get_db
-import uuid
-#from services.user_producer import publish_user_event
 
 import httpx
 

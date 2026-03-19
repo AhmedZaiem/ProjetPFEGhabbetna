@@ -1,16 +1,14 @@
 from fastapi import APIRouter, HTTPException
 from schemas.auth_schemas import LoginRequest, ActivationRequest, PasswordResetRequest, PasswordReset, ActivateAccountRequest
-from core.security import verify_password, create_access_token
+from core.security import verify_password, create_access_token, create_refresh_token,decode_token
 from services.email_service import send_activation_email, send_password_reset_email
 
 import httpx
 import uuid
+import jwt
 from core.redis_client import redis_client
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
-
-# Initialize Redis client
-
 
 ADMIN_SERVICE_URL = "http://localhost:8002"
 
@@ -37,7 +35,7 @@ async def login(data: LoginRequest):
     if user["is_blocked"]:
         raise HTTPException(status_code=403, detail="Account blocked")
 
-    token = create_access_token(
+    access_token = create_access_token(
         data={
             "user_id": user["id"],
             "sub": user["email"],
@@ -45,10 +43,76 @@ async def login(data: LoginRequest):
         }
     )
 
+    session_id = str(uuid.uuid4())
+
+    refresh_token = create_refresh_token(
+        data={
+            "user_id":user["id"],
+            "sub": user["email"],
+            "role_id":user["role_id"],
+            "sid": session_id
+        }
+    )
+
+    redis_client.setex(f"refresh:{user['id']}:{session_id}",7*24*3600,refresh_token)
+
     return {
-        "access_token": token,
+        "access_token": access_token,
+        "refresh_token": refresh_token,
         "token_type": "bearer"
     }
+
+@router.post("/refresh")
+async def refresh_token(refresh_token: str):
+    try:
+        payload = decode_token(refresh_token)
+
+        user_id = payload.get("user_id")
+        session_id = payload.get("sid")
+
+        if not user_id or not session_id:
+            raise HTTPException(status_code=401, detail="Invalid token")
+        
+        stored_token = redis_client.get(f"refresh:{user_id}:{session_id}")
+
+        if stored_token is None:
+            raise HTTPException(status_code=401, detail="Session expired")
+        
+        if stored_token.decode() != refresh_token:
+            raise HTTPException(status_code=401, detail="Token mismatch")
+        
+        new_access_token = create_access_token(
+            data={
+                "user_id": user_id,
+                "sub": payload.get("sub"),
+                "role_id": payload.get("role_id")
+            }
+        )
+
+        new_refresh_token = create_refresh_token(
+            data={
+                "user_id": user_id,
+                "sub": payload.get("sub"),
+                "role_id": payload.get("role_id"),
+                "sid": session_id
+            }
+        )
+
+        redis_client.setex(
+            f"refresh:{user_id}:{session_id}",
+            7 * 24 * 3600,
+            new_refresh_token
+        )
+
+        return {
+            "access_token": new_access_token,
+            "refresh_token": new_refresh_token
+        }
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Refresh token expired")
+
+    except jwt.InvalidTokenError:
+        raise HTTPException(status_code=401, detail="Invalid token")
 
 
 @router.post("/send-activation")
