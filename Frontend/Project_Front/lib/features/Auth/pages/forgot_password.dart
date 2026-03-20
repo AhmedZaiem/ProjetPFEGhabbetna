@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../../../config.dart' as config;
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:authproject/features/Auth/services/auth_service.dart';
 
 class ForgetPassword extends StatefulWidget {
   const ForgetPassword({super.key});
@@ -17,68 +18,32 @@ class _ForgetPasswordState extends State<ForgetPassword> {
   final _formKey = GlobalKey<FormState>();
 
   final String baseUrl = config.baseUrl;
+  final AuthService authService = AuthService();
 
-  void ForgetPassword() async {
-    if (emailController.text.isEmpty) {
-      // Quick validation
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text("Error"),
-          content: Text("Please enter your email."),
-          actions: [
-            TextButton(onPressed: () => context.pop(), child: Text("OK")),
-          ],
-        ),
-      );
-      return;
-    }
-
-    var url = Uri.parse("$baseUrl/auth/forgot-password");
-    var response = await http.post(
-      url,
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode({'email': emailController.text}),
+  void sendResetEmail() async {
+    final result = await authService.forgetPassword(
+      email: emailController.text.trim(),
     );
+    _showDialog(result['success'] ? "Success" : "Error", result['message']);
+  }
 
-    if (response.statusCode == 200) {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text("Success"),
-            content: Text("Password reset email sent successfully."),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  context.pop();
-                  context.replace('/');
-                },
-                child: Text("OK"),
-              ),
-            ],
-          );
-        },
-      );
-    } else {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text("Error"),
-            content: Text("Forget Password Failed! Please check your email."),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  context.pop();
-                },
-                child: Text("OK"),
-              ),
-            ],
-          );
-        },
-      );
-    }
+  void _showDialog(String title, String message) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text(title),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () {
+              context.pop();
+              if (title == "Success") context.replace('/');
+            },
+            child: Text("OK"),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -118,7 +83,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    ForgetPassword();
+                    sendResetEmail();
                   }
                 },
                 child: const Text("Send Email"),

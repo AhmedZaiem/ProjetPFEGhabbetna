@@ -1,6 +1,6 @@
 import 'package:authproject/config.dart' as config;
-import 'package:authproject/features/Auth/models/user_model.dart';
-import 'package:authproject/features/Auth/models/role_model.dart';
+import 'package:authproject/features/Admin/models/user_model.dart';
+import 'package:authproject/features/Admin/models/role_model.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -21,6 +21,45 @@ class UserService {
     } catch (e) {
       print("Error fetching users: $e");
       throw Exception("Error fetching users");
+    }
+  }
+
+  Future<Map<String, dynamic>> createUser({
+    required String username,
+    required String email,
+    required int age,
+    required String roleName,
+  }) async {
+    try {
+      var url = Uri.parse("$baseUrl/auth/register");
+      var response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          'username': username,
+          'email': email,
+          'age': age,
+          'role_name': roleName,
+        }),
+      );
+
+      final data = jsonDecode(response.body);
+      final message =
+          (data['message'] as String?) ??
+          "Registration failed. Please check your input.";
+
+      final bool success;
+      if (data.containsKey('success')) {
+        success = data['success'] == true;
+      } else {
+        success =
+            message.toLowerCase().contains("created") ||
+            message.toLowerCase().contains("success");
+      }
+
+      return {"success": success, "message": message};
+    } catch (e) {
+      return {"success": false, "message": "An error occurred: $e"};
     }
   }
 
@@ -113,18 +152,18 @@ class UserService {
     }
   }
 
- Future<void> deleteRole(String name) async {
-  final url = Uri.parse("$baseUrl/auth/delete-role?name=$name");
-  final response = await http.delete(url);
+  Future<void> deleteRole(String name) async {
+    final url = Uri.parse("$baseUrl/auth/delete-role?name=$name");
+    final response = await http.delete(url);
 
-  if (response.statusCode != 200) {
-    throw Exception(
-      "Failed to delete role: ${response.statusCode} - ${response.body}"
-    );
-  } else {
-    print("Role deleted successfully");
+    if (response.statusCode != 200) {
+      throw Exception(
+        "Failed to delete role: ${response.statusCode} - ${response.body}",
+      );
+    } else {
+      print("Role deleted successfully");
+    }
   }
-}
 
   Future<void> modifyRole(String oldName, String newName) async {
     try {

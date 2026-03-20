@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import '../../../config.dart' as config;
+import 'package:authproject/features/Auth/services/auth_service.dart';
 
 class login extends StatefulWidget {
   const login({super.key});
@@ -21,87 +22,42 @@ class _LoginState extends State<login> {
 
   final storage = FlutterSecureStorage();
   final String baseUrl = config.baseUrl;
+  final AuthService authService = AuthService();
 
   void loginUser() async {
-    try {
-      var url = Uri.parse("$baseUrl/auth/login");
-      var response = await http.post(
-        url,
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode({
-          'email': emailController.text.trim(),
-          'password': passwordController.text.trim(),
-        }),
-      );
+    final result = await authService.login(
+      email: emailController.text.trim(),
+      password: passwordController.text.trim(),
+    );
 
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body) as Map<String, dynamic>?;
+    if (result['success']) {
+      final accessToken = result['data']['access_token'];
+      final decoded = JwtDecoder.decode(accessToken);
+      int roleId = decoded['role_id'];
 
-        final accessToken = data?['access_token'] as String?;
-
-        if (accessToken != null && accessToken.isNotEmpty) {
-          Map<String, dynamic> decoded = JwtDecoder.decode(accessToken);
-          int roleId = decoded['role_id'];
-          await storage.write(key: "access_token", value: accessToken);
-          if (roleId == 1) {
-            context.replace("/admin_dashboard");
-          } else if (roleId == 2) {
-            context.replace("/supervisor_home");
-          } else {
-            context.replace("/welcome");
-          }
-        } else {
-          final message = data?['message'] ?? "Login failed. Please try again.";
-          showDialog(
-            context: context,
-            builder: (_) => AlertDialog(
-              title: const Text("Error"),
-              content: Text(message),
-              actions: [
-                TextButton(
-                  onPressed: () => context.pop(),
-                  child: const Text("OK"),
-                ),
-              ],
-            ),
-          );
-        }
+      if (roleId == 1) {
+        context.replace("/admin_dashboard");
+      } else if (roleId == 2) {
+        context.replace("/supervisor_home");
       } else {
-        Map<String, dynamic>? data;
-        try {
-          data = jsonDecode(response.body) as Map<String, dynamic>?;
-        } catch (_) {
-          data = null;
-        }
-        final message =
-            data?['message'] ??
-            "Login failed. Server returned ${response.statusCode}";
-        showDialog(
-          context: context,
-          builder: (_) => AlertDialog(
-            title: const Text("Error"),
-            content: Text(message),
-            actions: [
-              TextButton(
-                onPressed: () => context.pop(),
-                child: const Text("OK"),
-              ),
-            ],
-          ),
-        );
+        context.replace("/welcome");
       }
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (_) => AlertDialog(
-          title: const Text("Error"),
-          content: Text("An error occurred: $e"),
-          actions: [
-            TextButton(onPressed: () => context.pop(), child: const Text("OK")),
-          ],
-        ),
-      );
+    } else {
+      _showDialog("Error", result['message']);
     }
+  }
+
+  void _showDialog(String title, String message) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text(title),
+        content: Text(message),
+        actions: [
+          TextButton(onPressed: () => context.pop(), child: const Text("OK")),
+        ],
+      ),
+    );
   }
 
   @override

@@ -3,11 +3,11 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
 
-import 'package:authproject/features/Auth/models/coordinates.dart';
-import 'package:authproject/features/Auth/models/forest_model.dart';
-import 'package:authproject/features/Auth/models/parcelle_model.dart';
-import 'package:authproject/features/Auth/services/forest_service.dart';
-import 'package:authproject/features/Auth/services/parcelle_service.dart';
+import 'package:authproject/features/Admin/models/coordinates.dart';
+import 'package:authproject/features/Admin/models/forest_model.dart';
+import 'package:authproject/features/Admin/models/parcelle_model.dart';
+import 'package:authproject/features/Admin/services/forest_service.dart';
+import 'package:authproject/features/Admin/services/parcelle_service.dart';
 
 enum PolygonMode { forest, parcel }
 

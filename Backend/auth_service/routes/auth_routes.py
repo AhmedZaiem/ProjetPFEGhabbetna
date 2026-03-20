@@ -114,6 +114,24 @@ async def refresh_token(refresh_token: str):
     except jwt.InvalidTokenError:
         raise HTTPException(status_code=401, detail="Invalid token")
 
+@router.post("/logout")
+async def logout(refresh_token: str):
+    try:
+        payload = decode_token(refresh_token)
+
+        user_id = payload.get("user_id")
+        session_id = payload.get("sid")
+
+        if not user_id or not session_id:
+            raise HTTPException(status_code=400, detail="Invalid token")
+        
+        redis_client.delete(f"refresh:{user_id}:{session_id}")
+
+        return {"message": "Logged out successfully"}
+    
+    except jwt.InvalidTokenError:
+        raise HTTPException(status_code=401, detail="Invalid token")
+
 
 @router.post("/send-activation")
 async def send_activation(data: ActivationRequest):

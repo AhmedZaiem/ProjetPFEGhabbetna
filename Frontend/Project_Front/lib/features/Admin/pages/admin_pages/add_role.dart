@@ -1,5 +1,5 @@
-import 'package:authproject/features/Auth/models/role_model.dart';
-import 'package:authproject/features/Auth/services/user_service.dart';
+import 'package:authproject/features/Admin/models/role_model.dart';
+import 'package:authproject/features/Admin/services/user_service.dart';
 import 'package:flutter/material.dart';
 
 class AddRole extends StatefulWidget {

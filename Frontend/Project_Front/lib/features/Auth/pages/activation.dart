@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import '../../../config.dart' as config;
+import 'package:authproject/features/Auth/services/auth_service.dart';
 
 class Activation extends StatefulWidget {
   final String token;
@@ -18,77 +19,34 @@ class _ActivationState extends State<Activation> {
   final _formKey = GlobalKey<FormState>();
 
   final String baseUrl = config.baseUrl;
+  final AuthService authService = AuthService();
 
-  void ActiviateAccount() async {
-    String password = passwordController.text.trim();
-
-    if (widget.token.isEmpty || password.isEmpty) {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text("Error"),
-            content: Text("Please fill all fields correctly."),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  context.pop();
-                },
-                child: Text("OK"),
-              ),
-            ],
-          );
-        },
-      );
-      return;
-    }
-
-    var url = Uri.parse("$baseUrl/auth/activate");
-    var response = await http.post(
-      url,
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode({'token': widget.token, 'password': password}),
+  void activateAccount() async {
+    final result = await authService.activateAccount(
+      token: widget.token,
+      password: passwordController.text.trim(),
     );
-    if (response.statusCode == 200) {
-      print("User Activated Successful");
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text("Success"),
-            content: Text("Activation Successful! Please login."),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  context.pop();
-                  context.replace('/');
-                },
-                child: Text("OK"),
-              ),
-            ],
-          );
-        },
-      );
-    } else {
-      print("Activation Failed");
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text("Error"),
-            content: Text("Activation Failed! Please try again."),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  context.pop();
-                },
-                child: Text("OK"),
-              ),
-            ],
-          );
-        },
-      );
-    }
+
+    _showDialog(result['success'] ? "Success" : "Error", result['message']);
+  }
+
+  void _showDialog(String title, String message) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text(title),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () {
+              context.pop();
+              if (title == "Success") context.replace('/');
+            },
+            child: Text("OK"),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -125,7 +83,7 @@ class _ActivationState extends State<Activation> {
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    ActiviateAccount();
+                    activateAccount();
                   }
                 },
                 child: const Text('Activate'),

@@ -1,14 +1,14 @@
-import 'package:authproject/features/Auth/core/auth_routes.dart';
+import 'package:authproject/features/Admin/core/admin_routes.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 import 'package:app_links/app_links.dart';
-import 'features/Auth/core/mobile_url_strategy.dart'
-    if (dart.library.html) 'features/Auth/core/web_url_strategy.dart';
+import 'features/Admin/core/mobile_url_strategy.dart'
+    if (dart.library.html) 'features/Admin/core/web_url_strategy.dart';
 
 void main() {
   configureUrlStrategy();
 
-  runApp(MainApp(router: authRouter));
+  runApp(MainApp(router: adminRouter));
 }
 
 class MainApp extends StatefulWidget {
@@ -59,11 +59,9 @@ class _MainAppState extends State<MainApp> {
       debugShowCheckedModeBanner: false,
 
       theme: ThemeData(
-        scaffoldBackgroundColor: const Color(
-          0xFFF2EFEA,
-        ),
+        scaffoldBackgroundColor: const Color(0xFFF2EFEA),
 
-        primaryColor: const Color(0xFF1B5E20), 
+        primaryColor: const Color(0xFF1B5E20),
 
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF1B5E20)),
 

@@ -8,6 +8,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http_parser/http_parser.dart';
 import '../../../config.dart' as config;
+import 'package:authproject/features/Auth/services/auth_service.dart';
 
 class Welcome extends StatefulWidget {
   const Welcome({super.key});
@@ -17,7 +18,7 @@ class Welcome extends StatefulWidget {
 }
 
 class _WelcomeState extends State<Welcome> {
-  Map<String, dynamic>? data;
+  Map<String, dynamic>? userData;
   String? error;
 
   final String baseUrl = config.baseUrl;
@@ -32,43 +33,20 @@ class _WelcomeState extends State<Welcome> {
   final _formKey = GlobalKey<FormState>();
   XFile? _imageFile;
   final ImagePicker _picker = ImagePicker();
+  final AuthService authService = AuthService();
 
   @override
   void initState() {
     super.initState();
-    fetchUserData();
+    loadUser();
   }
 
-  void fetchUserData() async {
-    try {
-      String? token = await storage.read(key: "access_token");
-      if (token == null) {
-        setState(() {
-          error = "No access token found. Please log in.";
-        });
-        return;
-      }
-      var url = Uri.parse("$baseUrl/auth/me");
-      var response = await http.get(
-        url,
-        headers: {
-          "content-type": "application/json",
-          "Authorization": "Bearer $token",
-        },
-      );
-      if (response.statusCode == 200) {
-        setState(() {
-          data = jsonDecode(response.body);
-        });
-      } else {
-        setState(() {
-          error = "Failed to load user data";
-        });
-      }
-    } catch (e) {
-      setState(() {
-        error = e.toString();
-      });
+  void loadUser() async {
+    final result = await authService.getCurrentUser();
+    if (result['success']) {
+      setState(() => userData = result['data']);
+    } else {
+      setState(() => error = result['message']);
     }
   }
 
@@ -129,6 +107,11 @@ class _WelcomeState extends State<Welcome> {
     }
   }
 
+  void logout() async {
+    await authService.logout();
+    context.replace('/');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -141,7 +124,7 @@ class _WelcomeState extends State<Welcome> {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
-          child: data != null
+          child: userData != null
               ? Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -179,11 +162,11 @@ class _WelcomeState extends State<Welcome> {
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Text("Username: ${data!['username']}"),
+                                  Text("Username: ${userData!['username']}"),
                                   SizedBox(height: 8),
-                                  Text("Email: ${data!['email']}"),
+                                  Text("Email: ${userData!['email']}"),
                                   SizedBox(height: 8),
-                                  Text("Age: ${data!['age']}"),
+                                  Text("Age: ${userData!['age']}"),
                                 ],
                               ),
                             ),
@@ -192,10 +175,7 @@ class _WelcomeState extends State<Welcome> {
                           SizedBox(height: 30),
 
                           ElevatedButton(
-                            onPressed: () async {
-                              await storage.delete(key: "access_token");
-                              context.replace('/');
-                            },
+                            onPressed: logout,
                             child: Text("Logout"),
                           ),
                         ],

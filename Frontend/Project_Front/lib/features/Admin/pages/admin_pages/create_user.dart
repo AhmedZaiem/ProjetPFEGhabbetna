@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import '../../../../config.dart' as config;
-import 'package:authproject/features/Auth/models/role_model.dart';
-import 'package:authproject/features/Auth/services/user_service.dart';
+import 'package:authproject/features/Admin/models/role_model.dart';
+import 'package:authproject/features/Admin/services/user_service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
+import 'package:authproject/features/Auth/services/auth_service.dart';
 
 class Create_User extends StatefulWidget {
   const Create_User({super.key});
@@ -29,6 +30,7 @@ class _CreateUserState extends State<Create_User> {
   final String baseUrl = config.baseUrl;
 
   String selectedRole = '';
+  final AuthService authService = AuthService();
 
   @override
   void initState() {
@@ -45,89 +47,36 @@ class _CreateUserState extends State<Create_User> {
         email.isEmpty ||
         age == null ||
         selectedRole.isEmpty) {
-      showDialog(
-        context: context,
-        builder: (_) => AlertDialog(
-          title: const Text("Error"),
-          content: const Text("Please fill all fields correctly."),
-          actions: [
-            TextButton(onPressed: () => context.pop(), child: const Text("OK")),
-          ],
-        ),
-      );
+      _showDialog("Error", "Please fill all fields correctly.");
       return;
     }
 
-    try {
-      var url = Uri.parse("$baseUrl/auth/register");
-      var response = await http.post(
-        url,
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode({
-          'username': username,
-          'email': email,
-          'age': age,
-          'role_name': selectedRole,
-        }),
-      );
+    final result = await userService.createUser(
+      username: username,
+      email: email,
+      age: age,
+      roleName: selectedRole,
+    );
 
-      final data = jsonDecode(response.body);
-      final message =
-          (data['message'] as String?) ??
-          "Registration failed. Please check your input.";
+    _showDialog(result['success'] ? "Success" : "Error", result['message']);
+  }
 
-      final bool success;
-      if (data.containsKey('success')) {
-        success = data['success'] == true;
-      } else {
-        success =
-            message.toLowerCase().contains("created") ||
-            message.toLowerCase().contains("success");
-      }
+  void _showDialog(String title, String message) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text(title),
+        content: Text(message),
+        actions: [
+          TextButton(onPressed: () => context.pop(), child: const Text("OK")),
+        ],
+      ),
+    );
+  }
 
-      if (success) {
-        showDialog(
-          context: context,
-          builder: (_) => AlertDialog(
-            title: const Text("Success"),
-            content: Text(message),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  context.pop();
-                },
-                child: const Text("OK"),
-              ),
-            ],
-          ),
-        );
-      } else {
-        showDialog(
-          context: context,
-          builder: (_) => AlertDialog(
-            title: const Text("Error"),
-            content: Text(message),
-            actions: [
-              TextButton(
-                onPressed: () => context.pop(),
-                child: const Text("OK"),
-              ),
-            ],
-          ),
-        );
-      }
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (_) => AlertDialog(
-          title: const Text("Error"),
-          content: Text("An error occurred: $e"),
-          actions: [
-            TextButton(onPressed: () => context.pop(), child: const Text("OK")),
-          ],
-        ),
-      );
-    }
+  void logout() async {
+    await authService.logout();
+    context.replace('/');
   }
 
   @override
@@ -237,14 +186,8 @@ class _CreateUserState extends State<Create_User> {
               ),
 
               SizedBox(height: 20),
-              
-              ElevatedButton(
-                onPressed: () async {
-                  await storage.delete(key: "access_token");
-                  context.replace('/');
-                },
-                child: Text("Logout"),
-              ),
+
+              ElevatedButton(onPressed: logout, child: Text("Logout")),
             ],
           ),
         ),

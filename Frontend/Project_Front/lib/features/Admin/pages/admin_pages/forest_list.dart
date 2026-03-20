@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:authproject/features/Auth/models/forest_model.dart';
-import 'package:authproject/features/Auth/models/parcelle_model.dart';
-import 'package:authproject/features/Auth/services/forest_service.dart';
-import 'package:authproject/features/Auth/services/parcelle_service.dart';
+import 'package:authproject/features/Admin/models/forest_model.dart';
+import 'package:authproject/features/Admin/models/parcelle_model.dart';
+import 'package:authproject/features/Admin/services/forest_service.dart';
+import 'package:authproject/features/Admin/services/parcelle_service.dart';
 
 class ForestList extends StatefulWidget {
   const ForestList({super.key});
@@ -78,9 +78,7 @@ class _ForestListState extends State<ForestList> {
                     final parcel = relatedParcels[index];
                     return ListTile(
                       title: Text(parcel.name),
-                      subtitle: Text(
-                        "Area: ${parcel.areaHectares} ha",
-                      ),
+                      subtitle: Text("Area: ${parcel.areaHectares} ha"),
                       trailing: IconButton(
                         icon: const Icon(Icons.delete, color: Colors.red),
                         onPressed: () => deleteParcel(parcel.id),

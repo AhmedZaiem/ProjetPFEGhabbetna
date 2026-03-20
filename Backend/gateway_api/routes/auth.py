@@ -23,6 +23,34 @@ async def register(request: Request):
         response = await client.post(f"{Admin_SERVICE_URL}/auth/register", json=body)
     return response.json()
 
+@router.post("/refresh")
+async def refresh(request: Request):
+    body = await request.json()
+
+    async with httpx.AsyncClient() as client:
+        response = await client.post(
+            f"{Auth_SERVICE_URL}/auth/refresh",
+            json=body
+        )
+    return JSONResponse(
+        status_code=response.status_code,
+        content=response.json()
+    )
+
+@router.post("/logout")
+async def logout(request: Request):
+    body = await request.json()
+
+    async with httpx.AsyncClient() as client:
+        response = await client.post(
+            f"{Auth_SERVICE_URL}/auth/logout",
+            json=body
+        )
+    return JSONResponse(
+        status_code=response.status_code,
+        content=response.json()
+    )
+
 @router.post("/activate")
 async def activate(request: Request):
     body = await request.json()
