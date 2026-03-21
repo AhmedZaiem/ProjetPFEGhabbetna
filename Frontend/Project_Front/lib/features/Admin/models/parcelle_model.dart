@@ -6,6 +6,7 @@ class Parcel {
   final double areaHectares;
   final int forestId;
   final List<Coordinates> boundary;
+  final int? agentId;
 
   Parcel({
     required this.id,
@@ -13,6 +14,7 @@ class Parcel {
     required this.areaHectares,
     required this.forestId,
     required this.boundary,
+    this.agentId,
   });
 
   factory Parcel.fromJson(Map<String, dynamic> json) {
@@ -24,6 +26,7 @@ class Parcel {
       boundary: (json["boundary"] as List)
           .map((e) => Coordinates.fromJson(e))
           .toList(),
+      agentId: json["agent_id"],
     );
   }
 }

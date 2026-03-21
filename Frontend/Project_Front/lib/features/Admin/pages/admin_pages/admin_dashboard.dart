@@ -3,6 +3,8 @@ import 'package:authproject/features/Admin/pages/admin_pages/add_role.dart';
 import 'package:authproject/features/Admin/pages/admin_pages/create_user.dart';
 import 'package:authproject/features/Admin/pages/admin_pages/forest_list.dart';
 import 'package:authproject/features/Admin/pages/admin_pages/user_list.dart';
+import 'package:authproject/features/Admin/pages/admin_pages/assign.dart';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -22,6 +24,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
     const Create_User(),
     const AddPolygonPage(),
     const AddRole(),
+    const Assign(),
   ];
 
   @override
@@ -29,14 +32,13 @@ class _AdminDashboardState extends State<AdminDashboard> {
     return Scaffold(
       body: Row(
         children: [
-          // NavigationRail on the left
           NavigationRail(
             selectedIndex: _selectedIndex,
             onDestinationSelected: (index) {
               setState(() {
                 _selectedIndex = index;
               });
-              // Handle navigation / actions
+
               switch (index) {
                 case 0:
                   _selectedIndex = 0;
@@ -53,6 +55,10 @@ class _AdminDashboardState extends State<AdminDashboard> {
                 case 4:
                   _selectedIndex = 4;
                   break;
+                case 5:
+                  _selectedIndex = 5;
+                  break;
+                
               }
             },
             labelType: NavigationRailLabelType.all,
@@ -70,13 +76,14 @@ class _AdminDashboardState extends State<AdminDashboard> {
                 label: Text("Create Users"),
               ),
               NavigationRailDestination(
-                icon: Icon(Icons.add),
+                icon: Icon(Icons.forest_outlined),
                 label: Text("Add Forests"),
               ),
               NavigationRailDestination(
-                icon: Icon(Icons.add),
+                icon: Icon(Icons.manage_accounts),
                 label: Text("Manage Roles"),
               ),
+              NavigationRailDestination(icon: Icon(Icons.add), label: Text("Assign User"))
             ],
           ),
           const VerticalDivider(thickness: 1, width: 1),
