@@ -17,6 +17,7 @@ class ForestOut(BaseModel):
     area_hectares: float
     risk_level: str
     boundary: List[Coordinates]
+    supervisor_id : int | None=None
 
     class Config:
         orm_mode = True

@@ -34,6 +34,22 @@ async def get_parcelles(request: Request):
         media_type="application/json"
     )
 
+@router.get("/non_occupied_parcelles")
+async def get_non_patrolled_parcelles(request: Request):
+    headers = {}
+
+    auth = request.headers.get("Authorization")
+    if auth:
+        headers["Authorization"] = auth
+
+    async with httpx.AsyncClient() as client:
+        response = await client.get(f"{Auth_SERVICE_URL}/parcelles/non_occupied_parcelles", headers=headers)
+    return Response(
+        content=response.content,
+        status_code=response.status_code,
+        media_type="application/json"
+    )
+
 @router.get("/{parcelle_id}")
 async def get_parcelle(parcelle_id: int, request: Request):
     headers = {}
@@ -67,7 +83,7 @@ async def delete_parcelle(parcelle_id: int, request: Request):
     )
 
 @router.post("/{parcelle_id}/assign-agent/{user_id}")
-async def assign_supervisor(request: Request,parcelle_id:int,user_id:int):
+async def assign_agent(request: Request,parcelle_id:int,user_id:int):
     headers = {}
 
     auth = request.headers.get("Authorization")
@@ -80,3 +96,4 @@ async def assign_supervisor(request: Request,parcelle_id:int,user_id:int):
         status_code=response.status_code,
         media_type="application/json"
     )
+

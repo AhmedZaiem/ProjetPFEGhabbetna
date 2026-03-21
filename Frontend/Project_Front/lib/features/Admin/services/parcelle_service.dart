@@ -46,4 +46,15 @@ class ParcelService {
       throw Exception("Failed to delete parcel");
     }
   }
+
+  Future<void> assignAgent(int parcelleId, int userId) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/admin/$parcelleId/assign-agent/$userId'),
+      headers: {"Content-Type": "application/json"},
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception(jsonDecode(response.body)["detail"]);
+    }
+  }
 }

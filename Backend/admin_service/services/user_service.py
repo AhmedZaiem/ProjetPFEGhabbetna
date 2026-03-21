@@ -142,3 +142,18 @@ def get_non_assigned_agents(db: Session):
         }
         for a in agents
     ]
+
+def get_all_supervisors(db: Session):
+    users = db.query(User).join(Role).filter(Role.name == "Superviseur").all()
+    return [
+        {
+            "id": u.id,
+            "username": u.username,
+            "email": u.email,
+            "age": u.age,
+            "role_name": u.role.name,
+            "is_verified": u.is_verified,
+            "is_blocked": u.is_blocked
+        }
+        for u in users
+    ]

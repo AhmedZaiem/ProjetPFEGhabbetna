@@ -43,6 +43,9 @@ def get_all_parcelles(db: Session) -> List[Parcelle]:
 def get_parcelle_by_id(db: Session, parcelle_id: int) -> Parcelle | None:
     return db.query(Parcelle).get(parcelle_id)
 
+def get_non_occupied_parcelles(db: Session) -> Parcelle | None:
+    return db.query(Parcelle).filter(Parcelle.agent_id==None).all()
+
 def delete_parcelle(db: Session, parcelle_id: int) -> bool:
     parcelle = db.query(Parcelle).get(parcelle_id)
     if not parcelle:
@@ -70,5 +73,9 @@ def parcell_overlap(db: Session, polygon):
 
 def assign_agent(db: Session, agent_id:int,parcelle:Parcelle):
     parcelle.agent_id = agent_id
-    db.commit()    
+    db.commit()   
+    db.refresh(parcelle) 
     return True
+
+def get_parcelle_by_agent_id(db: Session, user_id: int):
+    return db.query(Parcelle).filter(Parcelle.agent_id == user_id).first()

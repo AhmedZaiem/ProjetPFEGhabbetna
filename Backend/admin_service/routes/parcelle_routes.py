@@ -4,7 +4,7 @@ from db.database import get_db
 from schemas.parcelle_schema import ParcelleCreate, ParcelleOut
 from services.parcelle_service import (
     create_parcelle, convert_parcelle_boundary, delete_parcelle,
-    get_all_parcelles, get_parcelle_by_id,assign_agent
+    get_all_parcelles, get_parcelle_by_id,assign_agent,get_parcelle_by_agent_id,get_non_occupied_parcelles
 )
 from services.forest_service import calculate_area_hectares
 from services.user_service import get_user_by_id
@@ -31,7 +31,22 @@ def get_parcelles_route(db: Session = Depends(get_db)):
             name=p.name,
             area_hectares=p.area_hectares,
             boundary=convert_parcelle_boundary(p),
-            forest_id=p.forest_id
+            forest_id=p.forest_id,
+            agent_id=p.agent_id
+        ) for p in parcelles
+    ]
+
+@router.get('/non_occupied_parcelles',response_model=list[ParcelleOut])
+def get_non_patrolled_parcelles(db: Session = Depends(get_db)):
+    parcelles=get_non_occupied_parcelles(db)
+    return [
+        ParcelleOut(
+            id=p.id,
+            name=p.name,
+            area_hectares=p.area_hectares,
+            boundary=convert_parcelle_boundary(p),
+            forest_id=p.forest_id,
+            agent_id=p.agent_id
         ) for p in parcelles
     ]
 
@@ -45,7 +60,8 @@ def get_parcelle_route(parcelle_id: int, db: Session = Depends(get_db)):
         name=parcelle.name,
         area_hectares=parcelle.area_hectares,
         boundary=convert_parcelle_boundary(parcelle),
-        forest_id=parcelle.forest_id
+        forest_id=parcelle.forest_id,
+        agent_id=parcelle.agent_id
     )
 
 @router.delete("/{parcelle_id}")
@@ -68,6 +84,13 @@ def assign_agent_route(parcelle_id: int,user_id: int ,db: Session = Depends(get_
     if user.role.name != "Agent":
         raise HTTPException(400, "User is Not Agent")
     
+    if user.parcelle:
+        raise HTTPException(409, "Agent already assigned to another parcelle")
+
+    if parcelle.agent_id :
+        raise HTTPException(409, "Parcelle Occupied")
+    
     assign_agent(db,user.id,parcelle)
 
     return {"message": "Agent assigned"}
+

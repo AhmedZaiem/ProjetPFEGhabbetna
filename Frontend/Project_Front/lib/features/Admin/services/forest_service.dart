@@ -46,4 +46,15 @@ class ForestService {
       throw Exception("Failed to delete forest");
     }
   }
+
+  Future<void> assignSupervisor(int forestId, int userId) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/forest/$forestId/assign-supervisor/$userId'),
+      headers: {"Content-Type": "application/json"},
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception(jsonDecode(response.body)["detail"]);
+    }
+  }
 }

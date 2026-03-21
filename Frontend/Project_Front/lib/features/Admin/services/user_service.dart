@@ -191,4 +191,21 @@ class UserService {
       throw Exception("Error modifying role: $e");
     }
   }
+
+  Future<List<UserModel>> getUnassignedAgents() async {
+    try {
+      var url = Uri.parse("$baseUrl/auth/agents/unassigned");
+      var response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(response.body) as List<dynamic>;
+        return data.map((json) => UserModel.fromJson(json)).toList();
+      } else {
+        throw Exception("Failed to load users");
+      }
+    } catch (e) {
+      print("Error fetching unassigned agents: $e");
+      throw Exception("Error fetching unassigned agents");
+    }
+  }
 }

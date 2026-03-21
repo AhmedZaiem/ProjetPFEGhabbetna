@@ -15,6 +15,7 @@ class ParcelleOut(BaseModel):
     area_hectares: float
     forest_id: int
     boundary: List[Coordinates]
+    agent_id : int | None=None
 
     class Config:
         orm_mode = True

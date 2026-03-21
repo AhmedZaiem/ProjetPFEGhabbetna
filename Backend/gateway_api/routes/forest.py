@@ -34,6 +34,22 @@ async def get_forests(request: Request):
         media_type="application/json"
     )
 
+@router.get("/non_occupied_forests")
+async def get_non_supervised_forests(request: Request):
+    headers = {}
+
+    auth = request.headers.get("Authorization")
+    if auth:
+        headers["Authorization"] = auth
+
+    async with httpx.AsyncClient() as client:
+        response = await client.get(f"{Auth_SERVICE_URL}/forest/non_occupied_forests", headers=headers)
+    return Response(
+        content=response.content,
+        status_code=response.status_code,
+        media_type="application/json"
+    )
+
 @router.get("/{forest_id}")
 async def get_forest(forest_id: int, request: Request):
     headers = {}
@@ -80,3 +96,5 @@ async def assign_supervisor(request: Request,forest_id:int,user_id:int):
         status_code=response.status_code,
         media_type="application/json"
     )
+
+
