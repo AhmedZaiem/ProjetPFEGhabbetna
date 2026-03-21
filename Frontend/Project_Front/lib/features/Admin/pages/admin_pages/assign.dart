@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
-
 import 'package:authproject/features/Admin/models/user_model.dart';
 import 'package:authproject/features/Admin/models/forest_model.dart';
 import 'package:authproject/features/Admin/models/parcelle_model.dart';
 import 'package:authproject/features/Admin/services/forest_service.dart';
 import 'package:authproject/features/Admin/services/parcelle_service.dart';
 import 'package:authproject/features/Admin/services/user_service.dart';
+import 'package:authproject/features/Admin/ui_components/assignment_card.dart';
+import 'package:authproject/features/Admin/ui_components/custom_dropdown.dart';
 
 class Assign extends StatefulWidget {
   const Assign({super.key});
@@ -41,23 +42,11 @@ class _AssignState extends State<Assign> {
   Future<void> loadData() async {
     setState(() => loading = true);
     try {
-      final allForests = await forestService.getForests();
-      final fetchedForests = allForests
-          .where((f) => f.supervisorId == null)
-          .toList();
-      print(
-        'Unassigned forests: ${fetchedForests.map((f) => f.name).toList()}',
-      );
+      final allForests = await forestService.getFreeForests();
+      print('Unassigned forests: ${allForests.map((f) => f.name).toList()}');
 
-      final allParcels = await parcelService.getParcels();
-      final fetchedParcels = allParcels
-          .where((p) => p.agentId == null)
-          .toList();
-      print(
-        'Unassigned parcels: ${fetchedParcels.map((p) => p.name).toList()}',
-      );
-
-
+      final allParcels = await parcelService.getFreeParcels();
+      print('Unassigned parcels: ${allParcels.map((p) => p.name).toList()}');
 
       final funassignedSupervisor = await userService.getSupervisors();
       print(
@@ -70,8 +59,8 @@ class _AssignState extends State<Assign> {
       );
 
       setState(() {
-        forests = fetchedForests;
-        parcels = fetchedParcels;
+        forests = allForests;
+        parcels = allParcels;
         unassignedSupervisor = funassignedSupervisor;
         unassignedAgents = fetchedUnassignedAgents;
 
@@ -132,12 +121,86 @@ class _AssignState extends State<Assign> {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
     return Scaffold(
-      
+      appBar: AppBar(
+        title: const Text("Assignments"),
+        actions: [
+          IconButton(icon: const Icon(Icons.refresh), onPressed: loadData),
+        ],
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            AssignmentCard(
+              title: "Assign Agent to Parcelle",
+              children: [
+                CustomDropdown(
+                  value: selectedUserForParcel,
+                  hint: "Select Agent",
+                  items: unassignedAgents,
+                  label: (u) => u.username,
+                  onChanged: (u) => setState(() => selectedUserForParcel = u),
+                ),
+
+                const SizedBox(height: 12),
+
+                CustomDropdown(
+                  value: selectedParcel,
+                  hint: "Select Parcelle",
+                  items: parcels,
+                  label: (p) => p.name,
+                  onChanged: (p) => setState(() => selectedParcel = p),
+                ),
+
+                const SizedBox(height: 16),
+
+                ElevatedButton(
+                  onPressed:
+                      (selectedUserForParcel != null && selectedParcel != null)
+                      ? assignAgent
+                      : null,
+                  child: const Text("Assign Agent"),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 24),
+
+            AssignmentCard(
+              title: "Assign Supervisor to Forest",
+              children: [
+                CustomDropdown(
+                  value: selectedUserForForest,
+                  hint: "Select Supervisor",
+                  items: unassignedSupervisor,
+                  label: (u) => u.username,
+                  onChanged: (u) => setState(() => selectedUserForForest = u),
+                ),
+
+                const SizedBox(height: 12),
+
+                CustomDropdown(
+                  value: selectedForest,
+                  hint: "Select Forest",
+                  items: forests,
+                  label: (p) => p.name,
+                  onChanged: (p) => setState(() => selectedForest = p),
+                ),
+
+                const SizedBox(height: 16),
+
+                ElevatedButton(
+                  onPressed:
+                      (selectedUserForForest != null && selectedForest != null)
+                      ? assignSupervisor
+                      : null,
+                  child: const Text("Assign Supervisor"),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
-
-
-
-
-

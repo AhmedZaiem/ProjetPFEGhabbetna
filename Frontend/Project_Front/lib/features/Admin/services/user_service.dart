@@ -210,19 +210,19 @@ class UserService {
   }
 
   Future<List<UserModel>> getSupervisors() async {
-  try {
-    var url = Uri.parse("$baseUrl/supervisors");
-    var response = await http.get(url);
+    try {
+      var url = Uri.parse("$baseUrl/auth/supervisors");
+      var response = await http.get(url);
 
-    if (response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(response.body) as List<dynamic>;
-      return data.map((json) => UserModel.fromJson(json)).toList();
-    } else {
-      throw Exception("Failed to load supervisors");
+      if (response.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(response.body) as List<dynamic>;
+        return data.map((json) => UserModel.fromJson(json)).toList();
+      } else {
+        throw Exception("Failed to load supervisors");
+      }
+    } catch (e) {
+      print("Error fetching supervisors: $e");
+      throw Exception("Error fetching supervisors");
     }
-  } catch (e) {
-    print("Error fetching supervisors: $e");
-    throw Exception("Error fetching supervisors");
   }
-}
 }

@@ -49,12 +49,25 @@ class ParcelService {
 
   Future<void> assignAgent(int parcelleId, int userId) async {
     final response = await http.post(
-      Uri.parse('$baseUrl/admin/$parcelleId/assign-agent/$userId'),
+      Uri.parse('$baseUrl/parcelles/$parcelleId/assign-agent/$userId'),
       headers: {"Content-Type": "application/json"},
     );
 
     if (response.statusCode != 200) {
       throw Exception(jsonDecode(response.body)["detail"]);
     }
+  }
+
+  Future<List<Parcel>> getFreeParcels() async {
+    final response = await http.get(
+      Uri.parse("$baseUrl/parcelles/non_occupied_parcelles"),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data.map<Parcel>((p) => Parcel.fromJson(p)).toList();
+    }
+
+    throw Exception("Failed to load parcelles");
   }
 }

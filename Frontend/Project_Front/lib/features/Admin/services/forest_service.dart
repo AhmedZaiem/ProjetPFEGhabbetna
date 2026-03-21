@@ -57,4 +57,17 @@ class ForestService {
       throw Exception(jsonDecode(response.body)["detail"]);
     }
   }
+
+  Future<List<Forest>> getFreeForests() async {
+    final response = await http.get(
+      Uri.parse("$baseUrl/forest/non_occupied_forests"),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data.map<Forest>((f) => Forest.fromJson(f)).toList();
+    }
+
+    throw Exception("Failed to load forests");
+  }
 }
