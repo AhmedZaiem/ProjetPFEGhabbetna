@@ -12,7 +12,7 @@ import 'package:go_router/go_router.dart';
 
 final adminRouter = GoRouter(
   routes: [
-    GoRoute(path: '/', builder: (context, state) => login()),
+    GoRoute(path: '/', builder: (context, state) => AdminDashboard()),
     GoRoute(path: '/welcome', builder: (context, state) => Welcome()),
     GoRoute(
       path: '/forgot_password',
