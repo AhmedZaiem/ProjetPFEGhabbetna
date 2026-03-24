@@ -1,5 +1,5 @@
 from models.user import User 
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, BackgroundTasks
 from schemas.userSchema import UserCreate
 from services.user_service import get_user_by_email, create_user,get_current_user
 from core.security import hash_password
@@ -18,7 +18,7 @@ def read_current_user(current_user: User = Depends(get_current_user)):
     return current_user
 
 @router.post("/register")
-async def register(user: UserCreate, db: Session = Depends(get_db)):
+async def register(user: UserCreate,background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
 
     if get_user_by_email(db, user.email):
         raise HTTPException(status_code=400, detail="Email already registered")
@@ -31,14 +31,17 @@ async def register(user: UserCreate, db: Session = Depends(get_db)):
         user.age
     )
 
-    async with httpx.AsyncClient() as client:
-        await client.post(
-            f"{AUTH_SERVICE_URL}/auth/send-activation",
-            json={
-                "user_id": new_user.id,
-                "email": new_user.email
-            }
-        )
+    async def send_activation_email(user_id: int, email: str):
+        async with httpx.AsyncClient() as client:
+            await client.post(
+                f"{AUTH_SERVICE_URL}/auth/send-activation",
+                json={
+                    "user_id": new_user.id,
+                    "email": new_user.email
+                }
+            )
+
+    background_tasks.add_task(send_activation_email,new_user.id, new_user.email)
 
     return {"message": "User registered successfully"}
 

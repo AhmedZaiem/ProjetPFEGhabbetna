@@ -29,68 +29,73 @@ class _AdminDashboardState extends State<AdminDashboard> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Row(
-        children: [
-          NavigationRail(
-            selectedIndex: _selectedIndex,
-            onDestinationSelected: (index) {
-              setState(() {
-                _selectedIndex = index;
-              });
+    return WillPopScope(
+      child: Scaffold(
+        body: Row(
+          children: [
+            NavigationRail(
+              selectedIndex: _selectedIndex,
+              onDestinationSelected: (index) {
+                setState(() {
+                  _selectedIndex = index;
+                });
 
-              switch (index) {
-                case 0:
-                  _selectedIndex = 0;
-                  break;
-                case 1:
-                  _selectedIndex = 1;
-                  break;
-                case 2:
-                  _selectedIndex = 2;
-                  break;
-                case 3:
-                  _selectedIndex = 3;
-                  break;
-                case 4:
-                  _selectedIndex = 4;
-                  break;
-                case 5:
-                  _selectedIndex = 5;
-                  break;
-                
-              }
-            },
-            labelType: NavigationRailLabelType.all,
-            destinations: const [
-              NavigationRailDestination(
-                icon: Icon(Icons.people),
-                label: Text("Users List"),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.forest),
-                label: Text("Forest List"),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.add),
-                label: Text("Create Users"),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.forest_outlined),
-                label: Text("Add Forests"),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.manage_accounts),
-                label: Text("Manage Roles"),
-              ),
-              NavigationRailDestination(icon: Icon(Icons.add), label: Text("Assign User"))
-            ],
-          ),
-          const VerticalDivider(thickness: 1, width: 1),
-          // Main content area
-          Expanded(child: Center(child: _contentWidgets[_selectedIndex])),
-        ],
+                switch (index) {
+                  case 0:
+                    _selectedIndex = 0;
+                    break;
+                  case 1:
+                    _selectedIndex = 1;
+                    break;
+                  case 2:
+                    _selectedIndex = 2;
+                    break;
+                  case 3:
+                    _selectedIndex = 3;
+                    break;
+                  case 4:
+                    _selectedIndex = 4;
+                    break;
+                  case 5:
+                    _selectedIndex = 5;
+                    break;
+                }
+              },
+              labelType: NavigationRailLabelType.all,
+              destinations: const [
+                NavigationRailDestination(
+                  icon: Icon(Icons.people),
+                  label: Text("Users List"),
+                ),
+                NavigationRailDestination(
+                  icon: Icon(Icons.forest),
+                  label: Text("Forest List"),
+                ),
+                NavigationRailDestination(
+                  icon: Icon(Icons.add),
+                  label: Text("Create Users"),
+                ),
+                NavigationRailDestination(
+                  icon: Icon(Icons.forest_outlined),
+                  label: Text("Add Forests"),
+                ),
+                NavigationRailDestination(
+                  icon: Icon(Icons.manage_accounts),
+                  label: Text("Manage Roles"),
+                ),
+                NavigationRailDestination(
+                  icon: Icon(Icons.add),
+                  label: Text("Assign User"),
+                ),
+              ],
+            ),
+            const VerticalDivider(thickness: 1, width: 1),
+            // Main content area
+            Expanded(child: Center(child: _contentWidgets[_selectedIndex])),
+          ],
+        ),
       ),
+      onWillPop: () async => false,
     );
   }
 }

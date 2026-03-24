@@ -114,153 +114,158 @@ class _WelcomeState extends State<Welcome> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [Text("Welcome")],
+    return WillPopScope(
+      child: Scaffold(
+        appBar: AppBar(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [Text("Welcome")],
+          ),
         ),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: userData != null
-              ? Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Center(
-                      child: Column(
-                        children: [
-                          CircleAvatar(
-                            radius: 40,
-                            backgroundColor: Colors.blue.shade100,
-                            child: Icon(
-                              Icons.person,
-                              size: 40,
-                              color: Colors.blue,
-                            ),
-                          ),
-                          SizedBox(height: 20),
-
-                          Text(
-                            "Welcome",
-                            style: TextStyle(
-                              fontSize: 28,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-
-                          SizedBox(height: 20),
-
-                          Card(
-                            elevation: 4,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(20),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text("Username: ${userData!['username']}"),
-                                  SizedBox(height: 8),
-                                  Text("Email: ${userData!['email']}"),
-                                  SizedBox(height: 8),
-                                  Text("Age: ${userData!['age']}"),
-                                ],
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: userData != null
+                ? Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Center(
+                        child: Column(
+                          children: [
+                            CircleAvatar(
+                              radius: 40,
+                              backgroundColor: Colors.blue.shade100,
+                              child: Icon(
+                                Icons.person,
+                                size: 40,
+                                color: Colors.blue,
                               ),
                             ),
-                          ),
+                            SizedBox(height: 20),
 
-                          SizedBox(height: 30),
-
-                          ElevatedButton(
-                            onPressed: logout,
-                            child: Text("Logout"),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    SizedBox(height: 10),
-
-                    Text(
-                      "Create an Incident",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 10),
-
-                    Form(
-                      key: _formKey,
-                      child: Column(
-                        children: [
-                          TextFormField(
-                            controller: _descriptionController,
-                            decoration: InputDecoration(
-                              labelText: 'Description',
+                            Text(
+                              "Welcome",
+                              style: TextStyle(
+                                fontSize: 28,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                            validator: (value) =>
-                                value!.isEmpty ? "Required" : null,
-                          ),
-                          TextFormField(
-                            controller: _typeController,
-                            decoration: InputDecoration(labelText: 'Type'),
-                            validator: (value) =>
-                                value!.isEmpty ? "Required" : null,
-                          ),
-                          TextFormField(
-                            controller: _locationController,
-                            decoration: InputDecoration(labelText: 'Location'),
-                            validator: (value) =>
-                                value!.isEmpty ? "Required" : null,
-                          ),
-                          TextFormField(
-                            controller: _regionController,
-                            decoration: InputDecoration(labelText: 'Region'),
-                            validator: (value) =>
-                                value!.isEmpty ? "Required" : null,
-                          ),
-                          SizedBox(height: 10),
-                          _imageFile == null
-                              ? TextButton.icon(
-                                  onPressed: pickImage,
-                                  icon: Icon(Icons.image),
-                                  label: Text("Pick Image"),
-                                )
-                              : FutureBuilder(
-                                  future: _imageFile!.readAsBytes(),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.connectionState ==
-                                            ConnectionState.done &&
-                                        snapshot.hasData) {
-                                      return Image.memory(
-                                        snapshot.data as Uint8List,
-                                        height: 150,
-                                      );
-                                    } else {
-                                      return CircularProgressIndicator();
-                                    }
-                                  },
-                                ),
 
-                          SizedBox(height: 20),
-                          ElevatedButton(
-                            onPressed: submitIncident,
-                            child: Text("Submit Incident"),
-                          ),
-                        ],
+                            SizedBox(height: 20),
+
+                            Card(
+                              elevation: 4,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(20),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text("Username: ${userData!['username']}"),
+                                    SizedBox(height: 8),
+                                    Text("Email: ${userData!['email']}"),
+                                    SizedBox(height: 8),
+                                    Text("Age: ${userData!['age']}"),
+                                  ],
+                                ),
+                              ),
+                            ),
+
+                            SizedBox(height: 30),
+
+                            ElevatedButton(
+                              onPressed: logout,
+                              child: Text("Logout"),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                )
-              : error != null
-              ? Text(error!, style: TextStyle(color: Colors.red))
-              : CircularProgressIndicator(),
+
+                      SizedBox(height: 10),
+
+                      Text(
+                        "Create an Incident",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 10),
+
+                      Form(
+                        key: _formKey,
+                        child: Column(
+                          children: [
+                            TextFormField(
+                              controller: _descriptionController,
+                              decoration: InputDecoration(
+                                labelText: 'Description',
+                              ),
+                              validator: (value) =>
+                                  value!.isEmpty ? "Required" : null,
+                            ),
+                            TextFormField(
+                              controller: _typeController,
+                              decoration: InputDecoration(labelText: 'Type'),
+                              validator: (value) =>
+                                  value!.isEmpty ? "Required" : null,
+                            ),
+                            TextFormField(
+                              controller: _locationController,
+                              decoration: InputDecoration(
+                                labelText: 'Location',
+                              ),
+                              validator: (value) =>
+                                  value!.isEmpty ? "Required" : null,
+                            ),
+                            TextFormField(
+                              controller: _regionController,
+                              decoration: InputDecoration(labelText: 'Region'),
+                              validator: (value) =>
+                                  value!.isEmpty ? "Required" : null,
+                            ),
+                            SizedBox(height: 10),
+                            _imageFile == null
+                                ? TextButton.icon(
+                                    onPressed: pickImage,
+                                    icon: Icon(Icons.image),
+                                    label: Text("Pick Image"),
+                                  )
+                                : FutureBuilder(
+                                    future: _imageFile!.readAsBytes(),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                              ConnectionState.done &&
+                                          snapshot.hasData) {
+                                        return Image.memory(
+                                          snapshot.data as Uint8List,
+                                          height: 150,
+                                        );
+                                      } else {
+                                        return CircularProgressIndicator();
+                                      }
+                                    },
+                                  ),
+
+                            SizedBox(height: 20),
+                            ElevatedButton(
+                              onPressed: submitIncident,
+                              child: Text("Submit Incident"),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  )
+                : error != null
+                ? Text(error!, style: TextStyle(color: Colors.red))
+                : CircularProgressIndicator(),
+          ),
         ),
       ),
+      onWillPop: () async => false,
     );
   }
 }
