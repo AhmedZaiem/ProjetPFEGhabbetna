@@ -4,6 +4,7 @@ import 'package:authproject/features/Admin/pages/admin_pages/create_user.dart';
 import 'package:authproject/features/Admin/pages/admin_pages/forest_list.dart';
 import 'package:authproject/features/Admin/pages/admin_pages/user_list.dart';
 import 'package:authproject/features/Admin/pages/admin_pages/assign.dart';
+import 'package:authproject/features/Admin/pages/admin_pages/add_service.dart';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -25,6 +26,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
     const AddPolygonPage(),
     const AddRole(),
     const Assign(),
+    const AddService(),
   ];
 
   @override
@@ -59,6 +61,9 @@ class _AdminDashboardState extends State<AdminDashboard> {
                   case 5:
                     _selectedIndex = 5;
                     break;
+                  case 6:
+                    _selectedIndex = 6;
+                    break;
                 }
               },
               labelType: NavigationRailLabelType.all,
@@ -87,10 +92,14 @@ class _AdminDashboardState extends State<AdminDashboard> {
                   icon: Icon(Icons.add),
                   label: Text("Assign User"),
                 ),
+                NavigationRailDestination(
+                  icon: Icon(Icons.add),
+                  label: Text("Add Service"),
+                ),
               ],
             ),
             const VerticalDivider(thickness: 1, width: 1),
-            // Main content area
+
             Expanded(child: Center(child: _contentWidgets[_selectedIndex])),
           ],
         ),
