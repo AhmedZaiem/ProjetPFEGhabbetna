@@ -128,12 +128,22 @@ class _AddPolygonPageState extends State<AddPolygonPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Draw Forest/Parcels")),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: ToggleButtons(
+      appBar: AppBar(
+        title: Row(
+          children: [
+            Image.asset('assets/images/logoApp.jpeg', height: 80),
+            const SizedBox(width: 12),
+            const Text("Add Forest or Parcel"),
+          ],
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Column(
+          children: [
+            /// Mode Toggle
+            ToggleButtons(
+              borderRadius: BorderRadius.circular(12),
               isSelected: [
                 mode == PolygonMode.forest,
                 mode == PolygonMode.parcel,
@@ -145,189 +155,240 @@ class _AddPolygonPageState extends State<AddPolygonPage> {
               },
               children: const [
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: Text("Forest"),
+                  padding: EdgeInsets.symmetric(horizontal: 25, vertical: 8),
+                  child: Text(
+                    "Forest",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: Text("Parcel"),
+                  padding: EdgeInsets.symmetric(horizontal: 25, vertical: 8),
+                  child: Text(
+                    "Parcel",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                 ),
               ],
             ),
-          ),
 
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Column(
-              children: [
-                TextField(
-                  controller: nameController,
-                  decoration: InputDecoration(
-                    labelText: mode == PolygonMode.forest
-                        ? "Forest name"
-                        : "Parcel name",
-                  ),
-                ),
+            const SizedBox(height: 12),
 
-                SizedBox(height: 20),
-
-                if (mode == PolygonMode.forest)
+            /// Name and Description Fields
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 2),
+              child: Column(
+                children: [
                   TextField(
-                    controller: descriptionController,
-                    decoration: const InputDecoration(labelText: "Description"),
-                  ),
-              ],
-            ),
-          ),
-
-          const SizedBox(height: 10),
-
-          Expanded(
-            child: Center(
-              child: Container(
-                margin: const EdgeInsets.symmetric(
-                  horizontal: 40,
-                  vertical: 20,
-                ),
-                constraints: const BoxConstraints(maxWidth: 1000),
-                clipBehavior: Clip.hardEdge,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: Stack(
-                  children: [
-                    FlutterMap(
-                      mapController: mapController,
-                      options: MapOptions(
-                        initialCenter: LatLng(37.2, 10.12),
-                        initialZoom: 13,
-                        onTap: (tapPosition, point) {
-                          addPoint(point);
-                        },
+                    controller: nameController,
+                    decoration: InputDecoration(
+                      labelText: mode == PolygonMode.forest
+                          ? "Forest name"
+                          : "Parcel name",
+                      prefixIcon: Icon(
+                        mode == PolygonMode.forest ? Icons.forest : Icons.map,
                       ),
-                      children: [
-                        TileLayer(
-                          urlTemplate:
-                              "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-                        ),
-
-                        if (points.length >= 3)
-                          PolygonLayer(
-                            polygons: [
-                              Polygon(
-                                points: points,
-                                color: mode == PolygonMode.forest
-                                    ? Colors.green.withOpacity(0.4)
-                                    : Colors.orange.withOpacity(0.4),
-                                borderColor: mode == PolygonMode.forest
-                                    ? Colors.green
-                                    : Colors.orange,
-                                borderStrokeWidth: 3,
-                              ),
-                            ],
-                          ),
-
-                        MarkerLayer(
-                          markers: points.map((p) {
-                            return Marker(
-                              point: p,
-                              width: 30,
-                              height: 30,
-                              child: const Icon(
-                                Icons.location_on,
-                                color: Colors.red,
-                              ),
-                            );
-                          }).toList(),
-                        ),
-
-                        PolygonLayer(
-                          polygons: forests.map((forest) {
-                            return Polygon(
-                              points: forest.boundary
-                                  .map((c) => LatLng(c.lat, c.lng))
-                                  .toList(),
-                              color: Colors.green.withOpacity(0.2),
-                              borderColor: Colors.green,
-                              borderStrokeWidth: 2,
-                            );
-                          }).toList(),
-                        ),
-
-                        PolygonLayer(
-                          polygons: parcels.map((parcel) {
-                            return Polygon(
-                              points: parcel.boundary
-                                  .map((c) => LatLng(c.lat, c.lng))
-                                  .toList(),
-                              color: Colors.orange.withOpacity(0.3),
-                              borderColor: Colors.orange,
-                              borderStrokeWidth: 2,
-                            );
-                          }).toList(),
-                        ),
-                      ],
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
+                  ),
+                  const SizedBox(height: 20),
+                  if (mode == PolygonMode.forest)
+                    TextField(
+                      controller: descriptionController,
+                      decoration: const InputDecoration(
+                        labelText: "Description",
+                        prefixIcon: Icon(Icons.description),
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                ],
+              ),
+            ),
 
-                    Positioned(
-                      right: 15,
-                      bottom: 20,
-                      child: Column(
-                        children: [
-                          FloatingActionButton(
-                            heroTag: "zoomIn",
-                            mini: true,
-                            onPressed: () {
-                              mapController.move(
-                                mapController.camera.center,
-                                mapController.camera.zoom + 1,
-                              );
-                            },
-                            child: const Icon(Icons.add),
+            const SizedBox(height: 15),
+
+            /// Map and Buttons side by side
+            Expanded(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  /// Buttons Section (Left)
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      ElevatedButton.icon(
+                        icon: const Icon(Icons.undo),
+                        label: const Text("Undo"),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.grey.shade800,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 16,
+                            horizontal: 20,
                           ),
-                          const SizedBox(height: 10),
-                          FloatingActionButton(
-                            heroTag: "zoomOut",
-                            mini: true,
-                            onPressed: () {
-                              mapController.move(
-                                mapController.camera.center,
-                                mapController.camera.zoom - 1,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        onPressed: undoPoint,
+                      ),
+                      const SizedBox(height: 15),
+                      ElevatedButton.icon(
+                        icon: const Icon(Icons.clear),
+                        label: const Text("Clear"),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blueGrey,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 16,
+                            horizontal: 20,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        onPressed: clearPolygon,
+                      ),
+                      const SizedBox(height: 15),
+                      ElevatedButton.icon(
+                        icon: const Icon(Icons.save),
+                        label: const Text("Save"),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.teal,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 16,
+                            horizontal: 20,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        onPressed: savePolygon,
+                      ),
+                      const SizedBox(height: 20),
+
+                      /// Zoom Buttons
+                      FloatingActionButton(
+                        heroTag: "zoomIn",
+                        mini: true,
+                        backgroundColor: Colors.green,
+                        onPressed: () {
+                          mapController.move(
+                            mapController.camera.center,
+                            mapController.camera.zoom + 1,
+                          );
+                        },
+                        child: const Icon(Icons.add),
+                      ),
+                      const SizedBox(height: 10),
+                      FloatingActionButton(
+                        heroTag: "zoomOut",
+                        mini: true,
+                        backgroundColor: Colors.red,
+                        onPressed: () {
+                          mapController.move(
+                            mapController.camera.center,
+                            mapController.camera.zoom - 1,
+                          );
+                        },
+                        child: const Icon(Icons.remove),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(width: 15),
+
+                  /// Map Section (Right)
+                  Expanded(
+                    flex: 3,
+                    child: Container(
+                      constraints: const BoxConstraints(maxWidth: 1000),
+                      clipBehavior: Clip.hardEdge,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 10,
+                            offset: Offset(0, 5),
+                          ),
+                        ],
+                      ),
+                      child: FlutterMap(
+                        mapController: mapController,
+                        options: MapOptions(
+                          initialCenter: LatLng(37.2, 10.12),
+                          initialZoom: 13,
+                          onTap: (tapPosition, point) => addPoint(point),
+                        ),
+                        children: [
+                          TileLayer(
+                            urlTemplate:
+                                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                          ),
+                          if (points.length >= 3)
+                            PolygonLayer(
+                              polygons: [
+                                Polygon(
+                                  points: points,
+                                  color: mode == PolygonMode.forest
+                                      ? Colors.green.withOpacity(0.4)
+                                      : Colors.orange.withOpacity(0.4),
+                                  borderColor: mode == PolygonMode.forest
+                                      ? Colors.green
+                                      : Colors.orange,
+                                  borderStrokeWidth: 3,
+                                ),
+                              ],
+                            ),
+                          MarkerLayer(
+                            markers: points.map((p) {
+                              return Marker(
+                                point: p,
+                                width: 30,
+                                height: 30,
+                                child: const Icon(
+                                  Icons.location_on,
+                                  color: Colors.red,
+                                ),
                               );
-                            },
-                            child: const Icon(Icons.remove),
+                            }).toList(),
+                          ),
+                          PolygonLayer(
+                            polygons: forests.map((forest) {
+                              return Polygon(
+                                points: forest.boundary
+                                    .map((c) => LatLng(c.lat, c.lng))
+                                    .toList(),
+                                color: Colors.green.withOpacity(0.2),
+                                borderColor: Colors.green,
+                                borderStrokeWidth: 2,
+                              );
+                            }).toList(),
+                          ),
+                          PolygonLayer(
+                            polygons: parcels.map((parcel) {
+                              return Polygon(
+                                points: parcel.boundary
+                                    .map((c) => LatLng(c.lat, c.lng))
+                                    .toList(),
+                                color: Colors.orange.withOpacity(0.3),
+                                borderColor: Colors.orange,
+                                borderStrokeWidth: 2,
+                              );
+                            }).toList(),
                           ),
                         ],
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-          ),
-
-          SizedBox(height: 5),
-
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(onPressed: undoPoint, child: const Text("Undo")),
-
-                ElevatedButton(
-                  onPressed: clearPolygon,
-                  child: const Text("Clear"),
-                ),
-
-                ElevatedButton(
-                  onPressed: savePolygon,
-                  child: const Text("Save"),
-                ),
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

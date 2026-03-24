@@ -28,7 +28,15 @@ class _UserListState extends State<UserList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("User List")),
+      appBar: AppBar(
+        title: Row(
+          children: [
+            Image.asset('assets/images/logoApp.jpeg', height: 80),
+            const SizedBox(width: 12),
+            const Text("User List"),
+          ],
+        ),
+      ),
       body: FutureBuilder<List<UserModel>>(
         future: _usersFuture,
         builder: (context, snapshot) {
@@ -40,157 +48,164 @@ class _UserListState extends State<UserList> {
             return const Center(child: Text('No users found'));
           } else {
             final users = snapshot.data!;
-            return Column(
-              children: [
-                // Header row
-                Container(
-                  color: Colors.grey[300],
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 10,
-                  ),
-                  child: Row(
-                    children: const [
-                      Expanded(
-                        flex: 2,
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(12),
+              child: Table(
+                border: TableBorder.all(color: Colors.white30),
+                columnWidths: const {
+                  0: FlexColumnWidth(2), // Username
+                  1: FlexColumnWidth(3), // Email
+                  2: FlexColumnWidth(2), // Role
+                  3: FlexColumnWidth(1), // Age
+                  4: FlexColumnWidth(1), // Verified
+                  5: FlexColumnWidth(2), // Actions
+                },
+                children: [
+                  // Table Header
+                  const TableRow(
+                    decoration: BoxDecoration(color: Color.fromARGB(255, 212, 198, 198)),
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
                         child: Text(
                           "Username",
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
                         ),
                       ),
-                      Expanded(
-                        flex: 3,
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
                         child: Text(
                           "Email",
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
                         ),
                       ),
-                      Expanded(
-                        flex: 2,
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
                         child: Text(
                           "Role",
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
                         ),
                       ),
-                      Expanded(
-                        flex: 1,
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
                         child: Text(
                           "Age",
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
                         ),
                       ),
-                      Expanded(
-                        flex: 1,
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
                         child: Text(
                           "Verified",
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
                         ),
                       ),
-                      Expanded(
-                        flex: 2,
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
                         child: Text(
                           "Actions",
                           textAlign: TextAlign.center,
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
                         ),
                       ),
                     ],
                   ),
-                ),
-                // User list
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: users.length,
-                    itemBuilder: (context, index) {
-                      final user = users[index];
-                      return Card(
-                        margin: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 10,
+                  // User rows
+                  ...users.map(
+                    (user) => TableRow(
+                      decoration: const BoxDecoration(color: Colors.white),
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(user.username),
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Row(
-                            children: [
-                              Expanded(flex: 2, child: Text(user.username)),
-                              Expanded(flex: 3, child: Text(user.email)),
-                              Expanded(flex: 2, child: Text(user.role_name)),
-                              Expanded(
-                                flex: 1,
-                                child: Text(user.age.toString()),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Center(
-                                  child: user.isVerified
-                                      ? const Icon(
-                                          Icons.check_circle,
-                                          color: Colors.green,
-                                        )
-                                      : const Icon(
-                                          Icons.cancel,
-                                          color: Colors.red,
-                                        ),
-                                ),
-                              ),
-                              // Actions button
-                              Expanded(
-                                flex: 2,
-                                child: Center(
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: user.isBlocked
-                                          ? Colors.green
-                                          : Colors.red,
-                                    ),
-                                    child: Text(
-                                      user.isBlocked ? "Unblock" : "Block",
-                                    ),
-                                    onPressed: () async {
-                                      try {
-                                        if (user.isBlocked) {
-                                          await userService.unblockUser(
-                                            user.id,
-                                          );
-                                        } else {
-                                          await userService.blockUser(user.id);
-                                        }
-                                        if (!mounted) return;
-                                        ScaffoldMessenger.of(
-                                          context,
-                                        ).showSnackBar(
-                                          SnackBar(
-                                            content: Text(
-                                              user.isBlocked
-                                                  ? "${user.username} unblocked"
-                                                  : "${user.username} blocked",
-                                            ),
-                                          ),
-                                        );
-
-                                        _refreshUsers();
-                                      } catch (e) {
-                                        if (!mounted) return;
-                                        ScaffoldMessenger.of(
-                                          context,
-                                        ).showSnackBar(
-                                          SnackBar(
-                                            content: Text("Action failed: $e"),
-                                          ),
-                                        );
-                                      }
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ],
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(user.email),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(user.role_name),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(user.age.toString()),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Center(
+                            child: user.isVerified
+                                ? const Icon(
+                                    Icons.check_circle,
+                                    color: Colors.green,
+                                  )
+                                : const Icon(Icons.cancel, color: Colors.red),
                           ),
                         ),
-                      );
-                    },
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Center(
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: user.isBlocked
+                                    ? Colors.green
+                                    : Colors.red,
+                              ),
+                              child: Text(user.isBlocked ? "Unblock" : "Block"),
+                              onPressed: () async {
+                                try {
+                                  if (user.isBlocked) {
+                                    await userService.unblockUser(user.id);
+                                  } else {
+                                    await userService.blockUser(user.id);
+                                  }
+                                  if (!mounted) return;
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        user.isBlocked
+                                            ? "${user.username} unblocked"
+                                            : "${user.username} blocked",
+                                      ),
+                                    ),
+                                  );
+                                  _refreshUsers();
+                                } catch (e) {
+                                  if (!mounted) return;
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text("Action failed: $e"),
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             );
           }
         },

@@ -102,7 +102,15 @@ class _AddRoleState extends State<AddRole> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Add Role")),
+      appBar: AppBar(
+        title: Row(
+          children: [
+            Image.asset('assets/images/logoApp.jpeg', height: 80),
+            const SizedBox(width: 12),
+            const Text("Add Role"),
+          ],
+        ),
+      ),
       body: Column(
         children: [
           /// Role Management Section
@@ -124,18 +132,24 @@ class _AddRoleState extends State<AddRole> {
                     const SizedBox(width: 10),
                     ElevatedButton(
                       onPressed: _addRole,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color.fromARGB(255, 3, 5, 3),
+                        foregroundColor: Colors.white,
+                      ),
                       child: const Text("Add"),
                     ),
                     const SizedBox(width: 10),
                     ElevatedButton(
                       onPressed: _deleteRole,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red[700],
+                        foregroundColor: Colors.white,
+                      ),
                       child: const Text("Delete"),
                     ),
                   ],
                 ),
-
                 const SizedBox(height: 10),
-
                 Row(
                   children: [
                     Expanded(
@@ -150,6 +164,10 @@ class _AddRoleState extends State<AddRole> {
                     const SizedBox(width: 10),
                     ElevatedButton(
                       onPressed: _modifyRole,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color.fromARGB(255, 3, 5, 3),
+                        foregroundColor: Colors.white,
+                      ),
                       child: const Text("Modify"),
                     ),
                   ],
@@ -171,7 +189,6 @@ class _AddRoleState extends State<AddRole> {
                   return const Center(child: Text('No roles found'));
                 } else {
                   final roles = snapshot.data!;
-
                   return RefreshIndicator(
                     onRefresh: _refreshRoles,
                     child: ListView.builder(
@@ -179,7 +196,9 @@ class _AddRoleState extends State<AddRole> {
                       itemBuilder: (context, index) {
                         final role = roles[index];
                         return ListTile(
-                          leading: const Icon(Icons.security),
+                          leading: const Icon(
+                            Icons.admin_panel_settings_rounded,
+                          ),
                           title: Text(role.name),
                           subtitle: Text("ID: ${role.id}"),
                         );

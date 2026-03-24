@@ -9,7 +9,20 @@ class AddService extends StatefulWidget {
 
 class _AddServiceState extends State<AddService> {
   @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
-  }
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      title: Row(
+        children: [
+          Image.asset('assets/images/logoApp.jpeg', height: 80),
+          const SizedBox(width: 12),
+          const Text("Add Services"),
+        ],
+      ),
+    ),
+    body: const Center(
+      child: Text("Add Service Page Content Here"),
+    ),
+  );
+}
 }

@@ -120,84 +120,120 @@ class _AssignState extends State<Assign> {
     if (loading) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Assignments"),
-        actions: [
-          IconButton(icon: const Icon(Icons.refresh), onPressed: loadData),
-        ],
+        title: Row(
+          children: [
+            Image.asset('assets/images/logoApp.jpeg', height: 80),
+            const SizedBox(width: 12),
+            const Text("Assign User"),
+          ],
+        ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            AssignmentCard(
-              title: "Assign Agent to Parcelle",
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CustomDropdown(
-                  value: selectedUserForParcel,
-                  hint: "Select Agent",
-                  items: unassignedAgents,
-                  label: (u) => u.username,
-                  onChanged: (u) => setState(() => selectedUserForParcel = u),
+                /// Assign Agent
+                Expanded(
+                  child: AssignmentCard(
+                    title: "Assign Agent to Parcelle",
+                    children: [
+                      CustomDropdown(
+                        value: selectedUserForParcel,
+                        hint: "Select Agent",
+                        items: unassignedAgents,
+                        label: (u) => u.username,
+                        onChanged: (u) =>
+                            setState(() => selectedUserForParcel = u),
+                      ),
+                      const SizedBox(height: 12),
+                      CustomDropdown(
+                        value: selectedParcel,
+                        hint: "Select Parcelle",
+                        items: parcels,
+                        label: (p) => p.name,
+                        onChanged: (p) => setState(() => selectedParcel = p),
+                      ),
+                      const SizedBox(height: 16),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton.icon(
+                          onPressed:
+                              (selectedUserForParcel != null &&
+                                  selectedParcel != null)
+                              ? assignAgent
+                              : null,
+                          icon: const Icon(Icons.assignment_turned_in),
+                          label: const Text("Assign Agent"),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.teal.shade700,
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
 
-                const SizedBox(height: 12),
-
-                CustomDropdown(
-                  value: selectedParcel,
-                  hint: "Select Parcelle",
-                  items: parcels,
-                  label: (p) => p.name,
-                  onChanged: (p) => setState(() => selectedParcel = p),
-                ),
-
-                const SizedBox(height: 16),
-
-                ElevatedButton(
-                  onPressed:
-                      (selectedUserForParcel != null && selectedParcel != null)
-                      ? assignAgent
-                      : null,
-                  child: const Text("Assign Agent"),
+                const SizedBox(width: 24), // spacing between the two forms
+                /// Assign Supervisor
+                Expanded(
+                  child: AssignmentCard(
+                    title: "Assign Supervisor to Forest",
+                    children: [
+                      CustomDropdown(
+                        value: selectedUserForForest,
+                        hint: "Select Supervisor",
+                        items: unassignedSupervisor,
+                        label: (u) => u.username,
+                        onChanged: (u) =>
+                            setState(() => selectedUserForForest = u),
+                      ),
+                      const SizedBox(height: 12),
+                      CustomDropdown(
+                        value: selectedForest,
+                        hint: "Select Forest",
+                        items: forests,
+                        label: (p) => p.name,
+                        onChanged: (p) => setState(() => selectedForest = p),
+                      ),
+                      const SizedBox(height: 16),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton.icon(
+                          onPressed:
+                              (selectedUserForForest != null &&
+                                  selectedForest != null)
+                              ? assignSupervisor
+                              : null,
+                          icon: const Icon(Icons.supervisor_account),
+                          label: const Text("Assign Supervisor"),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green.shade700,
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
 
-            const SizedBox(height: 24),
-
-            AssignmentCard(
-              title: "Assign Supervisor to Forest",
-              children: [
-                CustomDropdown(
-                  value: selectedUserForForest,
-                  hint: "Select Supervisor",
-                  items: unassignedSupervisor,
-                  label: (u) => u.username,
-                  onChanged: (u) => setState(() => selectedUserForForest = u),
-                ),
-
-                const SizedBox(height: 12),
-
-                CustomDropdown(
-                  value: selectedForest,
-                  hint: "Select Forest",
-                  items: forests,
-                  label: (p) => p.name,
-                  onChanged: (p) => setState(() => selectedForest = p),
-                ),
-
-                const SizedBox(height: 16),
-
-                ElevatedButton(
-                  onPressed:
-                      (selectedUserForForest != null && selectedForest != null)
-                      ? assignSupervisor
-                      : null,
-                  child: const Text("Assign Supervisor"),
-                ),
-              ],
-            ),
+            const SizedBox(height: 32),
           ],
         ),
       ),

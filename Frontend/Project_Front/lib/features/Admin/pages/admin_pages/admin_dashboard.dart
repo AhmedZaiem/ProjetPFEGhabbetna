@@ -24,11 +24,11 @@ class _AdminDashboardState extends State<AdminDashboard> {
 
   final List<Widget> _contentWidgets = [
     UserList(),
-    const ForestList(),
     const Create_User(),
-    const AddPolygonPage(),
     const AddRole(),
     const Assign(),
+    const AddPolygonPage(),
+    const ForestList(),
     const AddService(),
   ];
 
@@ -57,7 +57,6 @@ class _AdminDashboardState extends State<AdminDashboard> {
                     ),
                   ),
 
-
                   Expanded(
                     child: NavigationRail(
                       selectedIndex: _selectedIndex,
@@ -79,13 +78,6 @@ class _AdminDashboardState extends State<AdminDashboard> {
                           ),
                         ),
                         NavigationRailDestination(
-                          icon: Icon(Icons.forest, size: 25),
-                          label: Text(
-                            "Forest List",
-                            style: TextStyle(fontSize: 14),
-                          ),
-                        ),
-                        NavigationRailDestination(
                           icon: Icon(Icons.add, size: 25),
                           label: Text(
                             "Create Users",
@@ -93,14 +85,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                           ),
                         ),
                         NavigationRailDestination(
-                          icon: Icon(Icons.forest_outlined, size: 25),
-                          label: Text(
-                            "Add Forests",
-                            style: TextStyle(fontSize: 14),
-                          ),
-                        ),
-                        NavigationRailDestination(
-                          icon: Icon(Icons.manage_accounts, size: 25),
+                          icon: Icon(Icons.account_box_sharp, size: 25),
                           label: Text(
                             "Manage Roles",
                             style: TextStyle(fontSize: 14),
@@ -109,7 +94,21 @@ class _AdminDashboardState extends State<AdminDashboard> {
                         NavigationRailDestination(
                           icon: Icon(Icons.add, size: 25),
                           label: Text(
-                            "Assign User",
+                            "Assign Users",
+                            style: TextStyle(fontSize: 14),
+                          ),
+                        ),
+                        NavigationRailDestination(
+                          icon: Icon(Icons.forest, size: 25),
+                          label: Text(
+                            "Add Forests",
+                            style: TextStyle(fontSize: 14),
+                          ),
+                        ),
+                        NavigationRailDestination(
+                          icon: Icon(Icons.forest_outlined, size: 25),
+                          label: Text(
+                            "Forests list",
                             style: TextStyle(fontSize: 14),
                           ),
                         ),

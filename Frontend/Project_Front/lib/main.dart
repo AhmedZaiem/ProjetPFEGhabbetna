@@ -60,10 +60,10 @@ class _MainAppState extends State<MainApp> {
       theme: ThemeData(
         scaffoldBackgroundColor: const Color(0xFFE8F8F0),
 
-        primaryColor: const Color(0xFF2ECC71), 
+        primaryColor: const Color.fromARGB(255, 19, 113, 58),
 
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF2ECC71),
+          seedColor: const Color.fromARGB(255, 21, 121, 63),
           background: const Color(0xFFF4FBF7),
         ),
 
@@ -72,43 +72,42 @@ class _MainAppState extends State<MainApp> {
             color: Colors.black,
             fontSize: 14,
             fontWeight: FontWeight.w500,
-            fontFamily: 'Georgia',
+            fontFamily: 'Times New Roman', 
           ),
           bodyMedium: TextStyle(
             color: Colors.black,
             fontSize: 14,
             fontWeight: FontWeight.w400,
-            fontFamily: 'Georgia',
+            fontFamily: 'Times New Roman',
           ),
           bodySmall: TextStyle(
             color: Colors.black,
             fontSize: 12,
             fontWeight: FontWeight.w400,
-            fontFamily: 'Georgia',
+            fontFamily: 'Times New Roman',
           ),
-
 
           titleLarge: TextStyle(
             color: Colors.black,
             fontSize: 20,
             fontWeight: FontWeight.bold,
-            fontFamily: 'Georgia',
+            fontFamily: 'Times New Roman',
           ),
           titleMedium: TextStyle(
             color: Colors.black,
             fontSize: 16,
-            fontFamily: 'Georgia',
+            fontFamily: 'Times New Roman',
           ),
           titleSmall: TextStyle(
             color: Colors.black,
             fontSize: 14,
-            fontFamily: 'Georgia',
+            fontFamily: 'Times New Roman',
           ),
         ),
 
         appBarTheme: const AppBarTheme(
           backgroundColor: Color(0xFF2ECC71),
-          foregroundColor: Colors.white, 
+          foregroundColor: Colors.white,
           centerTitle: true,
         ),
 
@@ -130,7 +129,10 @@ class _MainAppState extends State<MainApp> {
           ),
           hintStyle: const TextStyle(color: Colors.grey, fontFamily: 'Georgia'),
           focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: Color(0xFF2ECC71), width: 2),
+            borderSide: const BorderSide(
+              color: Color.fromARGB(255, 25, 126, 67),
+              width: 2,
+            ),
             borderRadius: BorderRadius.circular(12),
           ),
           enabledBorder: OutlineInputBorder(

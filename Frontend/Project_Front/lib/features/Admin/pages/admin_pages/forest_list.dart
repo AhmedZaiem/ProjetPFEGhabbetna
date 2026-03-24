@@ -118,54 +118,101 @@ class _ForestListState extends State<ForestList> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Forest List")),
+      appBar: AppBar(
+        title: Row(
+          children: [
+            Image.asset(
+              'assets/images/logoApp.jpeg',
+              height: 80,
+              fit: BoxFit.contain,
+            ),
+            const SizedBox(width: 12),
+            const Text("Forest List"),
+          ],
+        ),
+      ),
       body: ListView.builder(
+        padding: const EdgeInsets.symmetric(vertical: 12),
         itemCount: forests.length,
         itemBuilder: (_, index) {
           final forest = forests[index];
           return Card(
-            margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            elevation: 4,
+            shadowColor: Colors.green.shade100,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Padding(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    "ID: ${forest.id}",
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF27AE60).withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      "ID: ${forest.id}",
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF27AE60),
+                      ),
+                    ),
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 8),
                   Text(
                     forest.name,
                     style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 6),
                   if (forest.description != null &&
                       forest.description!.isNotEmpty)
                     Text(
                       forest.description!,
-                      style: const TextStyle(color: Colors.grey),
+                      style: const TextStyle(color: Colors.grey, fontSize: 14),
                     ),
-                  const SizedBox(height: 4),
-                  Text(
-                    "Area: ${forest.areaHectares} ha",
-                    style: const TextStyle(fontSize: 14),
+                  const SizedBox(height: 6),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Area: ${forest.areaHectares} ha",
+                        style: const TextStyle(fontSize: 14),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        "Risk: ${forest.riskLevel}",
+                        style: const TextStyle(fontSize: 14),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 2),
-                  Text(
-                    "Risk: ${forest.riskLevel}",
-                    style: const TextStyle(fontSize: 14),
-                  ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 12),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      ElevatedButton(
+                      ElevatedButton.icon(
                         onPressed: () => showParcels(forest),
-                        child: const Text("View Parcels"),
+                        icon: const Icon(Icons.view_list),
+                        label: const Text("View Parcels"),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF27AE60),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
                       ),
                       const SizedBox(width: 8),
                       IconButton(
