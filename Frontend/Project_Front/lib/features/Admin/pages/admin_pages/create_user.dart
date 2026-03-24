@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:http/http.dart' as http;
-import '../../../../config.dart' as config;
 import 'package:authproject/features/Admin/models/role_model.dart';
 import 'package:authproject/features/Admin/services/user_service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
-import 'package:authproject/features/Auth/services/auth_service.dart';
 
 class Create_User extends StatefulWidget {
   const Create_User({super.key});
@@ -26,11 +23,7 @@ class _CreateUserState extends State<Create_User> {
   final UserService userService = UserService();
 
   final _formKey = GlobalKey<FormState>();
-
-  final String baseUrl = config.baseUrl;
-
   String selectedRole = '';
-  final AuthService authService = AuthService();
 
   @override
   void initState() {
@@ -65,7 +58,7 @@ class _CreateUserState extends State<Create_User> {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: Text(title),
+        title: Text(title, style: const TextStyle(color: Color(0xFF1B5E20))),
         content: Text(message),
         actions: [
           TextButton(onPressed: () => context.pop(), child: const Text("OK")),
@@ -74,121 +67,179 @@ class _CreateUserState extends State<Create_User> {
     );
   }
 
-  void logout() async {
-    await authService.logout();
-    context.replace('/');
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text("Create Account Page", style: TextStyle(fontSize: 24)),
-              SizedBox(height: 20),
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 350,
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 10,
+                        offset: Offset(0, 5),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'assets/images/logoApp.jpeg',
+                        height: 150,
+                        fit: BoxFit.contain,
+                      ),
+                      const SizedBox(height: 10),
+                      const Text(
+                        "Create Account",
+                        style: TextStyle(
+                          fontSize: 26,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF1B5E20),
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 30),
 
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Username'),
-                controller: usernameController,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Username is required';
-                  }
-                  if (!RegExp(r'^[a-zA-Z0-9]+$').hasMatch(value)) {
-                    return 'Only letters and numbers allowed';
-                  }
-                  return null;
-                },
-              ),
+                      TextFormField(
+                        decoration: InputDecoration(
+                          labelText: 'Username',
+                          prefixIcon: const Icon(Icons.person),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        controller: usernameController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Username is required';
+                          }
+                          if (!RegExp(r'^[a-zA-Z0-9]+$').hasMatch(value)) {
+                            return 'Only letters and numbers allowed';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 20),
 
-              SizedBox(height: 20),
+                      TextFormField(
+                        decoration: InputDecoration(
+                          labelText: 'Email',
+                          prefixIcon: const Icon(Icons.email_outlined),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        controller: emailController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Email is required';
+                          }
+                          if (!RegExp(
+                            r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                          ).hasMatch(value)) {
+                            return 'Enter valid email';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 20),
 
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Email'),
-                controller: emailController,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Email is required';
-                  }
-                  if (!RegExp(
-                    r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
-                  ).hasMatch(value)) {
-                    return 'Enter valid email';
-                  }
-                  return null;
-                },
-              ),
+                      TextFormField(
+                        decoration: InputDecoration(
+                          labelText: 'Age',
+                          prefixIcon: const Icon(Icons.calendar_today),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        keyboardType: TextInputType.number,
+                        controller: ageController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Age is required';
+                          }
+                          final age = int.tryParse(value);
+                          if (age == null) {
+                            return 'Enter valid number';
+                          }
+                          if (age <= 18) {
+                            return 'Age must be greater than 18';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 20),
 
-              SizedBox(height: 20),
+                      FutureBuilder<List<RoleModel>>(
+                        future: _rolesFuture,
+                        builder: (context, snapshot) {
+                          return DropdownButtonFormField<String>(
+                            decoration: InputDecoration(
+                              labelText: 'Select Role',
+                              prefixIcon: const Icon(
+                                Icons.admin_panel_settings,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            items: (snapshot.data ?? []).map((role) {
+                              return DropdownMenuItem<String>(
+                                value: role.name,
+                                child: Text(role.name),
+                              );
+                            }).toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                selectedRole = value ?? '';
+                              });
+                            },
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Role is required';
+                              }
+                              return null;
+                            },
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 30),
 
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Age'),
-                keyboardType: TextInputType.number,
-                controller: ageController,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Age is required';
-                  }
-                  final age = int.tryParse(value);
-                  if (age == null) {
-                    return 'Enter valid number';
-                  }
-                  if (age <= 18) {
-                    return 'Age must be greater than 18';
-                  }
-                  return null;
-                },
-              ),
-
-              SizedBox(height: 20),
-
-              FutureBuilder<List<RoleModel>>(
-                future: _rolesFuture,
-                builder: (context, snapshot) {
-                  return DropdownButtonFormField<String>(
-                    decoration: InputDecoration(labelText: 'Select Role'),
-                    items: (snapshot.data ?? []).map((role) {
-                      return DropdownMenuItem<String>(
-                        value: role.name,
-                        child: Text(role.name),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        selectedRole = value ?? '';
-                      });
-                    },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Role is required';
-                      }
-                      return null;
-                    },
-                  );
-                },
-              ),
-
-              SizedBox(height: 20),
-
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    CreateUserAcc();
-                  }
-                },
-                child: Text('Create Account'),
-              ),
-
-              SizedBox(height: 20),
-
-              ElevatedButton(onPressed: logout, child: Text("Logout")),
-            ],
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              CreateUserAcc();
+                            }
+                          },
+                          child: const Text('Create Account'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF1B5E20),
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

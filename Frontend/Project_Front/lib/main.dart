@@ -57,23 +57,64 @@ class _MainAppState extends State<MainApp> {
       title: "Ghabetna",
       routerConfig: widget.router,
       debugShowCheckedModeBanner: false,
-
       theme: ThemeData(
-        scaffoldBackgroundColor: const Color(0xFFF2EFEA),
+        scaffoldBackgroundColor: const Color(0xFFE8F8F0),
 
-        primaryColor: const Color(0xFF1B5E20),
+        primaryColor: const Color(0xFF2ECC71), 
 
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF1B5E20)),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF2ECC71),
+          background: const Color(0xFFF4FBF7),
+        ),
+
+        textTheme: const TextTheme(
+          bodyLarge: TextStyle(
+            color: Colors.black,
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            fontFamily: 'Georgia',
+          ),
+          bodyMedium: TextStyle(
+            color: Colors.black,
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+            fontFamily: 'Georgia',
+          ),
+          bodySmall: TextStyle(
+            color: Colors.black,
+            fontSize: 12,
+            fontWeight: FontWeight.w400,
+            fontFamily: 'Georgia',
+          ),
+
+
+          titleLarge: TextStyle(
+            color: Colors.black,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Georgia',
+          ),
+          titleMedium: TextStyle(
+            color: Colors.black,
+            fontSize: 16,
+            fontFamily: 'Georgia',
+          ),
+          titleSmall: TextStyle(
+            color: Colors.black,
+            fontSize: 14,
+            fontFamily: 'Georgia',
+          ),
+        ),
 
         appBarTheme: const AppBarTheme(
-          backgroundColor: Color.fromARGB(255, 14, 43, 16),
-          foregroundColor: Colors.white,
+          backgroundColor: Color(0xFF2ECC71),
+          foregroundColor: Colors.white, 
           centerTitle: true,
         ),
 
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF1B5E20),
+            backgroundColor: const Color(0xFF2ECC71),
             foregroundColor: Colors.white,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
@@ -83,11 +124,19 @@ class _MainAppState extends State<MainApp> {
         ),
 
         inputDecorationTheme: InputDecorationTheme(
+          labelStyle: const TextStyle(
+            color: Colors.black,
+            fontFamily: 'Georgia',
+          ),
+          hintStyle: const TextStyle(color: Colors.grey, fontFamily: 'Georgia'),
           focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: Color(0xFF1B5E20), width: 2),
+            borderSide: const BorderSide(color: Color(0xFF2ECC71), width: 2),
             borderRadius: BorderRadius.circular(12),
           ),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+          enabledBorder: OutlineInputBorder(
+            borderSide: const BorderSide(color: Colors.grey, width: 1),
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
       ),
     );
