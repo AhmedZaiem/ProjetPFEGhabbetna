@@ -24,9 +24,13 @@ final adminRouter = GoRouter(
 
     if (publicPaths.contains(state.uri.path)) return null;
 
-    final accessToken = await authService.getAccessToken();
+    String? accessToken = await authService.getAccessToken();
 
-    if (accessToken == null) return '/';
+    if (accessToken == null || JwtDecoder.isExpired(accessToken)) {
+      // Try refresh
+      accessToken = await authService.refreshToken();
+      if (accessToken == null) return '/'; // can't refresh → go to login
+    }
 
     final payload = JwtDecoder.decode(accessToken);
     final role = payload['role_id'];
