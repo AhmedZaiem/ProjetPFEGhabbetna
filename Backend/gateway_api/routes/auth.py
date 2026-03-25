@@ -14,14 +14,20 @@ async def login(request: Request):
     body = await request.json()
     async with httpx.AsyncClient() as client:
         response = await client.post(f"{Auth_SERVICE_URL}/auth/login", json=body)
-    return response.json()
+    return JSONResponse(
+    status_code=response.status_code,
+    content=response.json()
+)
 
 @router.post("/register")
 async def register(request: Request):
     body = await request.json()
     async with httpx.AsyncClient() as client:
         response = await client.post(f"{Admin_SERVICE_URL}/auth/register", json=body)
-    return response.json()
+    return JSONResponse(
+    status_code=response.status_code,
+    content=response.json()
+)
 
 @router.post("/refresh")
 async def refresh(request: Request):

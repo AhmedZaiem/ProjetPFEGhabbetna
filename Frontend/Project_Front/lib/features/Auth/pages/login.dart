@@ -38,11 +38,11 @@ class _LoginState extends State<login> {
       int roleId = decoded['role_id'];
 
       if (roleId == 1) {
-        context.replace("/admin_dashboard");
+        context.go("/admin_dashboard");
       } else if (roleId == 2) {
-        context.replace("/supervisor_home");
+        context.go("/supervisor_home");
       } else {
-        context.replace("/welcome");
+        context.go("/welcome");
       }
     } else {
       _showDialog("Error", result['message']);

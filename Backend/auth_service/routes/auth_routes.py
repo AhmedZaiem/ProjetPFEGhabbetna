@@ -1,11 +1,10 @@
 from fastapi import APIRouter, HTTPException
-from schemas.auth_schemas import LoginRequest, ActivationRequest, PasswordResetRequest, PasswordReset, ActivateAccountRequest
+from schemas.auth_schemas import LoginRequest, ActivationRequest, PasswordResetRequest, PasswordReset, ActivateAccountRequest,LogoutRequest,RefreshRequest
 from core.security import verify_password, create_access_token, create_refresh_token,decode_token
 from services.email_service import send_activation_email, send_password_reset_email
 
 import httpx
 import uuid
-import jwt
 import jwt
 from core.redis_client import redis_client
 
@@ -64,9 +63,9 @@ async def login(data: LoginRequest):
     }
 
 @router.post("/refresh")
-async def refresh_token(refresh_token: str):
+async def refresh_token(data: RefreshRequest):
     try:
-        payload = decode_token(refresh_token)
+        payload = decode_token(data.refresh_token)
 
         user_id = payload.get("user_id")
         session_id = payload.get("sid")
@@ -79,7 +78,7 @@ async def refresh_token(refresh_token: str):
         if stored_token is None:
             raise HTTPException(status_code=401, detail="Session expired")
         
-        if stored_token != refresh_token:
+        if stored_token.decode('utf-8') != data.refresh_token:
             raise HTTPException(status_code=401, detail="Token mismatch")
         
         new_access_token = create_access_token(
@@ -116,9 +115,9 @@ async def refresh_token(refresh_token: str):
         raise HTTPException(status_code=401, detail="Invalid token")
 
 @router.post("/logout")
-async def logout(refresh_token: str):
+async def logout(data: LogoutRequest):
     try:
-        payload = decode_token(refresh_token)
+        payload = decode_token(data.refresh_token)
 
         user_id = payload.get("user_id")
         session_id = payload.get("sid")

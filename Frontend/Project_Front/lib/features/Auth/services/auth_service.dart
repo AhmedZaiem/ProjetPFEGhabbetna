@@ -2,10 +2,14 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../../config.dart' as config;
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 class AuthService {
   final String baseUrl = config.baseUrl;
   final storage = FlutterSecureStorage();
+  static final AuthService _instance = AuthService._internal();
+  factory AuthService() => _instance;
+  AuthService._internal();
 
   // LOGIN
   Future<Map<String, dynamic>> login({
@@ -25,6 +29,7 @@ class AuthService {
       if (response.statusCode == 200 && data['access_token'] != null) {
         await storage.write(key: "access_token", value: data['access_token']);
         await storage.write(key: 'refresh_token', value: data['refresh_token']);
+
         return {"success": true, "data": data};
       } else {
         return {"success": false, "message": data['message'] ?? "Login failed"};
@@ -52,8 +57,6 @@ class AuthService {
 
       return data['access_token'];
     } else {
-      // Refresh failed, force logout
-      await logout();
       return null;
     }
   }
@@ -62,11 +65,12 @@ class AuthService {
     final refreshToken = await storage.read(key: 'refresh_token');
 
     if (refreshToken != null) {
-      await http.post(
-        Uri.parse('$baseUrl/logout'),
+      final response = await http.post(
+        Uri.parse('$baseUrl/auth/logout'),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({"refresh_token": refreshToken}),
       );
+      print('Logout response: ${response.statusCode} ${response.body}');
     }
 
     // Remove tokens locally

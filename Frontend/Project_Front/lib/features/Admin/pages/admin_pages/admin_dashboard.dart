@@ -34,7 +34,9 @@ class _AdminDashboardState extends State<AdminDashboard> {
 
   void logout() async {
     await authService.logout();
-    context.replace('/');
+    if (!mounted) return;
+
+    context.go('/');
   }
 
   @override

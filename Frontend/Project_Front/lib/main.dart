@@ -10,39 +10,12 @@ import 'features/Admin/core/mobile_url_strategy.dart'
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final authService = AuthService();
-
-  String? accessToken = await authService.getAccessToken();
-  String? refreshToken = await authService.storage.read(key: 'refresh_token');
-
-  String initialRoute = '/';
-
-  if (accessToken != null) {
-    bool isExpired = JwtDecoder.isExpired(accessToken);
-
-    if (isExpired && refreshToken != null) {
-      accessToken = await authService.refreshToken();
-    }
-
-    if (accessToken != null) {
-      final payload = JwtDecoder.decode(accessToken);
-      final role = payload['role_id'];
-
-      if (role == 'Admin') {
-        initialRoute = '/admin_dashboard';
-      } else if (role == 'Agent') {
-        initialRoute = '/welcome';
-      }
-    }
-  }
-
-  runApp(MainApp(router: adminRouter, initialRoute: initialRoute));
+  runApp(MainApp(router: adminRouter));
 }
 
 class MainApp extends StatefulWidget {
   final GoRouter router;
-  final String initialRoute;
-  const MainApp({super.key, required this.router, required this.initialRoute});
+  const MainApp({super.key, required this.router});
 
   @override
   State<MainApp> createState() => _MainAppState();

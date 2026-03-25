@@ -109,7 +109,9 @@ class _WelcomeState extends State<Welcome> {
 
   void logout() async {
     await authService.logout();
-    context.replace('/');
+    if (!mounted) return;
+
+    context.go('/');
   }
 
   @override
