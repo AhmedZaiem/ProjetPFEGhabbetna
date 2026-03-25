@@ -5,6 +5,7 @@ from routes.incidentUpload import router as incident_router
 from routes.forest import router as forest_router
 from routes.parcelle import router as parcelle_router
 from routes.service import router as service_router
+from core.middleware import auth_middleware
 
 app = FastAPI(title="Gateway API")
 
@@ -15,6 +16,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+#app.middleware("http")(auth_middleware)
 
 app.include_router(auth_router, prefix="/auth")
 app.include_router(incident_router, prefix="/incidents")

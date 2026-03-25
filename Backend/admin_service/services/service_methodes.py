@@ -6,8 +6,7 @@ def create_service(db: Session, service: ServiceCreate) -> Service:
     new_service = Service(
         name=service.name,
         type=service.type,
-        description=service.description,
-        user_id=service.user_id
+        description=service.description
     )
     db.add(new_service)
     db.commit()

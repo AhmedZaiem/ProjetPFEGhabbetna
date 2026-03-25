@@ -8,11 +8,9 @@ class Service(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, unique=True, index=True)
-    type = Column(String, unique=True, index=True)
+    type = Column(String, index=True)
     description = Column(String, nullable=True)
 
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    user = relationship("User", back_populates="services")
 
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 

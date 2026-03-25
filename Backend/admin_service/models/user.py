@@ -18,8 +18,6 @@ class User(Base):
     supervised_forests = relationship("Forest", back_populates="supervisor")
     parcelle = relationship("Parcelle", back_populates="agent", uselist=False)
 
-    services = relationship("Service", back_populates="user")
-
     is_verified = Column(Boolean, default=False, nullable=False)
     is_blocked = Column(Boolean, default=False, nullable=False)
 

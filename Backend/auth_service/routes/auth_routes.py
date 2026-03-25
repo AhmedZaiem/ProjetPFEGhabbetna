@@ -6,6 +6,7 @@ from services.email_service import send_activation_email, send_password_reset_em
 import httpx
 import uuid
 import jwt
+import jwt
 from core.redis_client import redis_client
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
@@ -78,7 +79,7 @@ async def refresh_token(refresh_token: str):
         if stored_token is None:
             raise HTTPException(status_code=401, detail="Session expired")
         
-        if stored_token.decode() != refresh_token:
+        if stored_token != refresh_token:
             raise HTTPException(status_code=401, detail="Token mismatch")
         
         new_access_token = create_access_token(
@@ -108,10 +109,10 @@ async def refresh_token(refresh_token: str):
             "access_token": new_access_token,
             "refresh_token": new_refresh_token
         }
-    except jwt.ExpiredSignatureError:
+    except jwt.exceptions.ExpiredSignatureError:
         raise HTTPException(status_code=401, detail="Refresh token expired")
 
-    except jwt.InvalidTokenError:
+    except jwt.exceptions.InvalidTokenError:
         raise HTTPException(status_code=401, detail="Invalid token")
 
 @router.post("/logout")

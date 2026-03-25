@@ -24,6 +24,7 @@ class AuthService {
 
       if (response.statusCode == 200 && data['access_token'] != null) {
         await storage.write(key: "access_token", value: data['access_token']);
+        await storage.write(key: 'refresh_token', value: data['refresh_token']);
         return {"success": true, "data": data};
       } else {
         return {"success": false, "message": data['message'] ?? "Login failed"};
@@ -31,6 +32,50 @@ class AuthService {
     } catch (e) {
       return {"success": false, "message": e.toString()};
     }
+  }
+
+  Future<String?> refreshToken() async {
+    final refreshToken = await storage.read(key: 'refresh_token');
+    if (refreshToken == null) return null;
+
+    final response = await http.post(
+      Uri.parse('$baseUrl/auth/refresh'),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode({"refresh_token": refreshToken}),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+
+      await storage.write(key: 'access_token', value: data['access_token']);
+      await storage.write(key: 'refresh_token', value: data['refresh_token']);
+
+      return data['access_token'];
+    } else {
+      // Refresh failed, force logout
+      await logout();
+      return null;
+    }
+  }
+
+  Future<void> logout() async {
+    final refreshToken = await storage.read(key: 'refresh_token');
+
+    if (refreshToken != null) {
+      await http.post(
+        Uri.parse('$baseUrl/logout'),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({"refresh_token": refreshToken}),
+      );
+    }
+
+    // Remove tokens locally
+    await storage.delete(key: 'access_token');
+    await storage.delete(key: 'refresh_token');
+  }
+
+  Future<String?> getAccessToken() async {
+    return await storage.read(key: 'access_token');
   }
 
   // ACTIVATE ACCOUNT
@@ -126,10 +171,5 @@ class AuthService {
     } catch (e) {
       return {"success": false, "message": e.toString()};
     }
-  }
-
-  // LOGOUT
-  Future<void> logout() async {
-    await storage.delete(key: "access_token");
   }
 }

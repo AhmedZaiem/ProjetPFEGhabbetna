@@ -1,19 +1,48 @@
 import 'package:authproject/features/Admin/core/admin_routes.dart';
+import 'package:authproject/features/Auth/services/auth_service.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:app_links/app_links.dart';
+import 'package:authproject/features/Auth/services/auth_service.dart';
 import 'features/Admin/core/mobile_url_strategy.dart'
     if (dart.library.html) 'features/Admin/core/web_url_strategy.dart';
 
-void main() {
-  configureUrlStrategy();
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final authService = AuthService();
 
-  runApp(MainApp(router: adminRouter));
+  String? accessToken = await authService.getAccessToken();
+  String? refreshToken = await authService.storage.read(key: 'refresh_token');
+
+  String initialRoute = '/';
+
+  if (accessToken != null) {
+    bool isExpired = JwtDecoder.isExpired(accessToken);
+
+    if (isExpired && refreshToken != null) {
+      accessToken = await authService.refreshToken();
+    }
+
+    if (accessToken != null) {
+      final payload = JwtDecoder.decode(accessToken);
+      final role = payload['role_id'];
+
+      if (role == 'Admin') {
+        initialRoute = '/admin_dashboard';
+      } else if (role == 'Agent') {
+        initialRoute = '/welcome';
+      }
+    }
+  }
+
+  runApp(MainApp(router: adminRouter, initialRoute: initialRoute));
 }
 
 class MainApp extends StatefulWidget {
   final GoRouter router;
-  const MainApp({super.key, required this.router});
+  final String initialRoute;
+  const MainApp({super.key, required this.router, required this.initialRoute});
 
   @override
   State<MainApp> createState() => _MainAppState();
@@ -72,7 +101,7 @@ class _MainAppState extends State<MainApp> {
             color: Colors.black,
             fontSize: 14,
             fontWeight: FontWeight.w500,
-            fontFamily: 'Times New Roman', 
+            fontFamily: 'Times New Roman',
           ),
           bodyMedium: TextStyle(
             color: Colors.black,
