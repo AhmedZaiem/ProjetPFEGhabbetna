@@ -4,6 +4,7 @@ import 'package:authproject/features/Admin/pages/admin_pages/create_user.dart';
 import 'package:authproject/features/Admin/pages/admin_pages/forest_list.dart';
 import 'package:authproject/features/Admin/pages/admin_pages/user_list.dart';
 import 'package:authproject/features/Admin/pages/admin_pages/assign.dart';
+import 'package:authproject/features/Admin/pages/admin_pages/assign_agent.dart';
 import 'package:authproject/features/Admin/pages/admin_pages/add_service.dart';
 import 'package:authproject/features/Auth/services/auth_service.dart';
 
@@ -27,9 +28,11 @@ class _AdminDashboardState extends State<AdminDashboard> {
     const Create_User(),
     const AddRole(),
     const Assign(),
+    const AssignAgent(),
     const AddPolygonPage(),
     const ForestList(),
     const AddService(),
+    
   ];
 
   void logout() async {
@@ -52,7 +55,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
               child: Column(
                 children: [
                   SizedBox(
-                    height: 150,
+                    height: 100,
                     child: Image.asset(
                       'assets/images/logoApp.jpeg',
                       fit: BoxFit.contain,
@@ -80,45 +83,52 @@ class _AdminDashboardState extends State<AdminDashboard> {
                           ),
                         ),
                         NavigationRailDestination(
-                          icon: Icon(Icons.add, size: 25),
+                          icon: Icon(Icons.add, size: 20),
                           label: Text(
                             "Create Users",
-                            style: TextStyle(fontSize: 14),
+                            style: TextStyle(fontSize: 12),
                           ),
                         ),
                         NavigationRailDestination(
-                          icon: Icon(Icons.account_box_sharp, size: 25),
+                          icon: Icon(Icons.account_box_sharp, size: 20),
                           label: Text(
                             "Manage Roles",
-                            style: TextStyle(fontSize: 14),
+                            style: TextStyle(fontSize: 12),
                           ),
                         ),
                         NavigationRailDestination(
-                          icon: Icon(Icons.add, size: 25),
+                          icon: Icon(Icons.add, size: 20),
                           label: Text(
-                            "Assign Users",
-                            style: TextStyle(fontSize: 14),
+                            "Assign Supervisor",
+                            style: TextStyle(fontSize: 12),
+                          ),
+                        ),
+                         NavigationRailDestination(
+                          icon: Icon(Icons.add, size: 20),
+                          label: Text(
+                            "Assign Agent",
+                            style: TextStyle(fontSize: 12),
                           ),
                         ),
                         NavigationRailDestination(
-                          icon: Icon(Icons.forest, size: 25),
+                          icon: Icon(Icons.forest, size: 20),
                           label: Text(
                             "Add Forests",
-                            style: TextStyle(fontSize: 14),
+                            style: TextStyle(fontSize: 12),
                           ),
                         ),
                         NavigationRailDestination(
-                          icon: Icon(Icons.forest_outlined, size: 25),
+                          icon: Icon(Icons.forest_outlined, size: 20),
                           label: Text(
                             "Forests list",
-                            style: TextStyle(fontSize: 14),
+                            style: TextStyle(fontSize: 12),
                           ),
                         ),
                         NavigationRailDestination(
-                          icon: Icon(Icons.add, size: 25),
+                          icon: Icon(Icons.add, size: 20),
                           label: Text(
                             "Add Service",
-                            style: TextStyle(fontSize: 14),
+                            style: TextStyle(fontSize: 12),
                           ),
                         ),
                       ],
@@ -131,14 +141,14 @@ class _AdminDashboardState extends State<AdminDashboard> {
                       width: double.infinity,
                       child: ElevatedButton.icon(
                         onPressed: logout,
-                        icon: const Icon(Icons.logout, size: 20),
+                        icon: const Icon(Icons.logout, size: 16),
                         label: const Text(
                           "Logout",
-                          style: TextStyle(fontSize: 16),
+                          style: TextStyle(fontSize: 14),
                         ),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF1B5E20),
-                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),

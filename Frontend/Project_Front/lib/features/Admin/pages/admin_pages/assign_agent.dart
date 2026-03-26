@@ -1,28 +1,27 @@
 import 'package:flutter/material.dart';
-
 import 'package:authproject/features/Admin/models/user_model.dart';
-import 'package:authproject/features/Admin/models/forest_model.dart';
-import 'package:authproject/features/Admin/services/forest_service.dart';
+import 'package:authproject/features/Admin/models/parcelle_model.dart';
+import 'package:authproject/features/Admin/services/parcelle_service.dart';
 import 'package:authproject/features/Admin/services/user_service.dart';
 import 'package:authproject/features/Admin/ui_components/assignment_card.dart';
 import 'package:authproject/features/Admin/ui_components/custom_dropdown.dart';
 
-class Assign extends StatefulWidget {
-  const Assign({super.key});
+class AssignAgent extends StatefulWidget {
+  const AssignAgent({super.key});
 
   @override
-  State<Assign> createState() => _AssignState();
+  State<AssignAgent> createState() => _AssignAgentState();
 }
 
-class _AssignState extends State<Assign> {
-  final ForestService forestService = ForestService();
+class _AssignAgentState extends State<AssignAgent> {
+  final ParcelService parcelService = ParcelService();
   final UserService userService = UserService();
 
-  List<Forest> forests = [];
-  List<UserModel> unassignedSupervisor = [];
+  List<Parcel> parcels = [];
+  List<UserModel> unassignedAgents = [];
 
-  Forest? selectedForest;
-  UserModel? selectedUserForForest;
+  Parcel? selectedParcel;
+  UserModel? selectedUserForParcel;
 
   bool loading = true;
 
@@ -35,20 +34,20 @@ class _AssignState extends State<Assign> {
   Future<void> loadData() async {
     setState(() => loading = true);
     try {
-      final allForests = await forestService.getFreeForests();
-      print('Unassigned forests: ${allForests.map((f) => f.name).toList()}');
+      final allParcels = await parcelService.getFreeParcels();
+      print('Unassigned parcels: ${allParcels.map((p) => p.name).toList()}');
 
-      final funassignedSupervisor = await userService.getSupervisors();
+      final fetchedUnassignedAgents = await userService.getUnassignedAgents();
       print(
-        'Unassigned supervisors: ${funassignedSupervisor.map((u) => u.username).toList()}',
+        'Unassigned agents: ${fetchedUnassignedAgents.map((u) => u.username).toList()}',
       );
 
       setState(() {
-        forests = allForests;
-        unassignedSupervisor = funassignedSupervisor;
+        parcels = allParcels;
+        unassignedAgents = fetchedUnassignedAgents;
 
-        selectedForest = null;
-        selectedUserForForest = null;
+        selectedParcel = null;
+        selectedUserForParcel = null;
 
         loading = false;
       });
@@ -58,16 +57,16 @@ class _AssignState extends State<Assign> {
     }
   }
 
-  Future<void> assignSupervisor() async {
-    if (selectedForest == null || selectedUserForForest == null) return;
+  Future<void> assignAgent() async {
+    if (selectedParcel == null || selectedUserForParcel == null) return;
 
     try {
-      await forestService.assignSupervisor(
-        selectedForest!.id,
-        selectedUserForForest!.id,
+      await parcelService.assignAgent(
+        selectedParcel!.id,
+        selectedUserForParcel!.id,
       );
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Supervisor assigned successfully")),
+        const SnackBar(content: Text("Agent assigned successfully")),
       );
       await loadData();
     } catch (e) {
@@ -89,7 +88,7 @@ class _AssignState extends State<Assign> {
           children: [
             Image.asset('assets/images/logoApp.jpeg', height: 80),
             const SizedBox(width: 12),
-            const Text("Assign Supervisor"),
+            const Text("Assign Agent"),
           ],
         ),
       ),
@@ -100,40 +99,40 @@ class _AssignState extends State<Assign> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                /// Assign Supervisor
+                /// Assign Agent
                 Expanded(
                   child: AssignmentCard(
-                    title: "Assign Supervisor to Forest",
+                    title: "Assign Agent to Parcelle",
                     children: [
                       CustomDropdown(
-                        value: selectedUserForForest,
-                        hint: "Select Supervisor",
-                        items: unassignedSupervisor,
+                        value: selectedUserForParcel,
+                        hint: "Select Agent",
+                        items: unassignedAgents,
                         label: (u) => u.username,
                         onChanged: (u) =>
-                            setState(() => selectedUserForForest = u),
+                            setState(() => selectedUserForParcel = u),
                       ),
                       const SizedBox(height: 12),
                       CustomDropdown(
-                        value: selectedForest,
-                        hint: "Select Forest",
-                        items: forests,
+                        value: selectedParcel,
+                        hint: "Select Parcelle",
+                        items: parcels,
                         label: (p) => p.name,
-                        onChanged: (p) => setState(() => selectedForest = p),
+                        onChanged: (p) => setState(() => selectedParcel = p),
                       ),
                       const SizedBox(height: 16),
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton.icon(
                           onPressed:
-                              (selectedUserForForest != null &&
-                                  selectedForest != null)
-                              ? assignSupervisor
+                              (selectedUserForParcel != null &&
+                                  selectedParcel != null)
+                              ? assignAgent
                               : null,
-                          icon: const Icon(Icons.supervisor_account),
-                          label: const Text("Assign Supervisor"),
+                          icon: const Icon(Icons.assignment_turned_in),
+                          label: const Text("Assign Agent"),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green.shade700,
+                            backgroundColor: Colors.teal.shade700,
                             foregroundColor: Colors.white,
                             padding: const EdgeInsets.symmetric(vertical: 16),
                             shape: RoundedRectangleBorder(

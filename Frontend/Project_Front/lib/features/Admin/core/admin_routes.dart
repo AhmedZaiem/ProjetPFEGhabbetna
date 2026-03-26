@@ -52,6 +52,7 @@ final adminRouter = GoRouter(
     GoRoute(path: '/', builder: (context, state) => login()),
     GoRoute(path: '/welcome', builder: (context, state) => Welcome()),
 
+
     GoRoute(
       path: '/forgot_password',
       builder: (context, state) => ForgetPassword(),

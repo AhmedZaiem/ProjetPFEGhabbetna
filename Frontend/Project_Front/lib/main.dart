@@ -59,16 +59,19 @@ class _MainAppState extends State<MainApp> {
       title: "Ghabetna",
       routerConfig: widget.router,
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        scaffoldBackgroundColor: const Color(0xFFE8F8F0),
 
-        primaryColor: const Color.fromARGB(255, 19, 113, 58),
+      theme: ThemeData(
+        // BACKGROUND COLOR
+        scaffoldBackgroundColor: const Color(0xFFDAD7CD),
+
+        primaryColor: const Color(0xFF1B5E20),
 
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color.fromARGB(255, 21, 121, 63),
-          background: const Color(0xFFF4FBF7),
+          seedColor: const Color(0xFF1B5E20),
+          background: const Color(0xFFDAD7CD),
         ),
 
+        // TEXT THEME
         textTheme: const TextTheme(
           bodyLarge: TextStyle(
             color: Colors.black,
@@ -89,33 +92,36 @@ class _MainAppState extends State<MainApp> {
             fontFamily: 'Times New Roman',
           ),
 
+          // TITLES 
           titleLarge: TextStyle(
-            color: Colors.black,
+            color: Color(0xFF1B5E20),
             fontSize: 20,
             fontWeight: FontWeight.bold,
             fontFamily: 'Times New Roman',
           ),
           titleMedium: TextStyle(
-            color: Colors.black,
+            color: Color(0xFF1B5E20),
             fontSize: 16,
             fontFamily: 'Times New Roman',
           ),
           titleSmall: TextStyle(
-            color: Colors.black,
+            color: Color(0xFF1B5E20),
             fontSize: 14,
             fontFamily: 'Times New Roman',
           ),
         ),
 
+        // APP BAR
         appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFF2ECC71),
+          backgroundColor: Color(0xFF1B5E20),
           foregroundColor: Colors.white,
           centerTitle: true,
         ),
 
+        // BUTTONS
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF2ECC71),
+            backgroundColor: const Color(0xFF1B5E20),
             foregroundColor: Colors.white,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
@@ -124,19 +130,22 @@ class _MainAppState extends State<MainApp> {
           ),
         ),
 
+        // INPUTS
         inputDecorationTheme: InputDecorationTheme(
           labelStyle: const TextStyle(
             color: Colors.black,
-            fontFamily: 'Georgia',
+            fontFamily: 'Times New Roman',
           ),
-          hintStyle: const TextStyle(color: Colors.grey, fontFamily: 'Georgia'),
+          hintStyle: const TextStyle(
+            color: Colors.grey,
+            fontFamily: 'Times New Roman',
+          ),
+
           focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(
-              color: Color.fromARGB(255, 25, 126, 67),
-              width: 2,
-            ),
+            borderSide: const BorderSide(color: Color(0xFF1B5E20), width: 2),
             borderRadius: BorderRadius.circular(12),
           ),
+
           enabledBorder: OutlineInputBorder(
             borderSide: const BorderSide(color: Colors.grey, width: 1),
             borderRadius: BorderRadius.circular(12),
