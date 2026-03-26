@@ -95,61 +95,62 @@ class _AssignState extends State<Assign> {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 700),
+            child: Column(
               children: [
-                /// Assign Supervisor
-                Expanded(
-                  child: AssignmentCard(
-                    title: "Assign Supervisor to Forest",
-                    children: [
-                      CustomDropdown(
-                        value: selectedUserForForest,
-                        hint: "Select Supervisor",
-                        items: unassignedSupervisor,
-                        label: (u) => u.username,
-                        onChanged: (u) =>
-                            setState(() => selectedUserForForest = u),
-                      ),
-                      const SizedBox(height: 12),
-                      CustomDropdown(
-                        value: selectedForest,
-                        hint: "Select Forest",
-                        items: forests,
-                        label: (p) => p.name,
-                        onChanged: (p) => setState(() => selectedForest = p),
-                      ),
-                      const SizedBox(height: 16),
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton.icon(
-                          onPressed:
-                              (selectedUserForForest != null &&
-                                  selectedForest != null)
-                              ? assignSupervisor
-                              : null,
-                          icon: const Icon(Icons.supervisor_account),
-                          label: const Text("Assign Supervisor"),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green.shade700,
-                            foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
+                AssignmentCard(
+                  title: "Assign Supervisor to Forest",
+                  children: [
+                    CustomDropdown(
+                      value: selectedUserForForest,
+                      hint: "Select Supervisor",
+                      items: unassignedSupervisor,
+                      label: (u) => u.username,
+                      onChanged: (u) =>
+                          setState(() => selectedUserForForest = u),
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    CustomDropdown(
+                      value: selectedForest,
+                      hint: "Select Forest",
+                      items: forests,
+                      label: (p) => p.name,
+                      onChanged: (p) => setState(() => selectedForest = p),
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        onPressed:
+                            (selectedUserForForest != null &&
+                                selectedForest != null)
+                            ? assignSupervisor
+                            : null,
+                        icon: const Icon(Icons.supervisor_account),
+                        label: const Text("Assign Supervisor"),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green.shade700,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
+
+                const SizedBox(height: 32),
               ],
             ),
-
-            const SizedBox(height: 32),
-          ],
+          ),
         ),
       ),
     );

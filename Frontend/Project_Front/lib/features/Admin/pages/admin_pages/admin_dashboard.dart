@@ -76,10 +76,10 @@ class _AdminDashboardState extends State<AdminDashboard> {
                       minExtendedWidth: 200,
                       destinations: const [
                         NavigationRailDestination(
-                          icon: Icon(Icons.people, size: 25),
+                          icon: Icon(Icons.people, size: 20),
                           label: Text(
                             "Users List",
-                            style: TextStyle(fontSize: 14),
+                            style: TextStyle(fontSize: 12),
                           ),
                         ),
                         NavigationRailDestination(
@@ -125,9 +125,9 @@ class _AdminDashboardState extends State<AdminDashboard> {
                           ),
                         ),
                         NavigationRailDestination(
-                          icon: Icon(Icons.add, size: 20),
+                          icon: Icon(Icons.medical_services, size: 20),
                           label: Text(
-                            "Add Service",
+                            "Manage Services",
                             style: TextStyle(fontSize: 12),
                           ),
                         ),

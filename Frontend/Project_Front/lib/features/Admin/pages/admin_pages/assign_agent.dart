@@ -94,61 +94,64 @@ class _AssignAgentState extends State<AssignAgent> {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(
+              maxWidth: 700,
+            ),
+            child: Column(
               children: [
-                /// Assign Agent
-                Expanded(
-                  child: AssignmentCard(
-                    title: "Assign Agent to Parcelle",
-                    children: [
-                      CustomDropdown(
-                        value: selectedUserForParcel,
-                        hint: "Select Agent",
-                        items: unassignedAgents,
-                        label: (u) => u.username,
-                        onChanged: (u) =>
-                            setState(() => selectedUserForParcel = u),
-                      ),
-                      const SizedBox(height: 12),
-                      CustomDropdown(
-                        value: selectedParcel,
-                        hint: "Select Parcelle",
-                        items: parcels,
-                        label: (p) => p.name,
-                        onChanged: (p) => setState(() => selectedParcel = p),
-                      ),
-                      const SizedBox(height: 16),
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton.icon(
-                          onPressed:
-                              (selectedUserForParcel != null &&
-                                  selectedParcel != null)
-                              ? assignAgent
-                              : null,
-                          icon: const Icon(Icons.assignment_turned_in),
-                          label: const Text("Assign Agent"),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.teal.shade700,
-                            foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
+                AssignmentCard(
+                  title: "Assign Agent to Parcelle",
+                  children: [
+                    CustomDropdown(
+                      value: selectedUserForParcel,
+                      hint: "Select Agent",
+                      items: unassignedAgents,
+                      label: (u) => u.username,
+                      onChanged: (u) =>
+                          setState(() => selectedUserForParcel = u),
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    CustomDropdown(
+                      value: selectedParcel,
+                      hint: "Select Parcelle",
+                      items: parcels,
+                      label: (p) => p.name,
+                      onChanged: (p) => setState(() => selectedParcel = p),
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        onPressed:
+                            (selectedUserForParcel != null &&
+                                selectedParcel != null)
+                            ? assignAgent
+                            : null,
+                        icon: const Icon(Icons.assignment_turned_in),
+                        label: const Text("Assign Agent"),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.teal.shade700,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
+
+                const SizedBox(height: 32),
               ],
             ),
-
-            const SizedBox(height: 32),
-          ],
+          ),
         ),
       ),
     );
