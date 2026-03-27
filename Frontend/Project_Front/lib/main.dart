@@ -10,6 +10,7 @@ import 'features/Admin/core/mobile_url_strategy.dart'
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  configureUrlStrategy();
   runApp(MainApp(router: adminRouter));
 }
 
@@ -92,7 +93,7 @@ class _MainAppState extends State<MainApp> {
             fontFamily: 'Times New Roman',
           ),
 
-          // TITLES 
+          // TITLES
           titleLarge: TextStyle(
             color: Color(0xFF1B5E20),
             fontSize: 20,

@@ -4,7 +4,7 @@ import 'dart:async';
 import 'package:authproject/features/Auth/pages/forgot_password.dart';
 import 'package:authproject/features/Auth/pages/login.dart';
 import 'package:authproject/features/Auth/pages/reset_password.dart';
-import 'package:authproject/features/Auth/pages/welcome.dart';
+import 'package:authproject/features/Agent/pages/welcome.dart';
 import 'package:authproject/features/Auth/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -13,16 +13,23 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 final authService = AuthService();
 
 final adminRouter = GoRouter(
-  initialLocation: '/',
   redirect: (context, state) async {
-    final publicPaths = [
-      '/',
-      '/forgot_password',
-      '/activate',
-      '/reset-password',
-    ];
+    print("➡️ Redirect check: ${state.uri}");
 
-    if (publicPaths.contains(state.uri.path)) return null;
+    // 🔥 FORCE allow activation route
+    if (state.uri.toString().contains('/activate') ||
+        state.uri.toString().contains('/reset-password')) {
+      return null;
+    }
+    final path = state.uri.path;
+
+    // Public routes (no auth needed)
+    if (path == '/' ||
+        path.startsWith('/forgot_password') ||
+        path.startsWith('/activate') ||
+        path.startsWith('/reset-password')) {
+      return null;
+    }
 
     String? accessToken = await authService.getAccessToken();
 
@@ -35,15 +42,12 @@ final adminRouter = GoRouter(
     final payload = JwtDecoder.decode(accessToken);
     final role = payload['role_id'];
 
-    if (state.uri.path == '/') {
-      if (role == 1) return '/admin_dashboard';
-      if (role == 3) return '/welcome';
-    }
+    if (role == 1 && path.startsWith('/admin_dashboard')) return null;
+    if (role == 3 && path.startsWith('/welcome')) return null;
 
-    if ((role == 1 && state.uri.path.startsWith('/admin_dashboard')) ||
-        (role == 3 && state.uri.path.startsWith('/welcome'))) {
-      return null; // Authorized
-    }
+    // Redirect based on role
+    if (role == 1) return '/admin_dashboard';
+    if (role == 3) return '/welcome';
 
     // Unauthorized → fallback
     return '/';
@@ -51,7 +55,6 @@ final adminRouter = GoRouter(
   routes: [
     GoRoute(path: '/', builder: (context, state) => login()),
     GoRoute(path: '/welcome', builder: (context, state) => Welcome()),
-
 
     GoRoute(
       path: '/forgot_password',
