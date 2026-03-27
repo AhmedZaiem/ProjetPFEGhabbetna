@@ -40,7 +40,7 @@ class _LoginState extends State<login> {
       if (roleId == 1) {
         context.go("/admin_dashboard");
       } else if (roleId == 2) {
-        context.go("/supervisor_home");
+        context.go("/supervisor");
       } else {
         context.go("/welcome");
       }
