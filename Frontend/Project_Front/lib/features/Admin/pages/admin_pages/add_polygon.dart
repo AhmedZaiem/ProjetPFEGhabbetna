@@ -125,6 +125,11 @@ class _AddPolygonPageState extends State<AddPolygonPage> {
     }
   }
 
+  final northTunisiaBounds = LatLngBounds(
+    LatLng(36.5, 9.5),
+    LatLng(37.4, 10.8),
+  );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -319,6 +324,15 @@ class _AddPolygonPageState extends State<AddPolygonPage> {
                       child: FlutterMap(
                         mapController: mapController,
                         options: MapOptions(
+                          initialCameraFit: CameraFit.bounds(
+                            bounds: northTunisiaBounds,
+                            padding: EdgeInsets.all(16),
+                          ),
+                          cameraConstraint: CameraConstraint.contain(
+                            bounds: northTunisiaBounds,
+                          ),
+                          minZoom: 8.5,
+                          maxZoom: 18,
                           initialCenter: LatLng(37.2, 10.12),
                           initialZoom: 13,
                           onTap: (tapPosition, point) => addPoint(point),
