@@ -23,6 +23,7 @@ class _AddPolygonPageState extends State<AddPolygonPage> {
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController regionController = TextEditingController();
 
   final MapController mapController = MapController();
 
@@ -92,12 +93,17 @@ class _AddPolygonPageState extends State<AddPolygonPage> {
           ForestCreate(
             name: nameController.text,
             description: descriptionController.text,
+            region: regionController.text,
             boundary: coords,
           ),
         );
       } else {
         await parcelService.createParcel(
-          ParcelCreate(name: nameController.text, boundary: coords),
+          ParcelCreate(
+            name: nameController.text,
+            boundary: coords,
+            region: regionController.text,
+          ),
         );
       }
 
@@ -114,6 +120,7 @@ class _AddPolygonPageState extends State<AddPolygonPage> {
 
       nameController.clear();
       descriptionController.clear();
+      regionController.clear();
 
       clearPolygon();
 
@@ -189,6 +196,20 @@ class _AddPolygonPageState extends State<AddPolygonPage> {
                       labelText: mode == PolygonMode.forest
                           ? "Forest name"
                           : "Parcel name",
+                      prefixIcon: Icon(
+                        mode == PolygonMode.forest ? Icons.forest : Icons.map,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                  TextField(
+                    controller: regionController,
+                    decoration: InputDecoration(
+                      labelText: mode == PolygonMode.forest
+                          ? "Forest region"
+                          : "Parcel region",
                       prefixIcon: Icon(
                         mode == PolygonMode.forest ? Icons.forest : Icons.map,
                       ),

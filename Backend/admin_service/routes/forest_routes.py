@@ -16,7 +16,8 @@ def create_forest_route(forest_in: ForestCreate, db: Session = Depends(get_db)):
         description=forest.description,
         area_hectares=forest.area_hectares,
         risk_level=forest.risk_level,
-        boundary=convert_forest_boundary(forest)
+        boundary=convert_forest_boundary(forest),
+        region=forest.region
     )
 
 @router.get("/", response_model=list[ForestOut])
@@ -30,7 +31,8 @@ def get_forests_route(db: Session = Depends(get_db)):
             area_hectares=f.area_hectares,
             risk_level=f.risk_level,
             boundary=convert_forest_boundary(f),
-            supervisor_id=f.supervisor_id
+            supervisor_id=f.supervisor_id,
+            region=f.region
         ) for f in forests
     ]
 
@@ -45,7 +47,8 @@ def get_non_supervised_forests(db: Session = Depends(get_db)):
             area_hectares=f.area_hectares,
             risk_level=f.risk_level,
             boundary=convert_forest_boundary(f),
-            supervisor_id=f.supervisor_id
+            supervisor_id=f.supervisor_id,
+            region=f.region
         ) for f in forests
     ]
 
@@ -62,7 +65,8 @@ def get_forest_route(forest_id: int, db: Session = Depends(get_db)):
         area_hectares=forest.area_hectares,
         risk_level=forest.risk_level,
         boundary=convert_forest_boundary(forest),
-        supervisor_id=forest.supervisor_id
+        supervisor_id=forest.supervisor_id,
+        region=forest.region
     )
 
 @router.delete("/{forest_id}")

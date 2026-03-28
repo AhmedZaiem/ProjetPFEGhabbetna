@@ -18,7 +18,7 @@ class Forest(Base):
     boundary = Column(Geometry(geometry_type='POLYGON', srid=4326))
     risk_level = Column(Enum(RiskLevel), default=RiskLevel.no_data)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
-
+    region = Column(String, nullable=True)
     supervisor_id = Column(Integer, ForeignKey("users.id"), nullable=True, default=None)
     supervisor = relationship("User", back_populates="supervised_forests", foreign_keys=[supervisor_id])
 

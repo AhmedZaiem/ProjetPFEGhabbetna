@@ -34,11 +34,21 @@ def get_user_by_email(db: Session, email: str):
 def get_user_by_id(db: Session,user_id: int):
     return db.query(User).filter(User.id == user_id).first()
 
-def create_user(db:Session,username:str, email: str,role_name: str, age: int):
+def create_user(db:Session,firstname:str,lastname:str,cin:str,username:str, email: str,role_name: str, age: int,region:str):
     role = db.query(Role).filter(Role.name == role_name).first()
     if not role:
         raise HTTPException(status_code=400, detail="Invalid role")
-    new_user = User(username=username, email=email,role_id=role.id, age=age)
+    new_user = User(
+        firstname=firstname,
+        lastname=lastname,
+        cin=cin,
+        username=username,
+        email=email,
+        role_id=role.id,
+        age=age,
+        region=region,
+
+    )
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
@@ -49,9 +59,13 @@ def get_all_users(db: Session):
     return [
         {
             "id": u.id,
+            "firstname": u.firstname,
+            "lastname": u.lastname,
+            "cin":u.cin,
             "username": u.username,
             "email": u.email,
             "age": u.age,
+            "region": u.region,
             "role_name": u.role.name,
             "is_verified": u.is_verified,
             "is_blocked": u.is_blocked
@@ -133,6 +147,10 @@ def get_non_assigned_agents(db: Session):
     return [
         {
             "id": a.id,
+            "firstname": a.firstname,
+            "lastname": a.lastname,
+            "cin": a.cin,
+            "region": a.region,
             "username": a.username,
             "email": a.email,
             "age": a.age,

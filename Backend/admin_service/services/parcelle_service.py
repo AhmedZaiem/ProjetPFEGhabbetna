@@ -25,6 +25,7 @@ def create_parcelle(db: Session, parcelle_in: ParcelleCreate) -> Parcelle:
         name=parcelle_in.name,
         area_hectares=calculate_area_hectares(geom),
         boundary=geom,
+        region=parcelle_in.region,
         forest_id=outside_forest_id
     )
     db.add(parcelle)

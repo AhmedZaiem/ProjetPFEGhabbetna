@@ -8,12 +8,14 @@ class Coordinates(BaseModel):
 class ForestCreate(BaseModel):
     name: str = Field(min_length=3, max_length=100)
     description: Optional[str] = Field(None, max_length=500)
+    region: str
     boundary: List[Coordinates]
 
 class ForestOut(BaseModel):
     id: int
     name: str
     description: Optional[str]
+    region: str
     area_hectares: float
     risk_level: str
     boundary: List[Coordinates]

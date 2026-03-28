@@ -8,6 +8,7 @@ class Forest {
   final String riskLevel;
   final List<Coordinates> boundary;
   final int? supervisorId;
+  final String region;
 
   Forest({
     required this.id,
@@ -17,6 +18,7 @@ class Forest {
     required this.riskLevel,
     required this.boundary,
     this.supervisorId,
+    required this.region,
   });
 
   factory Forest.fromJson(Map<String, dynamic> json) {
@@ -30,6 +32,7 @@ class Forest {
           .map((e) => Coordinates.fromJson(e))
           .toList(),
       supervisorId: json["supervisor_id"],
+      region: json["region"],
     );
   }
 }
@@ -38,11 +41,13 @@ class ForestCreate {
   final String name;
   final String? description;
   final List<Coordinates> boundary;
+  final String region;
 
   ForestCreate({
     required this.name,
     this.description,
     required this.boundary,
+    required this.region,
   });
 
   Map<String, dynamic> toJson() {
@@ -50,6 +55,7 @@ class ForestCreate {
       "name": name,
       "description": description,
       "boundary": boundary.map((c) => c.toJson()).toList(),
+      "region": region,
     };
   }
 }

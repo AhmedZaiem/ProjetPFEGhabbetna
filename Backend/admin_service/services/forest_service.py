@@ -22,7 +22,8 @@ def create_forest(db: Session, forest_in: ForestCreate) -> Forest:
         name=forest_in.name,
         description=forest_in.description,
         area_hectares=calculate_area_hectares(geom),
-        boundary=geom
+        region=forest_in.region,
+        boundary=geom, 
     )
     db.add(forest)
     db.commit()

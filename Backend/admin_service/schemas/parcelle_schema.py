@@ -8,6 +8,7 @@ class Coordinates(BaseModel):
 class ParcelleCreate(BaseModel):
     name: str = Field(min_length=3, max_length=100)
     boundary: List[Coordinates]
+    region: str
 
 class ParcelleOut(BaseModel):
     id: int
@@ -16,6 +17,7 @@ class ParcelleOut(BaseModel):
     forest_id: int
     boundary: List[Coordinates]
     agent_id : int | None=None
+    region: str
 
     class Config:
         orm_mode = True

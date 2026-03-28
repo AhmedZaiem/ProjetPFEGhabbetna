@@ -19,7 +19,8 @@ def create_parcelle_route(parcelle_in: ParcelleCreate, db: Session = Depends(get
         name=parcelle.name,
         area_hectares=parcelle.area_hectares,
         boundary=convert_parcelle_boundary(parcelle),
-        forest_id=parcelle.forest_id
+        forest_id=parcelle.forest_id,
+        region=parcelle.region
     )
 
 @router.get("/", response_model=list[ParcelleOut])
@@ -32,7 +33,8 @@ def get_parcelles_route(db: Session = Depends(get_db)):
             area_hectares=p.area_hectares,
             boundary=convert_parcelle_boundary(p),
             forest_id=p.forest_id,
-            agent_id=p.agent_id
+            agent_id=p.agent_id,
+            region=p.region
         ) for p in parcelles
     ]
 
@@ -46,7 +48,8 @@ def get_non_patrolled_parcelles(db: Session = Depends(get_db)):
             area_hectares=p.area_hectares,
             boundary=convert_parcelle_boundary(p),
             forest_id=p.forest_id,
-            agent_id=p.agent_id
+            agent_id=p.agent_id,
+            region=p.region
         ) for p in parcelles
     ]
 
@@ -61,7 +64,8 @@ def get_parcelle_route(parcelle_id: int, db: Session = Depends(get_db)):
         area_hectares=parcelle.area_hectares,
         boundary=convert_parcelle_boundary(parcelle),
         forest_id=parcelle.forest_id,
-        agent_id=parcelle.agent_id
+        agent_id=parcelle.agent_id,
+        region=parcelle.region
     )
 
 @router.delete("/{parcelle_id}")

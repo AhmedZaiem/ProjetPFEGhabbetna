@@ -7,6 +7,7 @@ class Parcel {
   final int forestId;
   final List<Coordinates> boundary;
   final int? agentId;
+  final String region;
 
   Parcel({
     required this.id,
@@ -15,6 +16,7 @@ class Parcel {
     required this.forestId,
     required this.boundary,
     this.agentId,
+    required this.region,
   });
 
   factory Parcel.fromJson(Map<String, dynamic> json) {
@@ -27,6 +29,7 @@ class Parcel {
           .map((e) => Coordinates.fromJson(e))
           .toList(),
       agentId: json["agent_id"],
+      region: json["region"],
     );
   }
 }
@@ -34,13 +37,19 @@ class Parcel {
 class ParcelCreate {
   final String name;
   final List<Coordinates> boundary;
+  final String region;
 
-  ParcelCreate({required this.name, required this.boundary});
+  ParcelCreate({
+    required this.name,
+    required this.boundary,
+    required this.region,
+  });
 
   Map<String, dynamic> toJson() {
     return {
       "name": name,
       "boundary": boundary.map((c) => c.toJson()).toList(),
+      "region": region,
     };
   }
 }

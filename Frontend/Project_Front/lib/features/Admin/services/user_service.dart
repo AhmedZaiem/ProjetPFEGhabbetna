@@ -25,10 +25,14 @@ class UserService {
   }
 
   Future<Map<String, dynamic>> createUser({
+    required String firstname,
+    required String lastname,
+    required String cin,
     required String username,
     required String email,
     required int age,
     required String roleName,
+    required String region,
   }) async {
     try {
       var url = Uri.parse("$baseUrl/auth/register");
@@ -36,10 +40,14 @@ class UserService {
         url,
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
+          'firstname': firstname,
+          'lastname': lastname,
+          'cin': cin,
           'username': username,
           'email': email,
           'age': age,
           'role_name': roleName,
+          'region': region,
         }),
       );
 

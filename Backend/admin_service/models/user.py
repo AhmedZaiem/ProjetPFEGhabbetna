@@ -7,11 +7,14 @@ class User(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
+    firstname = Column(String, index=True)
+    lastname = Column(String, index=True)
+    cin = Column(String, unique=True)
     username = Column(String, unique=True, index=True)
     email = Column(String, unique=True, index=True)
     password_hash = Column(String, nullable=True)
     age = Column(Integer,nullable=False)
-
+    region = Column(String, nullable=False)
     role_id = Column(Integer, ForeignKey("roles.id"), nullable=False)
     role = relationship("Role", back_populates="users")
 

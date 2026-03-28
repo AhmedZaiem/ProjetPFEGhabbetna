@@ -13,9 +13,13 @@ class Create_User extends StatefulWidget {
 }
 
 class _CreateUserState extends State<Create_User> {
+  var firstnameController = TextEditingController();
+  var lastnameController = TextEditingController();
+  var cinController = TextEditingController();
   var usernameController = TextEditingController();
   var emailController = TextEditingController();
   var ageController = TextEditingController();
+  var regionController = TextEditingController();
 
   final storage = FlutterSecureStorage();
 
@@ -32,23 +36,35 @@ class _CreateUserState extends State<Create_User> {
   }
 
   void CreateUserAcc() async {
+    String firstname = firstnameController.text.trim();
+    String lastname = lastnameController.text.trim();
+    String cin = cinController.text.trim();
     String username = usernameController.text.trim();
     String email = emailController.text.trim();
     int? age = int.tryParse(ageController.text.trim());
+    String region = regionController.text.trim();
 
-    if (username.isEmpty ||
+    if (firstname.isEmpty ||
+        lastname.isEmpty ||
+        cin.isEmpty ||
+        username.isEmpty ||
         email.isEmpty ||
         age == null ||
+        region.isEmpty ||
         selectedRole.isEmpty) {
       _showDialog("Error", "Please fill all fields correctly.");
       return;
     }
 
     final result = await userService.createUser(
+      firstname: firstname,
+      lastname: lastname,
+      cin: cin,
       username: username,
       email: email,
       age: age,
       roleName: selectedRole,
+      region: region,
     );
 
     _showDialog(result['success'] ? "Success" : "Error", result['message']);
@@ -109,6 +125,71 @@ class _CreateUserState extends State<Create_User> {
                           color: Color(0xFF1B5E20),
                         ),
                         textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 30),
+                      TextFormField(
+                        controller: firstnameController,
+                        decoration: InputDecoration(
+                          labelText: "First Name",
+                          prefixIcon: Icon(Icons.person),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'First Name is required';
+                          }
+                          if (!RegExp(r'^[a-zA-Z]+$').hasMatch(value)) {
+                            return 'Only letters allowed';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 30),
+
+                      TextFormField(
+                        controller: lastnameController,
+                        decoration: InputDecoration(
+                          labelText: "Last Name",
+                          prefixIcon: Icon(Icons.person),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Last Name is required';
+                          }
+                          if (!RegExp(r'^[a-zA-Z]+$').hasMatch(value)) {
+                            return 'Only letters allowed';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 30),
+
+                      TextFormField(
+                        controller: cinController,
+                        decoration: InputDecoration(
+                          labelText: "Cin",
+                          prefixIcon: Icon(Icons.numbers),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Cin is required';
+                          }
+                          if (value.length != 8) {
+                            return 'Cin needs to be 8 Numbers';
+                          }
+                          if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
+                            return 'Only numbers allowed';
+                          }
+                          return null;
+                        },
                       ),
                       const SizedBox(height: 30),
 
@@ -176,6 +257,27 @@ class _CreateUserState extends State<Create_User> {
                           }
                           if (age <= 18) {
                             return 'Age must be greater than 18';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 20),
+
+                      TextFormField(
+                        decoration: InputDecoration(
+                          labelText: 'Region',
+                          prefixIcon: const Icon(Icons.location_city),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        controller: regionController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Region is required';
+                          }
+                          if (!RegExp(r'^[a-zA-Z0-9]+$').hasMatch(value)) {
+                            return 'Only letters and numbers allowed';
                           }
                           return null;
                         },

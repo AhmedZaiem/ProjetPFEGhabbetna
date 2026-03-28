@@ -11,7 +11,7 @@ class Parcelle(Base):
     name = Column(String, nullable=False)
     area_hectares = Column(Float)
     boundary = Column(Geometry(geometry_type='POLYGON', srid=4326))
-
+    region = Column(String, nullable=True)
     forest_id = Column(Integer,ForeignKey("forests.id"), nullable=False)
     forest = relationship("Forest", back_populates="parcelles")
 
