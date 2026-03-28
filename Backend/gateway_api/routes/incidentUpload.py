@@ -12,7 +12,9 @@ async def create_incident(request: Request):
         "description": form.get("description"),
         "type": form.get("type"),
         "location": form.get("location"),
-        "region": form.get("region")
+        "region": form.get("region"),
+        "latitude": form.get("latitude"),
+        "longitude": form.get("longitude"),
     }
     files = {"image": (form["image"].filename, await form["image"].read(), form["image"].content_type)}
     

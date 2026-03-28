@@ -1,5 +1,5 @@
 import 'dart:typed_data';
-
+import 'package:geolocator/geolocator.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
@@ -41,6 +41,32 @@ class _WelcomeState extends State<Welcome> {
     loadUser();
   }
 
+  Future<Position> getCurrentLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      throw Exception("Location services are disabled.");
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        throw Exception("Location permissions are denied.");
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      throw Exception("Location permissions are permanently denied");
+    }
+
+    return await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+  }
+
   void loadUser() async {
     final result = await authService.getCurrentUser();
     if (result['success']) {
@@ -69,6 +95,16 @@ class _WelcomeState extends State<Welcome> {
         return;
       }
 
+      Position position;
+      try {
+        position = await getCurrentLocation();
+      } catch (e) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Could not get location: $e")));
+        return;
+      }
+
       var url = Uri.parse("$baseUrl/incidents/add");
       var request = http.MultipartRequest("POST", url);
 
@@ -78,6 +114,9 @@ class _WelcomeState extends State<Welcome> {
       request.fields['type'] = _typeController.text;
       request.fields['location'] = _locationController.text;
       request.fields['region'] = _regionController.text;
+
+      request.fields['latitude'] = position.latitude.toStringAsFixed(6);
+      request.fields['longitude'] = position.longitude.toStringAsFixed(6);
 
       var bytes = await _imageFile!.readAsBytes();
       request.files.add(

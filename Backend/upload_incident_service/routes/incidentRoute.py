@@ -20,9 +20,19 @@ def create_incident_route(
     location: str = Form(...),
     region: str = Form(...),
     image: UploadFile = File(...),
+    latitude: str = Form(...),
+    longitude: str = Form(...),
     db: Session = Depends(get_db),
     current_user_id= Depends(get_current_user)
 ):
+    
+    print("Received:", description, type, location, region, latitude, longitude)
+
+    try:
+        lat = float(latitude.replace(',', '.'))
+        lon = float(longitude.replace(',', '.'))
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Invalid latitude/longitude: {e}")
 
     ext=image.filename.split(".")[-1]
     filename = f"{uuid.uuid4()}.{ext}"
@@ -37,6 +47,8 @@ def create_incident_route(
         location=location,
         region=region,
         image_url=file_path,
+        latitude=lat,
+        longitude=lon,
         user_id=current_user_id
     )
 
