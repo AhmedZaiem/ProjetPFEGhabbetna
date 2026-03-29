@@ -76,8 +76,8 @@ class _WelcomeState extends State<Welcome> {
     }
   }
 
-  Future<void> pickImage() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+  Future<void> pickImage(ImageSource source) async {
+    final pickedFile = await _picker.pickImage(source: source);
     if (pickedFile != null) {
       setState(() {
         _imageFile = pickedFile;
@@ -151,6 +151,36 @@ class _WelcomeState extends State<Welcome> {
     if (!mounted) return;
 
     context.go('/');
+  }
+
+  void showImageSourcePicker() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return SafeArea(
+          child: Wrap(
+            children: [
+              ListTile(
+                leading: Icon(Icons.camera_alt),
+                title: Text('Take a photo'),
+                onTap: () {
+                  Navigator.pop(context);
+                  pickImage(ImageSource.camera);
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.photo_library),
+                title: Text('Choose from gallery'),
+                onTap: () {
+                  Navigator.pop(context);
+                  pickImage(ImageSource.gallery);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -270,7 +300,7 @@ class _WelcomeState extends State<Welcome> {
                             SizedBox(height: 10),
                             _imageFile == null
                                 ? TextButton.icon(
-                                    onPressed: pickImage,
+                                    onPressed: showImageSourcePicker,
                                     icon: Icon(Icons.image),
                                     label: Text("Pick Image"),
                                   )
