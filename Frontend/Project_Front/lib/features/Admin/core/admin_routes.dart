@@ -1,10 +1,11 @@
+import 'package:authproject/features/Agent/pages/agent_dashboard.dart';
 import 'package:authproject/features/Auth/pages/activation.dart';
 import 'package:authproject/features/Admin/pages/admin_pages/admin_dashboard.dart';
 import 'dart:async';
 import 'package:authproject/features/Auth/pages/forgot_password.dart';
 import 'package:authproject/features/Auth/pages/login.dart';
 import 'package:authproject/features/Auth/pages/reset_password.dart';
-import 'package:authproject/features/Agent/pages/welcome.dart';
+import 'package:authproject/features/Agent/pages/upload.dart';
 import 'package:authproject/features/Auth/services/auth_service.dart';
 import 'package:authproject/features/Supervisor/pages/Supervisor_menu.dart';
 import 'package:flutter/material.dart';
@@ -43,19 +44,19 @@ final adminRouter = GoRouter(
 
     if (role == 1 && path.startsWith('/admin_dashboard')) return null;
     if (role == 2 && path.startsWith('/supervisor')) return null;
-    if (role == 3 && path.startsWith('/welcome')) return null;
+    if (role == 3 && path.startsWith('/agent')) return null;
 
     // Redirect based on role
     if (role == 1) return '/admin_dashboard';
     if (role == 2) return '/supervisor';
-    if (role == 3) return '/welcome';
+    if (role == 3) return '/agent';
 
     // Unauthorized → fallback
     return '/';
   },
   routes: [
     GoRoute(path: '/', builder: (context, state) => login()),
-    GoRoute(path: '/welcome', builder: (context, state) => Welcome()),
+    GoRoute(path: '/agent', builder: (context, state) => agentDashboard()),
     GoRoute(path: '/supervisor', builder: (context, state) => SupervisorMenu()),
     GoRoute(
       path: '/forgot_password',

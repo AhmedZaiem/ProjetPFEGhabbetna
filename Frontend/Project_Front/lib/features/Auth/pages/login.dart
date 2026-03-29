@@ -42,7 +42,7 @@ class _LoginState extends State<login> {
       } else if (roleId == 2) {
         context.go("/supervisor");
       } else {
-        context.go("/welcome");
+        context.go("/agent");
       }
     } else {
       _showDialog("Error", result['message']);

@@ -10,14 +10,14 @@ import 'package:http_parser/http_parser.dart';
 import '../../../config.dart' as config;
 import 'package:authproject/features/Auth/services/auth_service.dart';
 
-class Welcome extends StatefulWidget {
-  const Welcome({super.key});
+class Upload extends StatefulWidget {
+  const Upload({super.key});
 
   @override
-  State<Welcome> createState() => _WelcomeState();
+  State<Upload> createState() => _UploadState();
 }
 
-class _WelcomeState extends State<Welcome> {
+class _UploadState extends State<Upload> {
   Map<String, dynamic>? userData;
   String? error;
 
@@ -190,7 +190,7 @@ class _WelcomeState extends State<Welcome> {
         appBar: AppBar(
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text("Welcome")],
+            children: [Text("Upload")],
           ),
         ),
         body: SingleChildScrollView(
@@ -215,7 +215,7 @@ class _WelcomeState extends State<Welcome> {
                             SizedBox(height: 20),
 
                             Text(
-                              "Welcome",
+                              "Upload",
                               style: TextStyle(
                                 fontSize: 28,
                                 fontWeight: FontWeight.bold,
