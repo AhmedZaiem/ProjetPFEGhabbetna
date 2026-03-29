@@ -31,6 +31,7 @@ def create_incident(db: Session, incident_data):
         "location": new_incident.location,
         "image_url": new_incident.image_url,
         "user_id": new_incident.user_id,
+        "status": new_incident.status,
         "created_at": new_incident.created_at.isoformat(),
         "latitude": incident_data.latitude,
         "longitude": incident_data.longitude

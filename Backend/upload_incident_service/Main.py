@@ -18,5 +18,6 @@ app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
 app.include_router(router)
 
+
 Base.metadata.create_all(bind=engine)
 

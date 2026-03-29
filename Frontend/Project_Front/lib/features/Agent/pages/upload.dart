@@ -1,4 +1,6 @@
 import 'dart:typed_data';
+import 'package:authproject/features/Agent/models/incident.dart';
+import 'package:authproject/features/Agent/services/incident_service.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -34,6 +36,7 @@ class _UploadState extends State<Upload> {
   XFile? _imageFile;
   final ImagePicker _picker = ImagePicker();
   final AuthService authService = AuthService();
+  final IncidentService incidentService = IncidentService();
 
   @override
   void initState() {
@@ -87,14 +90,6 @@ class _UploadState extends State<Upload> {
 
   Future<void> submitIncident() async {
     if (_formKey.currentState!.validate() && _imageFile != null) {
-      String? token = await storage.read(key: "access_token");
-      if (token == null) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text("No access token found")));
-        return;
-      }
-
       Position position;
       try {
         position = await getCurrentLocation();
@@ -105,32 +100,21 @@ class _UploadState extends State<Upload> {
         return;
       }
 
-      var url = Uri.parse("$baseUrl/incidents/add");
-      var request = http.MultipartRequest("POST", url);
-
-      request.headers["Authorization"] = "Bearer $token";
-
-      request.fields['description'] = _descriptionController.text;
-      request.fields['type'] = _typeController.text;
-      request.fields['location'] = _locationController.text;
-      request.fields['region'] = _regionController.text;
-
-      request.fields['latitude'] = position.latitude.toStringAsFixed(6);
-      request.fields['longitude'] = position.longitude.toStringAsFixed(6);
-
-      var bytes = await _imageFile!.readAsBytes();
-      request.files.add(
-        await http.MultipartFile.fromBytes(
-          'image',
-          bytes,
-          filename: _imageFile!.name,
-          contentType: MediaType('image', 'jpeg'),
-        ),
+      final incident = Incident(
+        description: _descriptionController.text,
+        type: _typeController.text,
+        location: _locationController.text,
+        region: _regionController.text,
+        latitude: position.latitude,
+        longitude: position.longitude,
       );
 
-      var response = await request.send();
+      final success = await incidentService.submitIncident(
+        incident,
+        _imageFile!,
+      );
 
-      if (response.statusCode == 200) {
+      if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Incident submitted successfully")),
         );

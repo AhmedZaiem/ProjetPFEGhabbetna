@@ -1,7 +1,8 @@
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Column, Integer, String, DateTime,Enum
 from sqlalchemy.sql import func
 from geoalchemy2 import Geometry
 from db.database import Base
+from models.status_enum import Status
 
 class Incident(Base):
     __tablename__ = "incidents"
@@ -12,6 +13,7 @@ class Incident(Base):
     region = Column(String, nullable=False)
     location = Column(String, nullable=False, default="ras jabel")
     image_url = Column(String, nullable=False)
+    status = Column(Enum(Status), default=Status.not_accepted)
 
     coords = Column(Geometry(geometry_type="POINT",srid=4326),nullable=False)
 
