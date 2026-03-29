@@ -63,7 +63,9 @@ class _UserListState extends State<UserList> {
                 children: [
                   // Table Header
                   const TableRow(
-                    decoration: BoxDecoration(color: Color.fromARGB(255, 212, 198, 198)),
+                    decoration: BoxDecoration(
+                      color: Color.fromARGB(255, 212, 198, 198),
+                    ),
                     children: [
                       Padding(
                         padding: EdgeInsets.all(8.0),

@@ -44,6 +44,15 @@ class _UploadState extends State<Upload> {
     loadUser();
   }
 
+  void loadUser() async {
+    final result = await authService.getCurrentUser();
+    if (result['success']) {
+      setState(() => userData = result['data']);
+    } else {
+      setState(() => error = result['message']);
+    }
+  }
+
   Future<Position> getCurrentLocation() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -68,15 +77,6 @@ class _UploadState extends State<Upload> {
     return await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high,
     );
-  }
-
-  void loadUser() async {
-    final result = await authService.getCurrentUser();
-    if (result['success']) {
-      setState(() => userData = result['data']);
-    } else {
-      setState(() => error = result['message']);
-    }
   }
 
   Future<void> pickImage(ImageSource source) async {
@@ -130,13 +130,6 @@ class _UploadState extends State<Upload> {
     }
   }
 
-  void logout() async {
-    await authService.logout();
-    if (!mounted) return;
-
-    context.go('/');
-  }
-
   void showImageSourcePicker() {
     showModalBottomSheet(
       context: context,
@@ -170,157 +163,145 @@ class _UploadState extends State<Upload> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
+      onWillPop: () async => false,
       child: Scaffold(
-        appBar: AppBar(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text("Upload")],
-          ),
-        ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: userData != null
-                ? Column(
-                    mainAxisSize: MainAxisSize.min,
+        appBar: AppBar(title: Text("Upload"), centerTitle: true),
+        body: userData == null
+            ? Center(
+                child: error != null
+                    ? Text(
+                        error!,
+                        style: TextStyle(color: Colors.red, fontSize: 16),
+                      )
+                    : CircularProgressIndicator(),
+              )
+            : SingleChildScrollView(
+                padding: const EdgeInsets.all(24.0),
+                child: Center(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Center(
-                        child: Column(
-                          children: [
-                            CircleAvatar(
-                              radius: 40,
-                              backgroundColor: Colors.blue.shade100,
-                              child: Icon(
-                                Icons.person,
-                                size: 40,
-                                color: Colors.blue,
-                              ),
-                            ),
-                            SizedBox(height: 20),
-
-                            Text(
-                              "Upload",
-                              style: TextStyle(
-                                fontSize: 28,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-
-                            SizedBox(height: 20),
-
-                            Card(
-                              elevation: 4,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(20),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text("Username: ${userData!['username']}"),
-                                    SizedBox(height: 8),
-                                    Text("Email: ${userData!['email']}"),
-                                    SizedBox(height: 8),
-                                    Text("Age: ${userData!['age']}"),
-                                  ],
-                                ),
-                              ),
-                            ),
-
-                            SizedBox(height: 30),
-
-                            ElevatedButton(
-                              onPressed: logout,
-                              child: Text("Logout"),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      SizedBox(height: 10),
-
                       Text(
                         "Create an Incident",
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: 22,
                           fontWeight: FontWeight.bold,
                         ),
+                        textAlign: TextAlign.center,
                       ),
-                      SizedBox(height: 10),
+                      SizedBox(height: 24),
 
                       Form(
                         key: _formKey,
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             TextFormField(
                               controller: _descriptionController,
                               decoration: InputDecoration(
                                 labelText: 'Description',
+                                border: OutlineInputBorder(),
                               ),
                               validator: (value) =>
                                   value!.isEmpty ? "Required" : null,
                             ),
+                            SizedBox(height: 16),
+
                             TextFormField(
                               controller: _typeController,
-                              decoration: InputDecoration(labelText: 'Type'),
+                              decoration: InputDecoration(
+                                labelText: 'Type',
+                                border: OutlineInputBorder(),
+                              ),
                               validator: (value) =>
                                   value!.isEmpty ? "Required" : null,
                             ),
+                            SizedBox(height: 16),
+
                             TextFormField(
                               controller: _locationController,
                               decoration: InputDecoration(
                                 labelText: 'Location',
+                                border: OutlineInputBorder(),
                               ),
                               validator: (value) =>
                                   value!.isEmpty ? "Required" : null,
                             ),
+                            SizedBox(height: 16),
+
                             TextFormField(
                               controller: _regionController,
-                              decoration: InputDecoration(labelText: 'Region'),
+                              decoration: InputDecoration(
+                                labelText: 'Region',
+                                border: OutlineInputBorder(),
+                              ),
                               validator: (value) =>
                                   value!.isEmpty ? "Required" : null,
                             ),
-                            SizedBox(height: 10),
-                            _imageFile == null
-                                ? TextButton.icon(
-                                    onPressed: showImageSourcePicker,
-                                    icon: Icon(Icons.image),
-                                    label: Text("Pick Image"),
-                                  )
-                                : FutureBuilder(
-                                    future: _imageFile!.readAsBytes(),
-                                    builder: (context, snapshot) {
-                                      if (snapshot.connectionState ==
-                                              ConnectionState.done &&
-                                          snapshot.hasData) {
-                                        return Image.memory(
-                                          snapshot.data as Uint8List,
-                                          height: 150,
-                                        );
-                                      } else {
-                                        return CircularProgressIndicator();
-                                      }
-                                    },
-                                  ),
+                            SizedBox(height: 24),
 
-                            SizedBox(height: 20),
+                            // Image picker & preview
+                            Center(
+                              child: _imageFile == null
+                                  ? TextButton.icon(
+                                      onPressed: showImageSourcePicker,
+                                      icon: Icon(Icons.image),
+                                      label: Text("Pick Image"),
+                                    )
+                                  : FutureBuilder(
+                                      future: _imageFile!.readAsBytes(),
+                                      builder: (context, snapshot) {
+                                        if (snapshot.connectionState ==
+                                                ConnectionState.done &&
+                                            snapshot.hasData) {
+                                          return Container(
+                                            height: 200,
+                                            width: double.infinity,
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                color: Colors.grey.shade400,
+                                                width: 1,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                              child: Image.memory(
+                                                snapshot.data as Uint8List,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          );
+                                        } else {
+                                          return CircularProgressIndicator();
+                                        }
+                                      },
+                                    ),
+                            ),
+                            SizedBox(height: 24),
+
                             ElevatedButton(
                               onPressed: submitIncident,
-                              child: Text("Submit Incident"),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 10.0,
+                                ),
+                                child: Text(
+                                  "Submit Incident",
+                                  style: TextStyle(fontSize: 14),
+                                ),
+                              ),
                             ),
                           ],
                         ),
                       ),
                     ],
-                  )
-                : error != null
-                ? Text(error!, style: TextStyle(color: Colors.red))
-                : CircularProgressIndicator(),
-          ),
-        ),
+                  ),
+                ),
+              ),
       ),
-      onWillPop: () async => false,
     );
   }
 }
