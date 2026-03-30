@@ -6,6 +6,7 @@ class Incident {
   final double latitude;
   final double longitude;
   final String? status;
+  final int? forestId;
 
   Incident({
     required this.description,
@@ -15,10 +16,11 @@ class Incident {
     required this.latitude,
     required this.longitude,
     this.status,
+    this.forestId,
   });
 
   Map<String, String> toFields() {
-    return {
+    final fields = {
       'description': description,
       'type': type,
       'location': location,
@@ -26,6 +28,8 @@ class Incident {
       'latitude': latitude.toStringAsFixed(6),
       'longitude': longitude.toStringAsFixed(6),
     };
+    if (forestId != null) fields['forest_id'] = forestId.toString();
+    return fields;
   }
 
   factory Incident.fromJson(Map<String, dynamic> json) {
@@ -37,6 +41,7 @@ class Incident {
       latitude: json['latitude'],
       longitude: json['longitude'],
       status: json['status'],
+      forestId: json['forest_id'],
     );
   }
 }

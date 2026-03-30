@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:authproject/features/Admin/models/user_model.dart';
+import 'package:authproject/features/Admin/services/parcelle_service.dart';
 import 'package:authproject/features/Agent/models/incident.dart';
 import 'package:authproject/features/Agent/services/incident_service.dart';
 import 'package:geolocator/geolocator.dart';
@@ -38,6 +39,7 @@ class _UploadState extends State<Upload> {
   final ImagePicker _picker = ImagePicker();
   final AuthService authService = AuthService();
   final IncidentService incidentService = IncidentService();
+  final ParcelService parcelService = ParcelService();
 
   bool? isAssigned;
 
@@ -108,6 +110,19 @@ class _UploadState extends State<Upload> {
         return;
       }
 
+      final parcelleResult = await incidentService.checkAssignedParcelle(
+        userData!['id'],
+      );
+      final parcelleId = parcelleResult['parcelle']?['id'];
+
+      final parcelleDetails = await parcelService.getParcelById(parcelleId);
+      if (parcelleDetails.forestId == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Parcelle is not linked to a forest.")),
+        );
+        return;
+      }
+
       final incident = Incident(
         description: _descriptionController.text,
         type: _typeController.text,
@@ -115,6 +130,7 @@ class _UploadState extends State<Upload> {
         region: _regionController.text,
         latitude: position.latitude,
         longitude: position.longitude,
+        forestId: parcelleDetails.forestId,
       );
 
       final success = await incidentService.submitIncident(

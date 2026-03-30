@@ -9,7 +9,7 @@ class IncidentCreate(BaseModel):
 
     latitude: float
     longitude: float
-
+    forest_id: int
     user_id: int = Field(default=None)
 
 

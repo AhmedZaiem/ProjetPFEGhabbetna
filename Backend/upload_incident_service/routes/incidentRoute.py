@@ -22,6 +22,7 @@ def create_incident_route(
     image: UploadFile = File(...),
     latitude: str = Form(...),
     longitude: str = Form(...),
+    forest_id: int = Form(...),
     db: Session = Depends(get_db),
     current_user_id= Depends(get_current_user)
 ):
@@ -49,7 +50,8 @@ def create_incident_route(
         image_url=file_path,
         latitude=lat,
         longitude=lon,
-        user_id=current_user_id
+        user_id=current_user_id,
+        forest_id=forest_id
     )
 
     return create_incident(db, incident_data)

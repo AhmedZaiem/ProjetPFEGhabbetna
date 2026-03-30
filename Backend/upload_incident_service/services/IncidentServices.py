@@ -20,6 +20,7 @@ def create_incident(db: Session, incident_data):
         location=incident_data.location,
         image_url=incident_data.image_url,
         user_id=incident_data.user_id,
+        forest_id=incident_data.forest_id,
         coords=point
     )
     db.add(new_incident)
@@ -35,8 +36,7 @@ def create_incident(db: Session, incident_data):
         "user_id": new_incident.user_id,
         "status": new_incident.status,
         "created_at": new_incident.created_at.isoformat(),
-        "latitude": incident_data.latitude,
-        "longitude": incident_data.longitude
+        "forest_id": new_incident.forest_id
     }
 
 def get_all_incidents(db: Session) -> List[Incident]:
@@ -44,4 +44,7 @@ def get_all_incidents(db: Session) -> List[Incident]:
 
 def get_incidents_by_user(db: Session, user_id:int) -> List[Incident]:
     return db.query(Incident).filter(Incident.user_id == user_id).all()
+
+def get_incidents_by_forest(db: Session, forest_id:int) -> List[Incident]:
+    return db.query(Incident).filter(Incident.forest_id == forest_id).all()
 

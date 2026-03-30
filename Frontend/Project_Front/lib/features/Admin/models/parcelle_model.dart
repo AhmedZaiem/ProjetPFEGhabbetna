@@ -4,7 +4,7 @@ class Parcel {
   final int id;
   final String name;
   final double areaHectares;
-  final int forestId;
+  final int? forestId;
   final List<Coordinates> boundary;
   final int? agentId;
   final String region;

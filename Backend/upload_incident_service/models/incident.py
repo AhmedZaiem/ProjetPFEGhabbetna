@@ -13,13 +13,14 @@ class Incident(Base):
     region = Column(String, nullable=False)
     location = Column(String, nullable=False, default="ras jabel")
     image_url = Column(String, nullable=False)
-    status = Column(Enum(Status), default=Status.not_accepted)
+    status = Column(Enum(Status), default=Status.pending)
 
     coords = Column(Geometry(geometry_type="POINT",srid=4326),nullable=False)
 
     created_at = Column(DateTime, nullable=False, server_default=func.now())
 
     user_id = Column(Integer)
+    forest_id = Column(Integer, nullable=False)
 
     class config:
         orm_mode = True
