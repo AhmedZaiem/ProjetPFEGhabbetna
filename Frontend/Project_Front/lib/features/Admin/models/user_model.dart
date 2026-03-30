@@ -28,16 +28,16 @@ class UserModel {
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
       id: json['id'],
-      firstname: json['firstname'],
-      lastname: json['lastname'],
-      cin: json['cin'],
-      username: json['username'],
-      email: json['email'],
-      age: json['age'],
-      role_name: json['role_name'],
-      isVerified: json['is_verified'],
-      isBlocked: json['is_blocked'],
-      region: json['region'],
+      firstname: json['firstname'] ?? '', // default empty string
+      lastname: json['lastname'] ?? '',
+      cin: json['cin'] ?? '',
+      username: json['username'] ?? '',
+      email: json['email'] ?? '',
+      age: json['age'] ?? 0,
+      role_name: json['role_name'] ?? '',
+      isVerified: json['is_verified'] ?? false,
+      isBlocked: json['is_blocked'] ?? false,
+      region: json['region'] ?? '',
     );
   }
 }

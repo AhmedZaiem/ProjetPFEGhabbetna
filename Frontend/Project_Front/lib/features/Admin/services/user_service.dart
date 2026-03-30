@@ -221,7 +221,7 @@ class UserService {
     try {
       var url = Uri.parse("$baseUrl/auth/supervisors");
       var response = await http.get(url);
-
+      print("Supervisors response: ${response.body}");
       if (response.statusCode == 200) {
         final List<dynamic> data = jsonDecode(response.body) as List<dynamic>;
         return data.map((json) => UserModel.fromJson(json)).toList();
