@@ -1,5 +1,6 @@
 import 'package:authproject/features/Admin/pages/admin_pages/assign.dart';
 import 'package:authproject/features/Admin/pages/admin_pages/assign_agent.dart';
+import 'package:authproject/features/Agent/pages/Profile.dart';
 import 'package:authproject/features/Auth/services/auth_service.dart';
 import 'package:authproject/features/Supervisor/pages/incident_list.dart';
 import 'package:authproject/features/Supervisor/pages/incident_map.dart';
@@ -22,6 +23,7 @@ class _MyWidgetState extends State<SupervisorMenu> {
     IncidentList(),
     IncidentMap(),
     AssignAgent(),
+    Profile(),
   ];
 
   void logout() async {
@@ -82,6 +84,13 @@ class _MyWidgetState extends State<SupervisorMenu> {
                           icon: Icon(Icons.add, size: 20),
                           label: Text(
                             "Assign Agent",
+                            style: TextStyle(fontSize: 12),
+                          ),
+                        ),
+                        NavigationRailDestination(
+                          icon: Icon(Icons.person_4_sharp, size: 20),
+                          label: Text(
+                            "Profile",
                             style: TextStyle(fontSize: 12),
                           ),
                         ),
