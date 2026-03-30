@@ -1,3 +1,5 @@
+from typing import List
+
 from db.database import get_db
 from models.incident import Incident
 from sqlalchemy.orm import Session
@@ -36,3 +38,10 @@ def create_incident(db: Session, incident_data):
         "latitude": incident_data.latitude,
         "longitude": incident_data.longitude
     }
+
+def get_all_incidents(db: Session) -> List[Incident]:
+    return db.query(Incident).all()
+
+def get_incidents_by_user(db: Session, user_id:int) -> List[Incident]:
+    return db.query(Incident).filter(Incident.user_id == user_id).all()
+

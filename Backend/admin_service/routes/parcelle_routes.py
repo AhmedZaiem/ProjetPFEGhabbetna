@@ -8,6 +8,7 @@ from services.parcelle_service import (
 )
 from services.forest_service import calculate_area_hectares
 from services.user_service import get_user_by_id
+from models.parcelle import Parcelle
 
 router = APIRouter(prefix="/parcelles", tags=["Parcelles"])
 
@@ -97,4 +98,11 @@ def assign_agent_route(parcelle_id: int,user_id: int ,db: Session = Depends(get_
     assign_agent(db,user.id,parcelle)
 
     return {"message": "Agent assigned"}
+
+@router.get("/assigned/{user_id}")
+def check_assigned_parcelle(user_id: int, db: Session = Depends(get_db)):
+    parcelle = db.query(Parcelle).filter(Parcelle.agent_id == user_id).first()
+    if parcelle:
+        return {"assigned": True, "parcelle": {"id": parcelle.id, "name": parcelle.name}}
+    return {"assigned": False, "parcelle": None}
 

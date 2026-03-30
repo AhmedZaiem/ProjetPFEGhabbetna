@@ -97,3 +97,19 @@ async def assign_agent(request: Request,parcelle_id:int,user_id:int):
         media_type="application/json"
     )
 
+@router.get("/assigned/{user_id}")
+async def check_assigned_parcelle(request: Request,user_id:int):
+    headers = {}
+
+    auth = request.headers.get("Authorization")
+    if auth:
+        headers["Authorization"] = auth
+    async with httpx.AsyncClient() as client:
+        response = await client.get(f"{Auth_SERVICE_URL}/parcelles/assigned/{user_id}")
+    return Response(
+        content=response.content,
+        status_code=response.status_code,
+        media_type="application/json"
+    )
+
+

@@ -1,3 +1,4 @@
+from models.forest import Forest
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from db.database import get_db
@@ -95,6 +96,13 @@ def assign_supervisor_route(forest_id: int,user_id: int ,db: Session = Depends(g
     assign_supervisor(db,user.id,forest)
 
     return {"message": "Supervisor assigned"}
+
+@router.get("/assigned/{user_id}")
+def check_assigned_forest(user_id: int, db: Session = Depends(get_db)):
+    forest = db.query(Forest).filter(Forest.supervisor_id == user_id).first()
+    if forest:
+        return {"assigned": True, "forest": {"id": forest.id, "name": forest.name}}
+    return {"assigned": False, "forest": None}
 
 
         

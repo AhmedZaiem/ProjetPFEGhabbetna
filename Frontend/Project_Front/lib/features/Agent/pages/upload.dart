@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:authproject/features/Admin/models/user_model.dart';
 import 'package:authproject/features/Agent/models/incident.dart';
 import 'package:authproject/features/Agent/services/incident_service.dart';
 import 'package:geolocator/geolocator.dart';
@@ -38,6 +39,8 @@ class _UploadState extends State<Upload> {
   final AuthService authService = AuthService();
   final IncidentService incidentService = IncidentService();
 
+  bool? isAssigned;
+
   @override
   void initState() {
     super.initState();
@@ -48,6 +51,11 @@ class _UploadState extends State<Upload> {
     final result = await authService.getCurrentUser();
     if (result['success']) {
       setState(() => userData = result['data']);
+
+      final assigned = await incidentService.checkAssignedParcelle(
+        userData!['id'],
+      );
+      setState(() => isAssigned = assigned["assigned"]);
     } else {
       setState(() => error = result['message']);
     }
@@ -282,15 +290,30 @@ class _UploadState extends State<Upload> {
                             ),
                             SizedBox(height: 24),
 
+                            if (isAssigned == false)
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 8.0),
+                                child: Text(
+                                  "You are not assigned to a parcelle",
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+
                             ElevatedButton(
-                              onPressed: submitIncident,
+                              onPressed: (isAssigned ?? false)
+                                  ? submitIncident
+                                  : null, // disabled if not assigned
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(
                                   vertical: 10.0,
                                 ),
                                 child: Text(
                                   "Submit Incident",
-                                  style: TextStyle(fontSize: 14),
+                                  style: TextStyle(fontSize: 15),
                                 ),
                               ),
                             ),

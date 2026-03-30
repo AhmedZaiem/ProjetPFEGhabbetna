@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:authproject/features/Agent/models/incident.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -38,5 +40,20 @@ class IncidentService {
     var response = await request.send();
 
     return response.statusCode == 200;
+  }
+
+  Future<Map<String, dynamic>> checkAssignedParcelle(int userId) async {
+    final url = Uri.parse('$baseUrl/parcelles/assigned/$userId');
+
+    try {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        return {"assigned": false, "parcelle": null};
+      }
+    } catch (e) {
+      return {"assigned": false, "parcelle": null};
+    }
   }
 }
