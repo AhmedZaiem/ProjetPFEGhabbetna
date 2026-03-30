@@ -1,11 +1,15 @@
+from typing import List
+
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File,Form
 from sqlalchemy.orm import Session
 from db.database import get_db
 from schemas.incidentSchema import IncidentCreate
-from services.IncidentServices import create_incident
+from services.IncidentServices import create_incident,get_incidents_by_forest,get_all_incidents,get_incidents_by_user
 from core.security import get_current_user
 import os
 import uuid
+from geoalchemy2.shape import to_shape
+from shapely.geometry import Point
 
 
 router = APIRouter(prefix="/incidents", tags=["Incidents"])
@@ -55,3 +59,65 @@ def create_incident_route(
     )
 
     return create_incident(db, incident_data)
+
+@router.get("/")
+def read_all_incidents(db: Session = Depends(get_db)):
+    incidents = get_all_incidents(db)
+    result = []
+    for i in incidents:
+        point : Point = to_shape(i.coords)
+        result.append({
+            "description": i.description,
+            "type": i.type,
+            "location": i.location,
+            "region": i.region,
+            "image_url": i.image_url,
+            "latitude": point.y,
+            "longitude": point.x,
+            "user_id": i.user_id,
+            "forest_id": i.forest_id,
+            "status": i.status.value if i.status else None
+        })
+    return result
+
+@router.get("/user/{user_id}")
+def read_incidents_by_user(user_id: int, db: Session = Depends(get_db)):
+    incidents = get_incidents_by_user(db, user_id)
+    result = []
+    for i in incidents:
+        point : Point = to_shape(i.coords)
+        result.append({
+            "description": i.description,
+            "type": i.type,
+            "location": i.location,
+            "region": i.region,
+            "image_url": i.image_url,
+            "latitude": point.y,
+            "longitude": point.x,
+            "user_id": i.user_id,
+            "forest_id": i.forest_id,
+            "status": i.status.value if i.status else None
+        })
+    return result
+
+@router.get("/forest/{forest_id}")
+def get_forest_incidents(forest_id: int,db: Session=Depends(get_db)):
+    incidents = get_incidents_by_forest(db,forest_id)
+    result = []
+    for i in incidents:
+        point : Point = to_shape(i.coords)
+        result.append({
+            "description": i.description,
+            "type": i.type,
+            "location": i.location,
+            "region": i.region,
+            "image_url": i.image_url,
+            "latitude": point.y,
+            "longitude": point.x,
+            "user_id": i.user_id,
+            "forest_id": i.forest_id,
+            "status": i.status.value if i.status else None
+        })
+    return result
+    
+
