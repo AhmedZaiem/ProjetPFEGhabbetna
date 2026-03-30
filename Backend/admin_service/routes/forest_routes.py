@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from db.database import get_db
 from schemas.forest_schema import ForestCreate, ForestOut
-from services.forest_service import create_forest, delete_forest, get_all_forests, get_forest_by_id, convert_forest_boundary,assign_supervisor,get_non_occupied_forests
+from services.forest_service import create_forest, delete_forest, get_all_forests, get_forest_by_id, convert_forest_boundary,assign_supervisor, get_forests_by_supervisor_id,get_non_occupied_forests
 from services.user_service import get_user_by_id
 
 router = APIRouter(prefix="/forest", tags=["Forest"])
@@ -69,6 +69,22 @@ def get_forest_route(forest_id: int, db: Session = Depends(get_db)):
         supervisor_id=forest.supervisor_id,
         region=forest.region
     )
+
+@router.get("/supervisor/{supervisor_id}", response_model=list[ForestOut])
+def get_forest_by_supervisor_id_route(supervisor_id: int, db: Session = Depends(get_db)):
+    forests = get_forests_by_supervisor_id(db, supervisor_id)
+    return [
+        ForestOut(
+            id=f.id,
+            name=f.name,
+            description=f.description,
+            area_hectares=f.area_hectares,
+            risk_level=f.risk_level,
+            boundary=convert_forest_boundary(f),
+            supervisor_id=f.supervisor_id,
+            region=f.region
+        ) for f in forests
+    ]
 
 @router.delete("/{forest_id}")
 def delete_forest_route(forest_id: int, db: Session = Depends(get_db)):

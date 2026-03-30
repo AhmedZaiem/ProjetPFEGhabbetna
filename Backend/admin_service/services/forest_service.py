@@ -40,6 +40,9 @@ def get_all_forests(db: Session) -> List[Forest]:
 def get_forest_by_id(db: Session,forest_id: int) -> Forest | None:
     return db.query(Forest).get(forest_id)
 
+def get_forests_by_supervisor_id(db: Session, supervisor_id: int) -> List[Forest]:
+    return db.query(Forest).filter(Forest.supervisor_id == supervisor_id).all()
+
 def get_non_occupied_forests(db: Session) -> Forest | None:
     return db.query(Forest).filter(Forest.supervisor_id==None).all()
 

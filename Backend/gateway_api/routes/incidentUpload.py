@@ -39,3 +39,50 @@ async def create_incident(request: Request):
         status_code=response.status_code,
         media_type="application/json"
     )
+
+@router.get("/")
+async def get_incidents(request: Request):
+    headers = {}
+
+    auth = request.headers.get("Authorization")
+    if auth:
+        headers["Authorization"] = auth
+
+    async with httpx.AsyncClient() as client:
+        response = await client.get(f"{upload_incident_URL}/incidents/", headers=headers)
+    return Response(
+        content=response.content,
+        status_code=response.status_code,
+        media_type="application/json"
+    )
+
+@router.get("/user/{user_id}")
+async def get_incidents_by_user_id(request: Request, user_id: int):
+    headers = {}
+
+    auth = request.headers.get("Authorization")
+    if auth:
+        headers["Authorization"] = auth
+    async with httpx.AsyncClient() as client:
+        response = await client.get(f"{upload_incident_URL}/incidents/user/{user_id}", headers=headers)
+    return Response(
+        content=response.content,
+        status_code=response.status_code,
+        media_type="application/json"
+    )
+
+@router.get("/forest/{forest_id}")
+async def get_incidents_by_forest_id(request: Request, forest_id: int):
+    headers = {}
+
+    auth = request.headers.get("Authorization")
+    if auth:
+        headers["Authorization"] = auth
+    async with httpx.AsyncClient() as client:
+        response = await client.get(f"{upload_incident_URL}/incidents/forest/{forest_id}", headers=headers)
+    return Response(
+        content=response.content,
+        status_code=response.status_code,
+        media_type="application/json"
+    )
+    
