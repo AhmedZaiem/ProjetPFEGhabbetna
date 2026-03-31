@@ -6,6 +6,7 @@ import 'package:authproject/features/Admin/pages/admin_pages/user_list.dart';
 import 'package:authproject/features/Admin/pages/admin_pages/assign.dart';
 import 'package:authproject/features/Admin/pages/admin_pages/assign_agent.dart';
 import 'package:authproject/features/Admin/pages/admin_pages/add_service.dart';
+import 'package:authproject/features/Admin/pages/admin_pages/manage_incident.dart';
 import 'package:authproject/features/Auth/services/auth_service.dart';
 
 import 'package:flutter/material.dart';
@@ -32,7 +33,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
     const AddPolygonPage(),
     const ForestList(),
     const AddService(),
-    
+    const ManageIncident(),
   ];
 
   void logout() async {
@@ -55,7 +56,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
               child: Column(
                 children: [
                   SizedBox(
-                    height: 100,
+                    height: 60,
                     child: Image.asset(
                       'assets/images/logoApp.jpeg',
                       fit: BoxFit.contain,
@@ -76,58 +77,65 @@ class _AdminDashboardState extends State<AdminDashboard> {
                       minExtendedWidth: 200,
                       destinations: const [
                         NavigationRailDestination(
-                          icon: Icon(Icons.people, size: 20),
+                          icon: Icon(Icons.people, size: 18),
                           label: Text(
                             "Users List",
                             style: TextStyle(fontSize: 12),
                           ),
                         ),
                         NavigationRailDestination(
-                          icon: Icon(Icons.add, size: 20),
+                          icon: Icon(Icons.add, size: 18),
                           label: Text(
                             "Create Users",
                             style: TextStyle(fontSize: 12),
                           ),
                         ),
                         NavigationRailDestination(
-                          icon: Icon(Icons.account_box_sharp, size: 20),
+                          icon: Icon(Icons.account_box_sharp, size: 18),
                           label: Text(
                             "Manage Roles",
                             style: TextStyle(fontSize: 12),
                           ),
                         ),
                         NavigationRailDestination(
-                          icon: Icon(Icons.add, size: 20),
+                          icon: Icon(Icons.add, size: 18),
                           label: Text(
                             "Assign Supervisor",
                             style: TextStyle(fontSize: 12),
                           ),
                         ),
-                         NavigationRailDestination(
-                          icon: Icon(Icons.add, size: 20),
+                        NavigationRailDestination(
+                          icon: Icon(Icons.add, size: 18),
                           label: Text(
                             "Assign Agent",
                             style: TextStyle(fontSize: 12),
                           ),
                         ),
                         NavigationRailDestination(
-                          icon: Icon(Icons.forest, size: 20),
+                          icon: Icon(Icons.forest, size: 18),
                           label: Text(
                             "Add Forests",
                             style: TextStyle(fontSize: 12),
                           ),
                         ),
                         NavigationRailDestination(
-                          icon: Icon(Icons.forest_outlined, size: 20),
+                          icon: Icon(Icons.forest_outlined, size: 18),
                           label: Text(
                             "Forests list",
                             style: TextStyle(fontSize: 12),
                           ),
                         ),
                         NavigationRailDestination(
-                          icon: Icon(Icons.medical_services, size: 20),
+                          icon: Icon(Icons.medical_services, size: 18),
                           label: Text(
                             "Manage Services",
+                            style: TextStyle(fontSize: 10),
+                          ),
+                        ),
+                        NavigationRailDestination(
+                          icon: Icon(Icons.add_a_photo_outlined, size: 18),
+                          label: Text(
+                            "Manage Incidents",
                             style: TextStyle(fontSize: 12),
                           ),
                         ),

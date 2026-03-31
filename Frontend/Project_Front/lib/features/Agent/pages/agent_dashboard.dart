@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'Profile.dart';
 import 'upload.dart';
+import 'Home.dart';
 
 class agentDashboard extends StatefulWidget {
   const agentDashboard({super.key});
@@ -13,8 +14,9 @@ class _agentDashboardState extends State<agentDashboard> {
   int _currentIndex = 0;
 
   final List<Widget> _pages = [
-    Upload(), // your upload page
-    Profile(), // create this page
+    Upload(), 
+    Profile(),
+    Home(),
   ];
 
   @override
@@ -32,6 +34,7 @@ class _agentDashboardState extends State<agentDashboard> {
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.upload), label: "Upload"),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
+          BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: "Home"),
         ],
       ),
     );

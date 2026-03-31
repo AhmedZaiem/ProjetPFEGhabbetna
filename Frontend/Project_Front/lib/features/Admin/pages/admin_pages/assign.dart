@@ -107,7 +107,7 @@ class _AssignState extends State<Assign> {
                       value: selectedUserForForest,
                       hint: "Select Supervisor",
                       items: unassignedSupervisor,
-                      label: (u) => u.username,
+                      label: (u) => "${u.username} - ${u.region}",
                       onChanged: (u) =>
                           setState(() => selectedUserForForest = u),
                     ),
@@ -118,7 +118,7 @@ class _AssignState extends State<Assign> {
                       value: selectedForest,
                       hint: "Select Forest",
                       items: forests,
-                      label: (p) => p.name,
+                      label: (p) => "${p.name} - ${p.region}",
                       onChanged: (p) => setState(() => selectedForest = p),
                     ),
 

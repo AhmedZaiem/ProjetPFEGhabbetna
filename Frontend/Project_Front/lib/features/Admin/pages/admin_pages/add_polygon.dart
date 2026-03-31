@@ -204,6 +204,7 @@ class _AddPolygonPageState extends State<AddPolygonPage> {
                       ),
                     ),
                   ),
+                  const SizedBox(height: 20),
                   TextField(
                     controller: regionController,
                     decoration: InputDecoration(

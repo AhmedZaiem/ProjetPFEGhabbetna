@@ -108,7 +108,7 @@ class _AssignAgentState extends State<AssignAgent> {
                       value: selectedUserForParcel,
                       hint: "Select Agent",
                       items: unassignedAgents,
-                      label: (u) => u.username,
+                      label: (u) => "${u.username} - ${u.region}",
                       onChanged: (u) =>
                           setState(() => selectedUserForParcel = u),
                     ),
@@ -119,7 +119,7 @@ class _AssignAgentState extends State<AssignAgent> {
                       value: selectedParcel,
                       hint: "Select Parcelle",
                       items: parcels,
-                      label: (p) => p.name,
+                      label: (p) => "${p.name} - ${p.region}",
                       onChanged: (p) => setState(() => selectedParcel = p),
                     ),
 
