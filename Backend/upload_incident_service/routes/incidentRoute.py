@@ -1,10 +1,10 @@
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File,Form
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, Query
 from sqlalchemy.orm import Session
 from db.database import get_db
 from schemas.incidentSchema import IncidentCreate
-from services.IncidentServices import create_incident,get_incidents_by_forest,get_all_incidents,get_incidents_by_user
+from services.IncidentServices import create_incident,get_all_incidents, get_incidents_by_forest_ids,get_incidents_by_user
 from core.security import get_current_user
 import os
 import uuid
@@ -100,9 +100,9 @@ def read_incidents_by_user(user_id: int, db: Session = Depends(get_db)):
         })
     return result
 
-@router.get("/forest/{forest_id}")
-def get_forest_incidents(forest_id: int,db: Session=Depends(get_db)):
-    incidents = get_incidents_by_forest(db,forest_id)
+@router.get("/forests")
+def get_forest_incidents(forest_ids: list[int]=Query(...), db: Session = Depends(get_db)):
+    incidents = get_incidents_by_forest_ids(db, forest_ids)
     result = []
     for i in incidents:
         point : Point = to_shape(i.coords)

@@ -45,6 +45,8 @@ def get_all_incidents(db: Session) -> List[Incident]:
 def get_incidents_by_user(db: Session, user_id:int) -> List[Incident]:
     return db.query(Incident).filter(Incident.user_id == user_id).all()
 
-def get_incidents_by_forest(db: Session, forest_id:int) -> List[Incident]:
-    return db.query(Incident).filter(Incident.forest_id == forest_id).all()
+def get_incidents_by_forest_ids(db: Session, forest_ids: list[int]):
+    return db.query(Incident).filter(
+        Incident.forest_id.in_(forest_ids)
+    ).all()
 
