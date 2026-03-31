@@ -78,6 +78,9 @@ async def refresh_token(data: RefreshRequest):
         if stored_token is None:
             raise HTTPException(status_code=401, detail="Session expired")
         
+        if isinstance(stored_token, bytes):
+            stored_token = stored_token.decode('utf-8')
+
         if stored_token.decode('utf-8') != data.refresh_token:
             raise HTTPException(status_code=401, detail="Token mismatch")
         
