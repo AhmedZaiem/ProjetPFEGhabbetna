@@ -86,3 +86,31 @@ async def get_incidents_by_forest_ids(request: Request, forest_ids: list[int] = 
         media_type="application/json"
     )
     
+
+
+@router.post("/verify")
+async def verify_incident(request: Request):
+    data = await request.json()
+    incident_id = data.get("incident_id")
+    status = data.get("status") 
+
+    if not incident_id or not status:
+        return Response(
+            content='{"detail": "incident_id or status missing"}',
+            status_code=400,
+            media_type="application/json"
+        )
+
+    headers = {"Authorization": request.headers.get("Authorization")}
+    async with httpx.AsyncClient() as client:
+        response = await client.post(
+            f"{upload_incident_URL}/incidents/verify",
+            json={"incident_id": incident_id, "status": status},
+            headers=headers
+        )
+
+    return Response(
+        content=response.content,
+        status_code=response.status_code,
+        media_type="application/json"
+    )

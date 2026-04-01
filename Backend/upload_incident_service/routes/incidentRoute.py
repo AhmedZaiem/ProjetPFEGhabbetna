@@ -4,7 +4,8 @@ from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, Q
 from sqlalchemy.orm import Session
 from db.database import get_db
 from schemas.incidentSchema import IncidentCreate
-from services.IncidentServices import create_incident,get_all_incidents, get_incidents_by_forest_ids,get_incidents_by_user
+from services.IncidentServices import create_incident,get_all_incidents, get_incidents_by_forest_ids,get_incidents_by_user,verify_incident
+from models.status_enum import Status
 from core.security import get_current_user
 import os
 import uuid
@@ -119,5 +120,12 @@ def get_forest_incidents(forest_ids: list[int]=Query(...), db: Session = Depends
             "status": i.status.value if i.status else None
         })
     return result
+
+@router.post("/verify")
+def verify_incident_route(incident_id: int, status: Status, db: Session = Depends(get_db)):
+    updated_incident = verify_incident(db, incident_id, status)
+    if not updated_incident:
+        raise HTTPException(status_code=404, detail="Incident not found")
+    return updated_incident
     
 

@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:authproject/features/Admin/models/role_model.dart';
 import 'package:authproject/features/Admin/services/user_service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'dart:convert';
 
 class Create_User extends StatefulWidget {
   const Create_User({super.key});
@@ -19,7 +18,19 @@ class _CreateUserState extends State<Create_User> {
   var usernameController = TextEditingController();
   var emailController = TextEditingController();
   var ageController = TextEditingController();
-  var regionController = TextEditingController();
+
+  List<String> tunisianStates = [
+    "Tunis","Ariana","BenArous","Manouba",
+    "Nabeul","Zaghouan","Bizerte","Béja",
+    "Jendouba","Kef","Siliana",
+    "Sousse","Monastir","Mahdia",
+    "Sfax","Kairouan","Kasserine","SidiBouzid",
+    "Gabès","Medenine","Tataouine",
+    "Gafsa","Tozeur","Kebili",
+  ];
+
+  String? selectedRegion;
+  String? selectedRole;
 
   final storage = FlutterSecureStorage();
 
@@ -27,7 +38,6 @@ class _CreateUserState extends State<Create_User> {
   final UserService userService = UserService();
 
   final _formKey = GlobalKey<FormState>();
-  String selectedRole = '';
 
   @override
   void initState() {
@@ -42,7 +52,7 @@ class _CreateUserState extends State<Create_User> {
     String username = usernameController.text.trim();
     String email = emailController.text.trim();
     int? age = int.tryParse(ageController.text.trim());
-    String region = regionController.text.trim();
+    String region = selectedRegion ?? '';
 
     if (firstname.isEmpty ||
         lastname.isEmpty ||
@@ -51,7 +61,7 @@ class _CreateUserState extends State<Create_User> {
         email.isEmpty ||
         age == null ||
         region.isEmpty ||
-        selectedRole.isEmpty) {
+        selectedRole == null) {
       _showDialog("Error", "Please fill all fields correctly.");
       return;
     }
@@ -63,11 +73,27 @@ class _CreateUserState extends State<Create_User> {
       username: username,
       email: email,
       age: age,
-      roleName: selectedRole,
+      roleName: selectedRole!,
       region: region,
     );
 
     _showDialog(result['success'] ? "Success" : "Error", result['message']);
+
+    if (result['success']) {
+      firstnameController.clear();
+      lastnameController.clear();
+      cinController.clear();
+      usernameController.clear();
+      emailController.clear();
+      ageController.clear();
+
+      setState(() {
+        selectedRole = null;
+        selectedRegion = null;
+      });
+
+      _formKey.currentState!.reset();
+    }
   }
 
   void _showDialog(String title, String message) {
@@ -109,7 +135,6 @@ class _CreateUserState extends State<Create_User> {
                     ],
                   ),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Image.asset(
                         'assets/images/logoApp.jpeg',
@@ -124,163 +149,39 @@ class _CreateUserState extends State<Create_User> {
                           fontWeight: FontWeight.bold,
                           color: Color(0xFF1B5E20),
                         ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 30),
-                      TextFormField(
-                        controller: firstnameController,
-                        decoration: InputDecoration(
-                          labelText: "First Name",
-                          prefixIcon: Icon(Icons.person),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'First Name is required';
-                          }
-                          if (!RegExp(r'^[a-zA-Z]+$').hasMatch(value)) {
-                            return 'Only letters allowed';
-                          }
-                          return null;
-                        },
                       ),
                       const SizedBox(height: 30),
 
-                      TextFormField(
-                        controller: lastnameController,
-                        decoration: InputDecoration(
-                          labelText: "Last Name",
-                          prefixIcon: Icon(Icons.person),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Last Name is required';
-                          }
-                          if (!RegExp(r'^[a-zA-Z]+$').hasMatch(value)) {
-                            return 'Only letters allowed';
-                          }
-                          return null;
-                        },
-                      ),
+                      TextFormField(controller: firstnameController, decoration: InputDecoration(labelText: "First Name", prefixIcon: Icon(Icons.person), border: OutlineInputBorder(borderRadius: BorderRadius.circular(12))), validator: (v)=>v==null||v.isEmpty?'First Name is required':!RegExp(r'^[a-zA-Z]+$').hasMatch(v)?'Only letters allowed':null),
                       const SizedBox(height: 30),
 
-                      TextFormField(
-                        controller: cinController,
-                        decoration: InputDecoration(
-                          labelText: "Cin",
-                          prefixIcon: Icon(Icons.numbers),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Cin is required';
-                          }
-                          if (value.length != 8) {
-                            return 'Cin needs to be 8 Numbers';
-                          }
-                          if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
-                            return 'Only numbers allowed';
-                          }
-                          return null;
-                        },
-                      ),
+                      TextFormField(controller: lastnameController, decoration: InputDecoration(labelText: "Last Name", prefixIcon: Icon(Icons.person), border: OutlineInputBorder(borderRadius: BorderRadius.circular(12))), validator: (v)=>v==null||v.isEmpty?'Last Name is required':!RegExp(r'^[a-zA-Z]+$').hasMatch(v)?'Only letters allowed':null),
                       const SizedBox(height: 30),
 
-                      TextFormField(
-                        decoration: InputDecoration(
-                          labelText: 'Username',
-                          prefixIcon: const Icon(Icons.person),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        controller: usernameController,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Username is required';
-                          }
-                          if (!RegExp(r'^[a-zA-Z0-9]+$').hasMatch(value)) {
-                            return 'Only letters and numbers allowed';
-                          }
-                          return null;
-                        },
-                      ),
+                      TextFormField(controller: cinController, decoration: InputDecoration(labelText: "Cin", prefixIcon: Icon(Icons.numbers), border: OutlineInputBorder(borderRadius: BorderRadius.circular(12))), validator: (v)=>v==null||v.isEmpty?'Cin is required':v.length!=8?'Cin needs to be 8 Numbers':!RegExp(r'^[0-9]+$').hasMatch(v)?'Only numbers allowed':null),
+                      const SizedBox(height: 30),
+
+                      TextFormField(controller: usernameController, decoration: InputDecoration(labelText: 'Username', prefixIcon: Icon(Icons.person), border: OutlineInputBorder(borderRadius: BorderRadius.circular(12))), validator: (v)=>v==null||v.isEmpty?'Username is required':!RegExp(r'^[a-zA-Z0-9]+$').hasMatch(v)?'Only letters and numbers allowed':null),
                       const SizedBox(height: 20),
 
-                      TextFormField(
-                        decoration: InputDecoration(
-                          labelText: 'Email',
-                          prefixIcon: const Icon(Icons.email_outlined),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        controller: emailController,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Email is required';
-                          }
-                          if (!RegExp(
-                            r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
-                          ).hasMatch(value)) {
-                            return 'Enter valid email';
-                          }
-                          return null;
-                        },
-                      ),
+                      TextFormField(controller: emailController, decoration: InputDecoration(labelText: 'Email', prefixIcon: Icon(Icons.email_outlined), border: OutlineInputBorder(borderRadius: BorderRadius.circular(12))), validator: (v)=>v==null||v.isEmpty?'Email is required':!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(v)?'Enter valid email':null),
                       const SizedBox(height: 20),
 
-                      TextFormField(
-                        decoration: InputDecoration(
-                          labelText: 'Age',
-                          prefixIcon: const Icon(Icons.calendar_today),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        keyboardType: TextInputType.number,
-                        controller: ageController,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Age is required';
-                          }
-                          final age = int.tryParse(value);
-                          if (age == null) {
-                            return 'Enter valid number';
-                          }
-                          if (age <= 18) {
-                            return 'Age must be greater than 18';
-                          }
-                          return null;
-                        },
-                      ),
+                      TextFormField(controller: ageController, keyboardType: TextInputType.number, decoration: InputDecoration(labelText: 'Age', prefixIcon: Icon(Icons.calendar_today), border: OutlineInputBorder(borderRadius: BorderRadius.circular(12))), validator: (v){if(v==null||v.isEmpty)return'Age is required';final a=int.tryParse(v);if(a==null)return'Enter valid number';if(a<=18)return'Age must be greater than 18';return null;}),
                       const SizedBox(height: 20),
 
-                      TextFormField(
+                      DropdownButtonFormField<String>(
+                        value: selectedRegion,
                         decoration: InputDecoration(
                           labelText: 'Region',
-                          prefixIcon: const Icon(Icons.location_city),
+                          prefixIcon: Icon(Icons.location_city),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
-                        controller: regionController,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Region is required';
-                          }
-                          if (!RegExp(r'^[a-zA-Z0-9]+$').hasMatch(value)) {
-                            return 'Only letters and numbers allowed';
-                          }
-                          return null;
-                        },
+                        items: tunisianStates.map((s)=>DropdownMenuItem(value:s,child:Text(s))).toList(),
+                        onChanged: (v)=>setState(()=>selectedRegion=v),
+                        validator: (v)=>v==null||v.isEmpty?'Region is required':null,
                       ),
                       const SizedBox(height: 20),
 
@@ -288,35 +189,23 @@ class _CreateUserState extends State<Create_User> {
                         future: _rolesFuture,
                         builder: (context, snapshot) {
                           return DropdownButtonFormField<String>(
+                            value: selectedRole,
                             decoration: InputDecoration(
                               labelText: 'Select Role',
-                              prefixIcon: const Icon(
-                                Icons.admin_panel_settings,
-                              ),
+                              prefixIcon: Icon(Icons.admin_panel_settings),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
-                            items: (snapshot.data ?? []).map((role) {
-                              return DropdownMenuItem<String>(
-                                value: role.name,
-                                child: Text(role.name),
-                              );
-                            }).toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                selectedRole = value ?? '';
-                              });
-                            },
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Role is required';
-                              }
-                              return null;
-                            },
+                            items: (snapshot.data ?? [])
+                                .map((r)=>DropdownMenuItem(value:r.name,child:Text(r.name)))
+                                .toList(),
+                            onChanged: (v)=>setState(()=>selectedRole=v),
+                            validator: (v)=>v==null||v.isEmpty?'Role is required':null,
                           );
                         },
                       ),
+
                       const SizedBox(height: 30),
 
                       SizedBox(
@@ -327,14 +216,11 @@ class _CreateUserState extends State<Create_User> {
                               CreateUserAcc();
                             }
                           },
-                          child: const Text('Create Account'),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF1B5E20),
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
+                            backgroundColor: Color(0xFF1B5E20),
+                            padding: EdgeInsets.symmetric(vertical: 16),
                           ),
+                          child: Text('Create Account'),
                         ),
                       ),
                     ],

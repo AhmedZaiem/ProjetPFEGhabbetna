@@ -204,7 +204,7 @@ class _AddPolygonPageState extends State<AddPolygonPage> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
                   TextField(
                     controller: regionController,
                     decoration: InputDecoration(
@@ -219,7 +219,7 @@ class _AddPolygonPageState extends State<AddPolygonPage> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
                   if (mode == PolygonMode.forest)
                     TextField(
                       controller: descriptionController,
@@ -233,7 +233,7 @@ class _AddPolygonPageState extends State<AddPolygonPage> {
               ),
             ),
 
-            const SizedBox(height: 15),
+            const SizedBox(height: 10),
 
             /// Map and Buttons side by side
             Expanded(

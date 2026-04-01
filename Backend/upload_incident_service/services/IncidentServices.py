@@ -2,6 +2,7 @@ from typing import List
 
 from db.database import get_db
 from models.incident import Incident
+from models.status_enum import Status
 from sqlalchemy.orm import Session
 from shapely.geometry import Point
 from geoalchemy2.shape import from_shape
@@ -50,3 +51,25 @@ def get_incidents_by_forest_ids(db: Session, forest_ids: list[int]):
         Incident.forest_id.in_(forest_ids)
     ).all()
 
+
+def verify_incident(db: Session, incident_id: int, new_status: Status):
+    incident = db.query(Incident).filter(Incident.id == incident_id).first()
+    if not incident:
+        return None
+
+    incident.status = new_status
+    db.commit()
+    db.refresh(incident)
+
+    return {
+        "id": incident.id,
+        "description": incident.description,
+        "type": incident.type,
+        "region": incident.region,
+        "location": incident.location,
+        "image_url": incident.image_url,
+        "user_id": incident.user_id,
+        "status": incident.status.value,
+        "created_at": incident.created_at.isoformat(),
+        "forest_id": incident.forest_id
+    }
