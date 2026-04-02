@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from db.database import get_db
 from schemas.parcelle_schema import ParcelleCreate, ParcelleOut
@@ -9,6 +9,7 @@ from services.parcelle_service import (
 from services.forest_service import calculate_area_hectares
 from services.user_service import get_user_by_id
 from models.parcelle import Parcelle
+from models.user import User
 
 router = APIRouter(prefix="/parcelles", tags=["Parcelles"])
 
@@ -105,4 +106,25 @@ def check_assigned_parcelle(user_id: int, db: Session = Depends(get_db)):
     if parcelle:
         return {"assigned": True, "parcelle": {"id": parcelle.id, "name": parcelle.name}}
     return {"assigned": False, "parcelle": None}
+
+@router.get("/byforest/")
+def get_parcelles_by_forest_ids(forest_ids: list[int]=Query(...), db: Session = Depends(get_db)):
+    parcelles = db.query(Parcelle).join(User, Parcelle.agent_id == User.id).filter(Parcelle.forest_id.in_(forest_ids)).all()
+    result = []
+    for p in parcelles:
+        result.append({
+            "id": p.id,
+            "name": p.name,
+            "area_hectares": p.area_hectares,
+            "boundary": convert_parcelle_boundary(p),
+            "forest_id": p.forest_id,
+            "agent": {
+                "id": p.agent.id,
+                "name": p.agent.username,
+                "email": p.agent.email
+            } if p.agent else None,
+            "region": p.region
+        })
+    return result
+
 

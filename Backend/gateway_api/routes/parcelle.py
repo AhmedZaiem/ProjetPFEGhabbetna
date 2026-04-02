@@ -1,4 +1,4 @@
-from fastapi import APIRouter,Request,Response
+from fastapi import APIRouter,Request,Response,Query
 import httpx
 from fastapi.responses import JSONResponse
 import json
@@ -112,4 +112,19 @@ async def check_assigned_parcelle(request: Request,user_id:int):
         media_type="application/json"
     )
 
+@router.get("/byforest/")
+async def get_parcelles_by_forest_ids(request: Request, forest_ids: list[int] = Query(...)):
+    headers = {}
+
+    auth = request.headers.get("Authorization")
+    if auth:
+        headers["Authorization"] = auth
+
+    async with httpx.AsyncClient() as client:
+        response = await client.get(f"{Auth_SERVICE_URL}/parcelles/byforest/", params={"forest_ids": forest_ids}, headers=headers)
+    return Response(
+        content=response.content,
+        status_code=response.status_code,
+        media_type="application/json"
+    )
 
