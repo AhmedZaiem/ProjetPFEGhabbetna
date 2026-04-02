@@ -114,6 +114,61 @@ class _IncidentMapState extends State<IncidentMap> {
                       children: [
                         Text('Status: ${incident.status}'),
                         Text('Description: ${incident.description}'),
+                        Text('Type: ${incident.type}'),
+                        ElevatedButton(
+                          onPressed: () async {
+                            try {
+                              await supervisorServices.verifyIncident(
+                                incident.id!,
+                                'accepted',
+                              );
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    'Incident verified as accepted',
+                                  ),
+                                ),
+                              );
+                              initData(); // Refresh data to update marker colors
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    'Failed to verify incident: $e',
+                                  ),
+                                ),
+                              );
+                            }
+                          },
+                          child: const Text('Verify as Accepted'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () async {
+                            try {
+                              await supervisorServices.verifyIncident(
+                                incident.id!,
+                                'not_accepted',
+                              );
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    'Incident verified as not accepted',
+                                  ),
+                                ),
+                              );
+                              initData(); // Refresh data to update marker colors
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    'Failed to verify incident: $e',
+                                  ),
+                                ),
+                              );
+                            }
+                          },
+                          child: const Text('Verify as Not Accepted'),
+                        ),
                       ],
                     ),
                     actions: [

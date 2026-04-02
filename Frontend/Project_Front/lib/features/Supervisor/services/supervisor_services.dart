@@ -37,4 +37,17 @@ class SupervisorServices {
       throw Exception('Failed to fetch incidents');
     }
   }
+
+  Future<void> verifyIncident(int incidentId, String status) async {
+    final response = await http.patch(
+      Uri.parse('$baseUrl/incidents/verify/$incidentId'),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({'status': status}),
+    );
+    if (response.statusCode == 200) {
+      print('Incident verified successfully');
+    } else {
+      throw Exception('Failed to verify incident');
+    }
+  }
 }

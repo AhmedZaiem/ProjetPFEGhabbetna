@@ -3,7 +3,7 @@ from typing import List
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, Query
 from sqlalchemy.orm import Session
 from db.database import get_db
-from schemas.incidentSchema import IncidentCreate
+from schemas.incidentSchema import IncidentCreate, VerifyIncidentBody
 from services.IncidentServices import create_incident,get_all_incidents, get_incidents_by_forest_ids,get_incidents_by_user,verify_incident
 from models.status_enum import Status
 from core.security import get_current_user
@@ -68,6 +68,7 @@ def read_all_incidents(db: Session = Depends(get_db)):
     for i in incidents:
         point : Point = to_shape(i.coords)
         result.append({
+            "id": i.id,
             "description": i.description,
             "type": i.type,
             "location": i.location,
@@ -88,6 +89,7 @@ def read_incidents_by_user(user_id: int, db: Session = Depends(get_db)):
     for i in incidents:
         point : Point = to_shape(i.coords)
         result.append({
+            "id": i.id,
             "description": i.description,
             "type": i.type,
             "location": i.location,
@@ -108,6 +110,7 @@ def get_forest_incidents(forest_ids: list[int]=Query(...), db: Session = Depends
     for i in incidents:
         point : Point = to_shape(i.coords)
         result.append({
+            "id": i.id,
             "description": i.description,
             "type": i.type,
             "location": i.location,
@@ -121,8 +124,9 @@ def get_forest_incidents(forest_ids: list[int]=Query(...), db: Session = Depends
         })
     return result
 
-@router.post("/verify")
-def verify_incident_route(incident_id: int, status: Status, db: Session = Depends(get_db)):
+@router.patch("/verify/{incident_id}")
+def verify_incident_route(incident_id: int, body:VerifyIncidentBody, db: Session = Depends(get_db)):
+    status = body.status
     updated_incident = verify_incident(db, incident_id, status)
     if not updated_incident:
         raise HTTPException(status_code=404, detail="Incident not found")

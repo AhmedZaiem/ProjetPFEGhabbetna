@@ -1,4 +1,5 @@
 from pydantic import BaseModel, Field
+from models.status_enum import Status
 
 class IncidentCreate(BaseModel):
     description: str
@@ -11,6 +12,9 @@ class IncidentCreate(BaseModel):
     longitude: float
     forest_id: int
     user_id: int = Field(default=None)
+
+class VerifyIncidentBody(BaseModel):
+    status: Status
 
 
 

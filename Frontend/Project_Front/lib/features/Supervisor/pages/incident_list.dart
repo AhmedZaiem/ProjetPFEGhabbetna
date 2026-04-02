@@ -96,7 +96,8 @@ class _IncidentListState extends State<IncidentList> {
                   1: FlexColumnWidth(2), // Type
                   2: FlexColumnWidth(2), // Region
                   3: FlexColumnWidth(2), // Status
-                  4: FlexColumnWidth(2), // Location
+                  4: FlexColumnWidth(2),
+                  5: FlexColumnWidth(2), // Location
                 },
                 defaultVerticalAlignment: TableCellVerticalAlignment.middle,
                 children: [
@@ -156,6 +157,16 @@ class _IncidentListState extends State<IncidentList> {
                           ),
                         ),
                       ),
+                      Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Text(
+                          "Id",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
 
@@ -193,6 +204,10 @@ class _IncidentListState extends State<IncidentList> {
                           child: Text(
                             "${incident.latitude.toStringAsFixed(4)}, ${incident.longitude.toStringAsFixed(4)}",
                           ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Text("${incident.id ?? 'N/A'}"),
                         ),
                       ],
                     );

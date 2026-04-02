@@ -1,4 +1,4 @@
-from fastapi import APIRouter,Request,Response,Query
+from fastapi import APIRouter,Request,Response,Query,Body
 import httpx
 
 router = APIRouter()
@@ -88,11 +88,11 @@ async def get_incidents_by_forest_ids(request: Request, forest_ids: list[int] = 
     
 
 
-@router.post("/verify")
-async def verify_incident(request: Request):
+@router.patch("/verify/{incident_id}")
+async def verify_incident(request: Request, incident_id: int):
     data = await request.json()
-    incident_id = data.get("incident_id")
     status = data.get("status") 
+    headers = {}
 
     if not incident_id or not status:
         return Response(
@@ -101,12 +101,15 @@ async def verify_incident(request: Request):
             media_type="application/json"
         )
 
-    headers = {"Authorization": request.headers.get("Authorization")}
+    auth = request.headers.get("Authorization")
+    if auth:
+        headers["Authorization"] = auth
     async with httpx.AsyncClient() as client:
-        response = await client.post(
-            f"{upload_incident_URL}/incidents/verify",
+        response = await client.patch(
+            f"{upload_incident_URL}/incidents/verify/{incident_id}",
             json={"incident_id": incident_id, "status": status},
             headers=headers
+
         )
 
     return Response(
