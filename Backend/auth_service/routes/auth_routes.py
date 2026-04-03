@@ -158,11 +158,20 @@ async def activate_account(data: ActivateAccountRequest):
 
     if not user_id:
         raise HTTPException(status_code=400, detail="Invalid token")
+    
+    if isinstance(user_id, bytes):
+        user_id = user_id.decode("utf-8")
 
     async with httpx.AsyncClient() as client:
-        await client.post(
+        response=await client.post(
             f"{ADMIN_SERVICE_URL}/auth/users/{user_id}/activate",
             json={"password": data.password}
+        )
+
+    if response.status_code != 200:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Activation failed: {response.text}"
         )
 
     redis_client.delete(f"activation:{data.token}")
