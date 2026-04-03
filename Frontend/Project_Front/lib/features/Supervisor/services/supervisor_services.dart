@@ -4,6 +4,7 @@ import '../../../config.dart' as config;
 import 'package:http_parser/http_parser.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:authproject/features/Supervisor/models/parcelleWithAgent.dart';
 
 class SupervisorServices {
   final String baseUrl = config.baseUrl;
@@ -48,6 +49,28 @@ class SupervisorServices {
       print('Incident verified successfully');
     } else {
       throw Exception('Failed to verify incident');
+    }
+  }
+
+  Future<List<Parcellewithagent>> getParcellesByForestIds(
+    List<int> forestIds,
+  ) async {
+    final uri = Uri.parse('$baseUrl/parcelles/by-forest/').replace(
+      queryParameters: {
+        'forest_ids': forestIds.map((id) => id.toString()).toList(),
+      },
+    );
+    final response = await http.get(
+      uri,
+      headers: {'Content-Type': 'application/json'},
+    );
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body);
+      return data.map((json) => Parcellewithagent.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to fetch parcelles');
     }
   }
 }
