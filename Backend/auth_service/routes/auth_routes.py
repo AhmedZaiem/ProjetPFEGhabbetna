@@ -81,7 +81,7 @@ async def refresh_token(data: RefreshRequest):
         if isinstance(stored_token, bytes):
             stored_token = stored_token.decode('utf-8')
 
-        if stored_token.decode('utf-8') != data.refresh_token:
+        if stored_token != data.refresh_token:
             raise HTTPException(status_code=401, detail="Token mismatch")
         
         new_access_token = create_access_token(
