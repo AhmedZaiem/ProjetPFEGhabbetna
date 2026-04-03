@@ -1,11 +1,15 @@
 from typing import List
-
+import re
 from db.database import get_db
 from models.incident import Incident
 from models.status_enum import Status
 from sqlalchemy.orm import Session
 from shapely.geometry import Point
 from geoalchemy2.shape import from_shape
+
+def safe_filename(filename: str) -> str:
+    filename = re.sub(r"[^a-zA-Z0-9_-]","_", filename)
+    return filename
 
 
 def create_incident(db: Session, incident_data):

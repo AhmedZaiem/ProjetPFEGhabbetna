@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+import os
 from routes.auth import router as auth_router
 from routes.incidentUpload import router as incident_router
 from routes.forest import router as forest_router
@@ -18,6 +20,11 @@ app.add_middleware(
 )
 
 #app.middleware("http")(auth_middleware)
+
+UPLOAD_FOLDER="C:\\Users\\ASUS\\Desktop\\ProjetPFEGhabbetna\\Backend\\upload_incident_service\\uploads"
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+app.mount("/uploads", StaticFiles(directory=UPLOAD_FOLDER), name="uploads")
 
 app.include_router(auth_router, prefix="/auth")
 app.include_router(incident_router, prefix="/incidents")

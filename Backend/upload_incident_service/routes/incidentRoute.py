@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, Q
 from sqlalchemy.orm import Session
 from db.database import get_db
 from schemas.incidentSchema import IncidentCreate, VerifyIncidentBody
-from services.IncidentServices import create_incident,get_all_incidents, get_incidents_by_forest_ids,get_incidents_by_user,verify_incident
+from services.IncidentServices import create_incident,get_all_incidents, get_incidents_by_forest_ids,get_incidents_by_user,verify_incident,safe_filename
 from models.status_enum import Status
 from core.security import get_current_user
 import os
@@ -41,7 +41,7 @@ def create_incident_route(
         raise HTTPException(status_code=400, detail=f"Invalid latitude/longitude: {e}")
 
     ext=image.filename.split(".")[-1]
-    filename = f"{uuid.uuid4()}.{ext}"
+    filename = f"{safe_filename(type)}_{safe_filename(location)}_{safe_filename(region)}_{uuid.uuid4().hex[:8]}.{ext}"
     file_path = f"{UPLOAD_FOLDER}/{filename}"
 
     with open(file_path, "wb") as f:

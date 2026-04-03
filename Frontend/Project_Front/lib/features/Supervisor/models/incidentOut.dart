@@ -8,6 +8,7 @@ class IncidentOut {
   final double longitude;
   final String? status;
   final int? forestId;
+  final String? imageUrl;
 
   IncidentOut({
     this.id,
@@ -19,6 +20,7 @@ class IncidentOut {
     required this.longitude,
     this.status,
     this.forestId,
+    required this.imageUrl,
   });
 
   Map<String, String> toFields() {
@@ -32,10 +34,15 @@ class IncidentOut {
       'longitude': longitude.toStringAsFixed(6),
     };
     if (forestId != null) fields['forest_id'] = forestId.toString();
+    if (imageUrl != null) fields['image_url'] = imageUrl!;
     return fields;
   }
 
   factory IncidentOut.fromJson(Map<String, dynamic> json) {
+    final baseUrl = "http://127.0.0.1:8000";
+    final imagePath = json['image_url'] ?? '';
+    final fullImageUrl = imagePath.isNotEmpty ? '$baseUrl/$imagePath' : null;
+
     return IncidentOut(
       id: json['id'] ?? 0,
       description: json['description'],
@@ -46,6 +53,7 @@ class IncidentOut {
       longitude: (json['longitude'] as num).toDouble(),
       status: json['status'],
       forestId: json['forest_id'],
+      imageUrl: fullImageUrl,
     );
   }
 }

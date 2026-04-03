@@ -115,6 +115,14 @@ class _IncidentMapState extends State<IncidentMap> {
                         Text('Status: ${incident.status}'),
                         Text('Description: ${incident.description}'),
                         Text('Type: ${incident.type}'),
+                        Container(
+                          child: Image.network(
+                            incident.imageUrl ?? '',
+                            errorBuilder: (context, error, stackTrace) {
+                              return const Text('No image available');
+                            },
+                          ),
+                        ),
                         ElevatedButton(
                           onPressed: () async {
                             try {
