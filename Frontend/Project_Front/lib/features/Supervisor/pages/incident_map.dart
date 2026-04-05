@@ -1,11 +1,11 @@
 import 'package:authproject/features/Admin/models/forest_model.dart';
-import 'package:authproject/features/Admin/models/incident.dart';
 import 'package:authproject/features/Auth/services/auth_service.dart';
 import 'package:authproject/features/Supervisor/models/incidentOut.dart';
 import 'package:authproject/features/Supervisor/services/supervisor_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:authproject/features/Supervisor/ui_components/incident_details.dart';
 
 class IncidentMap extends StatefulWidget {
   const IncidentMap({super.key});
@@ -104,88 +104,22 @@ class _IncidentMapState extends State<IncidentMap> {
             height: 40,
             child: GestureDetector(
               onTap: () {
-                showDialog(
+                showModalBottomSheet(
                   context: context,
-                  builder: (context) => AlertDialog(
-                    title: Text('Incident Details'),
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Status: ${incident.status}'),
-                        Text('Description: ${incident.description}'),
-                        Text('Type: ${incident.type}'),
-                        Container(
-                          child: Image.network(
-                            incident.imageUrl ?? '',
-                            errorBuilder: (context, error, stackTrace) {
-                              return const Text('No image available');
-                            },
-                          ),
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                  builder: (context) {
+                    return Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(20),
                         ),
-                        ElevatedButton(
-                          onPressed: () async {
-                            try {
-                              await supervisorServices.verifyIncident(
-                                incident.id!,
-                                'accepted',
-                              );
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    'Incident verified as accepted',
-                                  ),
-                                ),
-                              );
-                              initData(); // Refresh data to update marker colors
-                            } catch (e) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    'Failed to verify incident: $e',
-                                  ),
-                                ),
-                              );
-                            }
-                          },
-                          child: const Text('Verify as Accepted'),
-                        ),
-                        ElevatedButton(
-                          onPressed: () async {
-                            try {
-                              await supervisorServices.verifyIncident(
-                                incident.id!,
-                                'not_accepted',
-                              );
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    'Incident verified as not accepted',
-                                  ),
-                                ),
-                              );
-                              initData(); // Refresh data to update marker colors
-                            } catch (e) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    'Failed to verify incident: $e',
-                                  ),
-                                ),
-                              );
-                            }
-                          },
-                          child: const Text('Verify as Not Accepted'),
-                        ),
-                      ],
-                    ),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text('Close'),
                       ),
-                    ],
-                  ),
+                      padding: EdgeInsets.all(16),
+                      child: buildIncidentDetails(context, incident, initData),
+                    );
+                  },
                 );
               },
               child: Icon(

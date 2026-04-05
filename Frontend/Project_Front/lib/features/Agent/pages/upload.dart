@@ -3,6 +3,7 @@ import 'package:authproject/features/Admin/models/user_model.dart';
 import 'package:authproject/features/Admin/services/parcelle_service.dart';
 import 'package:authproject/features/Agent/models/incident.dart';
 import 'package:authproject/features/Agent/services/incident_service.dart';
+import 'package:authproject/features/Agent/ui_components/successDialog.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -100,6 +101,12 @@ class _UploadState extends State<Upload> {
 
   Future<void> submitIncident() async {
     if (_formKey.currentState!.validate() && _imageFile != null) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => Center(child: CircularProgressIndicator()),
+      );
+
       Position position;
       try {
         position = await getCurrentLocation();
@@ -139,9 +146,7 @@ class _UploadState extends State<Upload> {
       );
 
       if (success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Incident submitted successfully")),
-        );
+        showSuccessDialog(context);
         _formKey.currentState!.reset();
         setState(() {
           _imageFile = null;
