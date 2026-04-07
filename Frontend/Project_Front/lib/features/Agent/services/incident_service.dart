@@ -56,4 +56,31 @@ class IncidentService {
       return {"assigned": false, "parcelle": null};
     }
   }
+
+  Future<List<Incident>> getIncidentsByUserId(int userId) async {
+    String? token = await storage.read(key: "access_token");
+    if (token == null) return [];
+
+    final url = Uri.parse("$baseUrl/incidents/user/$userId");
+
+    try {
+      final response = await http.get(
+        url,
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json",
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        return data.map((json) => Incident.fromJson(json)).toList();
+      } else {
+        return [];
+      }
+    } catch (e) {
+      print("Error fetching incidents for user $userId: $e");
+      return [];
+    }
+  }
 }

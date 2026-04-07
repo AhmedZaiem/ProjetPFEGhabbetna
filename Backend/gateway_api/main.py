@@ -19,9 +19,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-#app.middleware("http")(auth_middleware)
+# app.middleware("http")(auth_middleware)
 
-UPLOAD_FOLDER="C:\\Users\\ASUS\\Desktop\\ProjetPFEGhabbetna\\Backend\\upload_incident_service\\uploads"
+# ✅ FIX: use project local folder instead of ASUS path
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+UPLOAD_FOLDER = os.path.join(BASE_DIR, "uploads")
+
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 app.mount("/uploads", StaticFiles(directory=UPLOAD_FOLDER), name="uploads")

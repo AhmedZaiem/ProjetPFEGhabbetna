@@ -19,6 +19,47 @@ class _ManageIncidentState extends State<ManageIncident> {
     _incidentsFuture = _incidentService.getAllIncidents();
   }
 
+  Future<void> _refreshIncidents() async {
+    setState(() {
+      _incidentsFuture = _incidentService.getAllIncidents();
+    });
+  }
+
+  Widget _buildCard(String title, String count, IconData icon, Color color) {
+    return Expanded(
+      child: Card(
+        elevation: 4,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Container(
+          height: 140,
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, size: 36, color: color),
+              const SizedBox(height: 12),
+              FittedBox(
+                child: Text(
+                  count,
+                  style: const TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                title,
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 14),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +68,7 @@ class _ManageIncidentState extends State<ManageIncident> {
           children: [
             Image.asset('assets/images/logoApp.jpeg', height: 80),
             const SizedBox(width: 12),
-            const Text("Manage incidents"),
+            const Text("Manage Incidents"),
           ],
         ),
       ),
@@ -43,63 +84,118 @@ class _ManageIncidentState extends State<ManageIncident> {
           }
 
           final incidents = snapshot.data!;
-          return ListView.builder(
-            itemCount: incidents.length,
-            itemBuilder: (context, index) {
-              final incident = incidents[index];
-              return Card(
-                color: const Color(0xFF1B5E20),
-                margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+          final totalIncidents = incidents.length;
+          final pendingIncidents = incidents
+              .where((i) => i.status == "pending")
+              .length;
+          final acceptedIncidents = incidents
+              .where((i) => i.status == "accepted")
+              .length;
+          final notAcceptedIncidents = incidents
+              .where((i) => i.status == "not_accepted")
+              .length;
+
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    _buildCard(
+                      "Total Incidents",
+                      totalIncidents.toString(),
+                      Icons.report,
+                      const Color.fromARGB(255, 0, 0, 0),
+                    ),
+                    const SizedBox(width: 12),
+                    _buildCard(
+                      "Pending Incidents",
+                      pendingIncidents.toString(),
+                      Icons.verified,
+                      const Color.fromARGB(255, 0, 128, 0),
+                    ),
+                    const SizedBox(width: 12),
+                    _buildCard(
+                      "Accepted Incidents",
+                      acceptedIncidents.toString(),
+                      Icons.check_circle,
+                      Colors.blue,
+                    ),
+                    const SizedBox(width: 12),
+                    _buildCard(
+                      "Not Accepted",
+                      notAcceptedIncidents.toString(),
+                      Icons.cancel,
+                      Colors.red,
+                    ),
+                  ],
                 ),
-                elevation: 4,
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        incident.type,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+                const SizedBox(height: 20),
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: incidents.length,
+                  itemBuilder: (context, index) {
+                    final incident = incidents[index];
+                    return Card(
+                      color: const Color(0xFF1B5E20),
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
                       ),
-                      const SizedBox(height: 6),
-                      Text('Description: ${incident.description}'),
-                      Text(
-                        'Location: ${incident.location}, ${incident.region}',
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                      Text(
-                        'Coordinates: ${incident.latitude.toStringAsFixed(6)}, ${incident.longitude.toStringAsFixed(6)}',
-                      ),
-                      if (incident.status != null)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 6),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 4,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.black,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              incident.status!,
+                      elevation: 4,
+                      child: Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              incident.type,
                               style: const TextStyle(
-                                color: Colors.white,
+                                fontSize: 18,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                          ),
+                            const SizedBox(height: 6),
+                            Text('Description: ${incident.description}'),
+                            Text(
+                              'Location: ${incident.location}, ${incident.region}',
+                            ),
+                            Text(
+                              'Coordinates: ${incident.latitude.toStringAsFixed(6)}, ${incident.longitude.toStringAsFixed(6)}',
+                            ),
+                            if (incident.status != null)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 6),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 4,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.black,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Text(
+                                    incident.status!,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                          ],
                         ),
-                    ],
-                  ),
+                      ),
+                    );
+                  },
                 ),
-              );
-            },
+              ],
+            ),
           );
         },
       ),

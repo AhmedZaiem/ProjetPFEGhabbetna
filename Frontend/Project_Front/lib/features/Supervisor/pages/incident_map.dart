@@ -16,17 +16,23 @@ class IncidentMap extends StatefulWidget {
 
 class _IncidentMapState extends State<IncidentMap> {
   AuthService authService = AuthService();
+  SupervisorServices supervisorServices = SupervisorServices();
   Map<String, dynamic>? userData;
   String? error;
-  SupervisorServices supervisorServices = SupervisorServices();
   List<Forest>? forests;
   List<IncidentOut>? incidentData;
   final MapController _mapController = MapController();
 
   final northTunisiaBounds = LatLngBounds(
-    LatLng(30.0, 7.0), // Southwest corner
-    LatLng(37.4, 12.0), // Northeast corner
+    LatLng(30.0, 7.0),
+    LatLng(37.4, 12.0),
   );
+
+  @override
+  void initState() {
+    super.initState();
+    initData();
+  }
 
   Future<void> initData() async {
     final result = await authService.getCurrentUser();
@@ -51,24 +57,15 @@ class _IncidentMapState extends State<IncidentMap> {
       final incidents = await supervisorServices.fetchIncidentsByForestids(
         forestIds,
       );
+
       setState(() {
         userData = user;
         forests = fetchedForests;
         incidentData = incidents;
       });
-      print('User Data: $userData');
-      print('Forests: $forests');
-      print('Incident Data: $incidentData');
     } catch (e) {
       setState(() => error = 'Failed to fetch forests: $e');
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    print('IncidentMap initState called');
-    initData();
   }
 
   Color _getStatusColor(String? status) {
@@ -85,51 +82,37 @@ class _IncidentMapState extends State<IncidentMap> {
   }
 
   List<Marker> _buildIncidentMarkers() {
-    if (incidentData == null) {
-      return [];
-    }
-    final incidents = incidentData!;
-    return incidents
-        .map((incident) {
-          final lat = incident.latitude;
-          final lng = incident.longitude;
-
-          if (lat == 0.0 && lng == 0.0) {
-            return null; // Skip incidents without valid coordinates
-          }
-
-          return Marker(
-            point: LatLng(lat, lng),
+    if (incidentData == null) return [];
+    return incidentData!
+        .where((i) => i.latitude != 0.0 && i.longitude != 0.0)
+        .map(
+          (incident) => Marker(
+            point: LatLng(incident.latitude, incident.longitude),
             width: 40,
             height: 40,
             child: GestureDetector(
-              onTap: () {
-                showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  backgroundColor: Colors.transparent,
-                  builder: (context) {
-                    return Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(20),
-                        ),
-                      ),
-                      padding: EdgeInsets.all(16),
-                      child: buildIncidentDetails(context, incident, initData),
-                    );
-                  },
-                );
-              },
+              onTap: () => showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                backgroundColor: Colors.transparent,
+                builder: (context) => Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(20),
+                    ),
+                  ),
+                  padding: EdgeInsets.all(16),
+                  child: buildIncidentDetails(context, incident, initData),
+                ),
+              ),
               child: Icon(
                 Icons.location_on,
                 color: _getStatusColor(incident.status),
               ),
             ),
-          );
-        })
-        .whereType<Marker>()
+          ),
+        )
         .toList();
   }
 
@@ -138,67 +121,70 @@ class _IncidentMapState extends State<IncidentMap> {
     final mapCenter = incidentData != null && incidentData!.isNotEmpty
         ? LatLng(incidentData!.first.latitude, incidentData!.first.longitude)
         : LatLng(36.8, 10.18);
+
     return Scaffold(
       appBar: AppBar(title: const Text('Incident Map')),
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: FlutterMap(
-              mapController: _mapController,
-              options: MapOptions(
-                initialCameraFit: CameraFit.bounds(
-                  bounds: northTunisiaBounds,
-                  padding: const EdgeInsets.all(16),
-                ),
-                cameraConstraint: CameraConstraint.contain(
-                  bounds: northTunisiaBounds,
-                ),
-                minZoom: 8.5,
-                maxZoom: 18,
-                initialCenter: mapCenter,
-                initialZoom: 10,
-              ),
-              children: [
-                TileLayer(
-                  urlTemplate:
-                      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                  subdomains: ['a', 'b', 'c'],
-                ),
-                MarkerLayer(markers: _buildIncidentMarkers()),
-              ],
-            ),
-          ),
-
-          Positioned(
-            right: 16,
-            bottom: 20,
-            child: Column(
+      body: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Row(
+          children: [
+            /// Left: Buttons
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 FloatingActionButton(
-                  heroTag: "zoom_in",
+                  heroTag: "zoomIn",
                   mini: true,
                   backgroundColor: Colors.green,
                   onPressed: () => _mapController.move(
-                    _mapController.camera.center,
-                    _mapController.camera.zoom + 1,
+                    _mapController.center,
+                    _mapController.zoom + 1,
                   ),
                   child: const Icon(Icons.zoom_in),
                 ),
                 const SizedBox(height: 10),
                 FloatingActionButton(
-                  heroTag: "zoom_out",
+                  heroTag: "zoomOut",
                   mini: true,
                   backgroundColor: Colors.red,
                   onPressed: () => _mapController.move(
-                    _mapController.camera.center,
-                    _mapController.camera.zoom - 1,
+                    _mapController.center,
+                    _mapController.zoom - 1,
                   ),
                   child: const Icon(Icons.zoom_out),
                 ),
+                const SizedBox(height: 20),
+                // Add more buttons here if needed
               ],
             ),
-          ),
-        ],
+
+            const SizedBox(width: 15),
+
+            /// Right: Map
+            Expanded(
+              child: FlutterMap(
+                mapController: _mapController,
+                options: MapOptions(
+                  initialCenter: mapCenter,
+                  initialZoom: 10,
+                  minZoom: 8.5,
+                  maxZoom: 18,
+                  cameraConstraint: CameraConstraint.contain(
+                    bounds: northTunisiaBounds,
+                  ),
+                ),
+                children: [
+                  TileLayer(
+                    urlTemplate:
+                        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                    subdomains: ['a', 'b', 'c'],
+                  ),
+                  MarkerLayer(markers: _buildIncidentMarkers()),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
