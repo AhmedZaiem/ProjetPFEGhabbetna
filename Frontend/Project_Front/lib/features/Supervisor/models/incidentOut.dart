@@ -1,3 +1,5 @@
+import 'package:authproject/config.dart' as config;
+
 class IncidentOut {
   final int? id;
   final String description;
@@ -39,7 +41,7 @@ class IncidentOut {
   }
 
   factory IncidentOut.fromJson(Map<String, dynamic> json) {
-    final baseUrl = "http://127.0.0.1:8000";
+    final baseUrl = config.baseUrl;
     final imagePath = json['image_url'] ?? '';
     final fullImageUrl = imagePath.isNotEmpty ? '$baseUrl/$imagePath' : null;
 

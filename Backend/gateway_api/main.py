@@ -8,6 +8,8 @@ from routes.forest import router as forest_router
 from routes.parcelle import router as parcelle_router
 from routes.service import router as service_router
 from core.middleware import auth_middleware
+import httpx
+from fastapi.responses import StreamingResponse
 
 app = FastAPI(title="Gateway API")
 
@@ -27,7 +29,21 @@ UPLOAD_FOLDER = os.path.join(BASE_DIR, "uploads")
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-app.mount("/uploads", StaticFiles(directory=UPLOAD_FOLDER), name="uploads")
+@app.get("/uploads/{path:path}")
+async def proxy_uploads(path: str):
+    # URL of your upload_incident microservice
+    microservice_url = f"http://localhost:8003/uploads/{path}"
+
+    async with httpx.AsyncClient() as client:
+        response = await client.get(microservice_url)
+        if response.status_code != 200:
+            return {"error": "File not found"}, response.status_code
+
+        # Stream the file back to the client
+        return StreamingResponse(
+            response.aiter_bytes(),
+            media_type=response.headers.get("content-type")
+        )
 
 app.include_router(auth_router, prefix="/auth")
 app.include_router(incident_router, prefix="/incidents")

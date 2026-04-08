@@ -36,12 +36,15 @@ class _UploadState extends State<Upload> {
 
   bool? isAssigned;
   String? selectedRegion;
+  String? selectedType;
 
   @override
   void initState() {
     super.initState();
     loadUser();
   }
+
+  List<String> incidentTypes = ["Fire", "Illegal Logging", "Disease", "Other"];
 
   List<String> tunisianStates = [
     "Tunis",
@@ -168,6 +171,7 @@ class _UploadState extends State<Upload> {
         setState(() {
           _imageFile = null;
           selectedType = null; // ✅ reset
+          selectedRegion = null; // ✅ reset
         });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -284,14 +288,27 @@ class _UploadState extends State<Upload> {
 
                             const SizedBox(height: 16),
 
-                            TextFormField(
-                              controller: _regionController,
+                            DropdownButtonFormField<String>(
+                              value: selectedRegion,
                               decoration: InputDecoration(
                                 labelText: 'Region',
-                                border: OutlineInputBorder(),
+                                prefixIcon: const Icon(Icons.map),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
                               ),
+                              items: tunisianStates
+                                  .map(
+                                    (region) => DropdownMenuItem(
+                                      value: region,
+                                      child: Text(region),
+                                    ),
+                                  )
+                                  .toList(),
+                              onChanged: (value) =>
+                                  setState(() => selectedRegion = value),
                               validator: (value) =>
-                                  value!.isEmpty ? "Required" : null,
+                                  value == null ? "Region is required" : null,
                             ),
 
                             const SizedBox(height: 24),
