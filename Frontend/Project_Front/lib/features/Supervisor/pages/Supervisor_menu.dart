@@ -1,5 +1,3 @@
-import 'package:authproject/features/Admin/pages/admin_pages/assign.dart';
-import 'package:authproject/features/Admin/pages/admin_pages/assign_agent.dart';
 import 'package:authproject/features/Agent/pages/Profile.dart';
 import 'package:authproject/features/Auth/services/auth_service.dart';
 import 'package:authproject/features/Supervisor/pages/agent_list.dart';
@@ -12,18 +10,16 @@ class SupervisorMenu extends StatefulWidget {
   const SupervisorMenu({super.key});
 
   @override
-  State<SupervisorMenu> createState() => _MyWidgetState();
+  State<SupervisorMenu> createState() => _SupervisorMenuState();
 }
 
-class _MyWidgetState extends State<SupervisorMenu> {
+class _SupervisorMenuState extends State<SupervisorMenu> {
   int _selectedIndex = 0;
-
   final AuthService authService = AuthService();
 
   final List<Widget> _contentWidgets = [
     IncidentList(),
     IncidentMap(),
-    AssignAgent(),
     AgentList(),
     Profile(),
   ];
@@ -31,8 +27,30 @@ class _MyWidgetState extends State<SupervisorMenu> {
   void logout() async {
     await authService.logout();
     if (!mounted) return;
-
     context.go('/');
+  }
+
+  NavigationRailDestination _buildItem(String text, IconData icon) {
+    return NavigationRailDestination(
+      icon: Container(
+        color: Colors.transparent,
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Text(
+                text,
+                style: const TextStyle(fontSize: 13),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            Icon(icon, size: 18),
+          ],
+        ),
+      ),
+      label: const SizedBox.shrink(),
+    );
   }
 
   @override
@@ -42,13 +60,14 @@ class _MyWidgetState extends State<SupervisorMenu> {
       child: Scaffold(
         body: Row(
           children: [
+            // Sidebar
             Container(
-              width: 220,
-              color: Colors.white,
+              width: 240,
+              color: Colors.transparent,
               child: Column(
                 children: [
                   SizedBox(
-                    height: 100,
+                    height: 70,
                     child: Image.asset(
                       'assets/images/logoApp.jpeg',
                       fit: BoxFit.contain,
@@ -56,54 +75,32 @@ class _MyWidgetState extends State<SupervisorMenu> {
                   ),
 
                   Expanded(
-                    child: NavigationRail(
-                      selectedIndex: _selectedIndex,
-                      onDestinationSelected: (index) {
-                        setState(() {
-                          _selectedIndex = index;
-                        });
-                      },
-                      labelType: NavigationRailLabelType.all,
-                      backgroundColor: Colors.transparent,
-                      minWidth: 80,
-                      minExtendedWidth: 200,
-                      destinations: const [
-                        NavigationRailDestination(
-                          icon: Icon(Icons.fireplace, size: 20),
-                          label: Text(
-                            "Incident List",
-                            style: TextStyle(fontSize: 12),
-                          ),
-                        ),
-                        NavigationRailDestination(
-                          icon: Icon(Icons.map, size: 20),
-                          label: Text(
-                            "Incident Map",
-                            style: TextStyle(fontSize: 12),
-                          ),
-                        ),
-                        NavigationRailDestination(
-                          icon: Icon(Icons.add, size: 20),
-                          label: Text(
-                            "Assign Agent",
-                            style: TextStyle(fontSize: 12),
-                          ),
-                        ),
-                        NavigationRailDestination(
-                          icon: Icon(Icons.person, size: 20),
-                          label: Text(
-                            "Agent List",
-                            style: TextStyle(fontSize: 12),
-                          ),
-                        ),
-                        NavigationRailDestination(
-                          icon: Icon(Icons.person_4_sharp, size: 20),
-                          label: Text(
-                            "Profile",
-                            style: TextStyle(fontSize: 12),
-                          ),
-                        ),
-                      ],
+                    child: Theme(
+                      data: Theme.of(context).copyWith(
+                        splashFactory: NoSplash.splashFactory,
+                        highlightColor: Colors.transparent,
+                        hoverColor: Colors.transparent,
+                        focusColor: Colors.transparent,
+                      ),
+                      child: NavigationRail(
+                        selectedIndex: _selectedIndex,
+                        onDestinationSelected: (index) {
+                          setState(() {
+                            _selectedIndex = index;
+                          });
+                        },
+                        labelType: NavigationRailLabelType.none,
+                        backgroundColor: Colors.transparent,
+                        indicatorColor: Colors.transparent,
+                        groupAlignment: -1.0,
+                        minWidth: 220,
+                        destinations: [
+                          _buildItem("Incident List", Icons.fireplace),
+                          _buildItem("Incident Map", Icons.map),
+                          _buildItem("Agent List", Icons.person),
+                          _buildItem("Profile", Icons.person_4_sharp),
+                        ],
+                      ),
                     ),
                   ),
 
@@ -116,13 +113,26 @@ class _MyWidgetState extends State<SupervisorMenu> {
                         icon: const Icon(Icons.logout, size: 16),
                         label: const Text(
                           "Logout",
-                          style: TextStyle(fontSize: 14),
+                          style: TextStyle(fontSize: 14, color: Colors.white),
                         ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF1B5E20),
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                            const Color(0xFF1B5E20),
+                          ),
+                          overlayColor: MaterialStateProperty.all(
+                            Colors.transparent,
+                          ),
+                          shadowColor: MaterialStateProperty.all(
+                            Colors.transparent,
+                          ),
+                          elevation: MaterialStateProperty.all(0),
+                          padding: MaterialStateProperty.all(
+                            const EdgeInsets.symmetric(vertical: 14),
+                          ),
+                          shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                           ),
                         ),
                       ),
@@ -134,6 +144,7 @@ class _MyWidgetState extends State<SupervisorMenu> {
 
             const VerticalDivider(thickness: 1, width: 1),
 
+            // Main content
             Expanded(child: Center(child: _contentWidgets[_selectedIndex])),
           ],
         ),

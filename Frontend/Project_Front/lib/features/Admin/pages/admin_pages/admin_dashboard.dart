@@ -21,7 +21,6 @@ class AdminDashboard extends StatefulWidget {
 
 class _AdminDashboardState extends State<AdminDashboard> {
   int _selectedIndex = 0;
-
   final AuthService authService = AuthService();
 
   final List<Widget> _contentWidgets = [
@@ -39,8 +38,30 @@ class _AdminDashboardState extends State<AdminDashboard> {
   void logout() async {
     await authService.logout();
     if (!mounted) return;
-
     context.go('/');
+  }
+
+  NavigationRailDestination _buildItem(String text, IconData icon) {
+    return NavigationRailDestination(
+      icon: Container(
+        color: Colors.transparent,
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Text(
+                text,
+                style: const TextStyle(fontSize: 13),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            Icon(icon, size: 18),
+          ],
+        ),
+      ),
+      label: const SizedBox.shrink(),
+    );
   }
 
   @override
@@ -50,99 +71,61 @@ class _AdminDashboardState extends State<AdminDashboard> {
       child: Scaffold(
         body: Row(
           children: [
+            // Sidebar
             Container(
-              width: 220,
-              color: Colors.white,
+              width: 240,
+              color: Colors.transparent, // transparent background
               child: Column(
                 children: [
+                  // Logo
                   SizedBox(
-                    height: 60,
+                    height: 70,
                     child: Image.asset(
                       'assets/images/logoApp.jpeg',
                       fit: BoxFit.contain,
                     ),
                   ),
 
+                  // Navigation Rail without Theme wrapper
                   Expanded(
-                    child: NavigationRail(
-                      selectedIndex: _selectedIndex,
-                      onDestinationSelected: (index) {
-                        setState(() {
-                          _selectedIndex = index;
-                        });
-                      },
-                      labelType: NavigationRailLabelType.all,
-                      backgroundColor: Colors.transparent,
-                      minWidth: 80,
-                      minExtendedWidth: 200,
-                      destinations: const [
-                        NavigationRailDestination(
-                          icon: Icon(Icons.people, size: 18),
-                          label: Text(
-                            "Users List",
-                            style: TextStyle(fontSize: 12),
-                          ),
-                        ),
-                        NavigationRailDestination(
-                          icon: Icon(Icons.add, size: 18),
-                          label: Text(
-                            "Create Users",
-                            style: TextStyle(fontSize: 12),
-                          ),
-                        ),
-                        NavigationRailDestination(
-                          icon: Icon(Icons.account_box_sharp, size: 18),
-                          label: Text(
-                            "Manage Roles",
-                            style: TextStyle(fontSize: 12),
-                          ),
-                        ),
-                        NavigationRailDestination(
-                          icon: Icon(Icons.add, size: 18),
-                          label: Text(
-                            "Assign Supervisor",
-                            style: TextStyle(fontSize: 12),
-                          ),
-                        ),
-                        NavigationRailDestination(
-                          icon: Icon(Icons.add, size: 18),
-                          label: Text(
-                            "Assign Agent",
-                            style: TextStyle(fontSize: 12),
-                          ),
-                        ),
-                        NavigationRailDestination(
-                          icon: Icon(Icons.forest, size: 18),
-                          label: Text(
-                            "Add Forests",
-                            style: TextStyle(fontSize: 12),
-                          ),
-                        ),
-                        NavigationRailDestination(
-                          icon: Icon(Icons.forest_outlined, size: 18),
-                          label: Text(
-                            "Forests list",
-                            style: TextStyle(fontSize: 12),
-                          ),
-                        ),
-                        NavigationRailDestination(
-                          icon: Icon(Icons.medical_services, size: 18),
-                          label: Text(
-                            "Manage Services",
-                            style: TextStyle(fontSize: 10),
-                          ),
-                        ),
-                        NavigationRailDestination(
-                          icon: Icon(Icons.add_a_photo_outlined, size: 18),
-                          label: Text(
+                    child: Theme(
+                      data: Theme.of(context).copyWith(
+                        splashFactory: NoSplash.splashFactory,
+                        highlightColor: Colors.transparent,
+                        hoverColor: Colors.transparent,
+                        focusColor: Colors.transparent,
+                      ),
+                      child: NavigationRail(
+                        selectedIndex: _selectedIndex,
+                        onDestinationSelected: (index) {
+                          setState(() {
+                            _selectedIndex = index;
+                          });
+                        },
+                        labelType: NavigationRailLabelType.none,
+                        backgroundColor: Colors.transparent,
+                        indicatorColor: Colors.transparent,
+                        groupAlignment: -1.0,
+                        minWidth: 220,
+                        destinations: [
+                          _buildItem("Users List", Icons.people),
+                          _buildItem("Create Users", Icons.add),
+                          _buildItem("Manage Roles", Icons.account_box_sharp),
+                          _buildItem("Assign Supervisor", Icons.add),
+                          _buildItem("Assign Agent", Icons.add),
+                          _buildItem("Add Forests", Icons.forest),
+                          _buildItem("Forests list", Icons.forest_outlined),
+                          _buildItem("Manage Services", Icons.medical_services),
+                          _buildItem(
                             "Manage Incidents",
-                            style: TextStyle(fontSize: 12),
+                            Icons.add_a_photo_outlined,
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
 
+                  // Logout button
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: SizedBox(
@@ -152,13 +135,26 @@ class _AdminDashboardState extends State<AdminDashboard> {
                         icon: const Icon(Icons.logout, size: 16),
                         label: const Text(
                           "Logout",
-                          style: TextStyle(fontSize: 14),
+                          style: TextStyle(fontSize: 14, color: Colors.white),
                         ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF1B5E20),
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                            Colors.red,
+                          ),
+                          overlayColor: MaterialStateProperty.all(
+                            Colors.transparent,
+                          ),
+                          shadowColor: MaterialStateProperty.all(
+                            Colors.transparent,
+                          ),
+                          elevation: MaterialStateProperty.all(0),
+                          padding: MaterialStateProperty.all(
+                            const EdgeInsets.symmetric(vertical: 14),
+                          ),
+                          shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                           ),
                         ),
                       ),
@@ -170,6 +166,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
 
             const VerticalDivider(thickness: 1, width: 1),
 
+            // Main content
             Expanded(child: Center(child: _contentWidgets[_selectedIndex])),
           ],
         ),

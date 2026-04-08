@@ -3,21 +3,26 @@ from services.forest_service import calculate_area_hectares
 from sqlalchemy.orm import Session
 from models.parcelle import Parcelle
 from schemas.parcelle_schema import ParcelleCreate, Coordinates
-from shapely.geometry import Polygon
+from shapely.geometry import Polygon, MultiPoint
 from geoalchemy2.shape import from_shape, to_shape
 from typing import List
 from sqlalchemy import func
 
 def create_parcelle(db: Session, parcelle_in: ParcelleCreate) -> Parcelle:
     coords = [(p.lng, p.lat) for p in parcelle_in.boundary]
-    if coords[0] != coords[-1]:
-        coords.append(coords[0])
-    geom = from_shape(Polygon(coords), srid=4326)
+
+    
+    polygon = MultiPoint(coords).convex_hull
+
+    if not polygon.is_valid:
+        polygon = polygon.buffer(0)
+
+    geom = from_shape(polygon, srid=4326)
 
     outside_forest_id = find_forest_for_parcelle(db, geom)
     if not outside_forest_id:
         raise ValueError("Parcelle boundary must be within an existing forest")
-    
+
     if parcell_overlap(db, geom):
         raise ValueError("Parcelle boundary overlaps with an existing parcelle")
 
@@ -28,6 +33,7 @@ def create_parcelle(db: Session, parcelle_in: ParcelleCreate) -> Parcelle:
         region=parcelle_in.region,
         forest_id=outside_forest_id
     )
+
     db.add(parcelle)
     db.commit()
     db.refresh(parcelle)

@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-import 'package:authproject/features/Admin/models/user_model.dart';
 import 'package:authproject/features/Admin/services/parcelle_service.dart';
 import 'package:authproject/features/Agent/models/incident.dart';
 import 'package:authproject/features/Agent/services/incident_service.dart';
@@ -7,12 +6,8 @@ import 'package:authproject/features/Agent/ui_components/successDialog.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:http_parser/http_parser.dart';
-import '../../../config.dart' as config;
 import 'package:authproject/features/Auth/services/auth_service.dart';
 
 class Upload extends StatefulWidget {
@@ -26,13 +21,11 @@ class _UploadState extends State<Upload> {
   Map<String, dynamic>? userData;
   String? error;
 
-  final String baseUrl = config.baseUrl;
-
   final storage = FlutterSecureStorage();
 
   final _descriptionController = TextEditingController();
-  final _typeController = TextEditingController();
   final _locationController = TextEditingController();
+  final _regionController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
   XFile? _imageFile;
@@ -96,9 +89,7 @@ class _UploadState extends State<Upload> {
     LocationPermission permission;
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      throw Exception("Location services are disabled.");
-    }
+    if (!serviceEnabled) throw Exception("Location services are disabled.");
 
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
@@ -120,9 +111,7 @@ class _UploadState extends State<Upload> {
   Future<void> pickImage(ImageSource source) async {
     final pickedFile = await _picker.pickImage(source: source);
     if (pickedFile != null) {
-      setState(() {
-        _imageFile = pickedFile;
-      });
+      setState(() => _imageFile = pickedFile);
     }
   }
 
@@ -131,11 +120,10 @@ class _UploadState extends State<Upload> {
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (_) => Center(child: CircularProgressIndicator()),
+        builder: (_) => const Center(child: CircularProgressIndicator()),
       );
 
       Position position;
-      String? selectedRegion = this.selectedRegion;
       try {
         position = await getCurrentLocation();
       } catch (e) {
@@ -151,16 +139,17 @@ class _UploadState extends State<Upload> {
       final parcelleId = parcelleResult['parcelle']?['id'];
 
       final parcelleDetails = await parcelService.getParcelById(parcelleId);
+
       if (parcelleDetails.forestId == null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Parcelle is not linked to a forest.")),
+          const SnackBar(content: Text("Parcelle is not linked to a forest.")),
         );
         return;
       }
 
       final incident = Incident(
         description: _descriptionController.text,
-        type: _typeController.text,
+        type: selectedType!,
         location: _locationController.text,
         region: selectedRegion!,
         latitude: position.latitude,
@@ -178,11 +167,12 @@ class _UploadState extends State<Upload> {
         _formKey.currentState!.reset();
         setState(() {
           _imageFile = null;
+          selectedType = null; // ✅ reset
         });
       } else {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text("Failed to submit incident")));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Failed to submit incident")),
+        );
       }
     }
   }
@@ -190,30 +180,28 @@ class _UploadState extends State<Upload> {
   void showImageSourcePicker() {
     showModalBottomSheet(
       context: context,
-      builder: (context) {
-        return SafeArea(
-          child: Wrap(
-            children: [
-              ListTile(
-                leading: Icon(Icons.camera_alt),
-                title: Text('Take a photo'),
-                onTap: () {
-                  Navigator.pop(context);
-                  pickImage(ImageSource.camera);
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.photo_library),
-                title: Text('Choose from gallery'),
-                onTap: () {
-                  Navigator.pop(context);
-                  pickImage(ImageSource.gallery);
-                },
-              ),
-            ],
-          ),
-        );
-      },
+      builder: (context) => SafeArea(
+        child: Wrap(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.camera_alt),
+              title: const Text('Take a photo'),
+              onTap: () {
+                Navigator.pop(context);
+                pickImage(ImageSource.camera);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.photo_library),
+              title: const Text('Choose from gallery'),
+              onTap: () {
+                Navigator.pop(context);
+                pickImage(ImageSource.gallery);
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -222,163 +210,129 @@ class _UploadState extends State<Upload> {
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
-        appBar: AppBar(title: Text("Upload"), centerTitle: true),
+        appBar: AppBar(title: const Text("Upload"), centerTitle: true),
         body: userData == null
             ? Center(
                 child: error != null
                     ? Text(
                         error!,
-                        style: TextStyle(color: Colors.red, fontSize: 16),
+                        style: const TextStyle(color: Colors.red, fontSize: 16),
                       )
-                    : CircularProgressIndicator(),
+                    : const CircularProgressIndicator(),
               )
             : SingleChildScrollView(
                 padding: const EdgeInsets.all(24.0),
                 child: Center(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Text(
+                      const Text(
                         "Create an Incident",
                         style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
                         ),
-                        textAlign: TextAlign.center,
                       ),
-                      SizedBox(height: 24),
+                      const SizedBox(height: 24),
 
                       Form(
                         key: _formKey,
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             TextFormField(
                               controller: _descriptionController,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 labelText: 'Description',
                                 border: OutlineInputBorder(),
                               ),
-                              validator: (value) =>
-                                  value!.isEmpty ? "Required" : null,
+                              validator: (v) => v!.isEmpty ? "Required" : null,
                             ),
-                            SizedBox(height: 16),
-
-                            TextFormField(
-                              controller: _typeController,
-                              decoration: InputDecoration(
-                                labelText: 'Type',
-                                border: OutlineInputBorder(),
-                              ),
-                              validator: (value) =>
-                                  value!.isEmpty ? "Required" : null,
-                            ),
-                            SizedBox(height: 16),
-
-                            TextFormField(
-                              controller: _locationController,
-                              decoration: InputDecoration(
-                                labelText: 'Location',
-                                border: OutlineInputBorder(),
-                              ),
-                              validator: (value) =>
-                                  value!.isEmpty ? "Required" : null,
-                            ),
-                            SizedBox(height: 16),
+                            const SizedBox(height: 16),
 
                             DropdownButtonFormField<String>(
-                              value: selectedRegion,
+                              value: selectedType,
                               decoration: InputDecoration(
-                                labelText: 'Region',
-                                prefixIcon: Icon(Icons.location_city),
+                                labelText: 'Type',
+                                prefixIcon: const Icon(Icons.category),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                               ),
-                              items: tunisianStates
+                              items: incidentTypes
                                   .map(
-                                    (s) => DropdownMenuItem(
-                                      value: s,
-                                      child: Text(s),
+                                    (type) => DropdownMenuItem(
+                                      value: type,
+                                      child: Text(type),
                                     ),
                                   )
                                   .toList(),
-                              onChanged: (v) =>
-                                  setState(() => selectedRegion = v),
-                              validator: (v) => v == null || v.isEmpty
-                                  ? 'Region is required'
-                                  : null,
+                              onChanged: (value) =>
+                                  setState(() => selectedType = value),
+                              validator: (value) =>
+                                  value == null ? "Type is required" : null,
                             ),
-                            SizedBox(height: 24),
 
-                            // Image picker & preview
-                            Center(
-                              child: _imageFile == null
-                                  ? TextButton.icon(
-                                      onPressed: showImageSourcePicker,
-                                      icon: Icon(Icons.image),
-                                      label: Text("Pick Image"),
-                                    )
-                                  : FutureBuilder(
-                                      future: _imageFile!.readAsBytes(),
-                                      builder: (context, snapshot) {
-                                        if (snapshot.connectionState ==
-                                                ConnectionState.done &&
-                                            snapshot.hasData) {
-                                          return Container(
-                                            height: 200,
-                                            width: double.infinity,
-                                            decoration: BoxDecoration(
-                                              border: Border.all(
-                                                color: Colors.grey.shade400,
-                                                width: 1,
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                            ),
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                              child: Image.memory(
-                                                snapshot.data as Uint8List,
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                          );
-                                        } else {
-                                          return CircularProgressIndicator();
-                                        }
-                                      },
-                                    ),
+                            const SizedBox(height: 16),
+
+                            TextFormField(
+                              controller: _locationController,
+                              decoration: const InputDecoration(
+                                labelText: 'Location',
+                                border: OutlineInputBorder(),
+                              ),
+                              validator: (v) => v!.isEmpty ? "Required" : null,
                             ),
-                            SizedBox(height: 24),
+
+                            const SizedBox(height: 16),
+
+                            TextFormField(
+                              controller: _regionController,
+                              decoration: InputDecoration(
+                                labelText: 'Region',
+                                border: OutlineInputBorder(),
+                              ),
+                              validator: (value) =>
+                                  value!.isEmpty ? "Required" : null,
+                            ),
+
+                            const SizedBox(height: 24),
+
+                            /// Image
+                            _imageFile == null
+                                ? TextButton.icon(
+                                    onPressed: showImageSourcePicker,
+                                    icon: const Icon(Icons.image),
+                                    label: const Text("Pick Image"),
+                                  )
+                                : FutureBuilder(
+                                    future: _imageFile!.readAsBytes(),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        return Image.memory(
+                                          snapshot.data as Uint8List,
+                                          height: 200,
+                                          fit: BoxFit.cover,
+                                        );
+                                      }
+                                      return const CircularProgressIndicator();
+                                    },
+                                  ),
+
+                            const SizedBox(height: 24),
 
                             if (isAssigned == false)
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 8.0),
-                                child: Text(
-                                  "You are not assigned to a parcelle",
-                                  style: TextStyle(
-                                    color: Colors.red,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  textAlign: TextAlign.center,
+                              const Text(
+                                "You are not assigned to a parcelle",
+                                style: TextStyle(
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
 
                             ElevatedButton(
                               onPressed: (isAssigned ?? false)
                                   ? submitIncident
-                                  : null, // disabled if not assigned
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 10.0,
-                                ),
-                                child: Text(
-                                  "Submit Incident",
-                                  style: TextStyle(fontSize: 15),
-                                ),
-                              ),
+                                  : null,
+                              child: const Text("Submit Incident"),
                             ),
                           ],
                         ),

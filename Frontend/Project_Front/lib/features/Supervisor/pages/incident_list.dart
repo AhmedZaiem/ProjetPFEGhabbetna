@@ -82,7 +82,15 @@ class _IncidentListState extends State<IncidentList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Incident List')),
+      appBar: AppBar(
+        title: Row(
+          children: [
+            Image.asset('assets/images/logoApp.jpeg', height: 80),
+            const SizedBox(width: 12),
+            const Text("Incident List"),
+          ],
+        ),
+      ),
       body: incidentData == null
           ? const Center(child: CircularProgressIndicator())
           : incidentData!.isEmpty
