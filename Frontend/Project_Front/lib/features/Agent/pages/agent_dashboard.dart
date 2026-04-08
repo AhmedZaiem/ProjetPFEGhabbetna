@@ -14,12 +14,7 @@ class agentDashboard extends StatefulWidget {
 class _agentDashboardState extends State<agentDashboard> {
   int _currentIndex = 0;
 
-  final List<Widget> _pages = [
-    Upload(), 
-    Profile(),
-    Home(),
-    History(),
-  ];
+  final List<Widget> _pages = [Upload(), Profile(), Home(), History()];
 
   @override
   Widget build(BuildContext context) {
@@ -34,10 +29,26 @@ class _agentDashboardState extends State<agentDashboard> {
           });
         },
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.upload), label: "Upload"),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
-          BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.history), label: "History"),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.upload),
+            label: "Upload",
+            backgroundColor: Color(0xFF4CAF50),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: "Profile",
+            backgroundColor: Color(0xFF4CAF50),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_filled),
+            label: "Home",
+            backgroundColor: Color(0xFF4CAF50),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.history),
+            label: "History",
+            backgroundColor: Color(0xFF4CAF50),
+          ),
         ],
       ),
     );
