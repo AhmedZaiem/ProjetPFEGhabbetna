@@ -90,7 +90,15 @@ class _AgentListState extends State<AgentList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Agents List')),
+      appBar: AppBar(
+        title: Row(
+          children: [
+            Image.asset('assets/images/logoApp.jpeg', height: 80),
+            const SizedBox(width: 12),
+            const Text("Agent List"),
+          ],
+        ),
+      ),
       body: parcellesWithAgents.isEmpty && error == null
           ? const Center(child: CircularProgressIndicator())
           : error != null

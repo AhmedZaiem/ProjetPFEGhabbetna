@@ -177,6 +177,7 @@ class _AssignAgentState extends State<AssignAgent> {
                               style: TextStyle(
                                 fontStyle: FontStyle.italic,
                                 color: Colors.grey,
+                                fontSize: 16,
                               ),
                             ),
                           ),
@@ -185,38 +186,88 @@ class _AssignAgentState extends State<AssignAgent> {
                           final u = e.value;
                           final pName =
                               agentParcelMap[e.key] ?? "Unknown Parcelle";
-                          return Card(
+                          return Container(
                             margin: const EdgeInsets.symmetric(
-                              vertical: 6,
-                              horizontal: 8,
+                              vertical: 8,
+                              horizontal: 12,
                             ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[50],
+                              borderRadius: BorderRadius.circular(14),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black26,
+                                  blurRadius: 6,
+                                  offset: Offset(0, 3),
+                                ),
+                              ],
                             ),
-                            color: Colors.grey[50],
-                            child: ListTile(
-                              leading: CircleAvatar(
-                                backgroundColor: Colors.blueAccent,
-                                child: Text(
-                                  u.username[0].toUpperCase(),
-                                  style: const TextStyle(color: Colors.white),
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    CircleAvatar(
+                                      backgroundColor: Colors.blueAccent,
+                                      child: Text(
+                                        u.username[0].toUpperCase(),
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Text(
+                                      "Username: ${u.username}",
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                              title: Text(
-                                "${u.username} (${u.firstname} ${u.lastname})",
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
+                                const SizedBox(height: 12),
+                                Text(
+                                  "First Name: ${u.firstname}",
+                                  style: const TextStyle(fontSize: 14),
                                 ),
-                              ),
-                              subtitle: Text(
-                                "Region: ${u.region} | Parcelle: $pName",
-                                style: const TextStyle(color: Colors.black87),
-                              ),
-                              trailing: const Icon(Icons.person),
-                              contentPadding: const EdgeInsets.symmetric(
-                                vertical: 8,
-                                horizontal: 16,
-                              ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  "Last Name: ${u.lastname}",
+                                  style: const TextStyle(fontSize: 14),
+                                ),
+                                const SizedBox(height: 8),
+                                Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.location_on,
+                                      size: 16,
+                                      color: Colors.black54,
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      "Region: ${u.region}",
+                                      style: const TextStyle(fontSize: 14),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 4),
+                                Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.map,
+                                      size: 16,
+                                      color: Colors.black54,
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      "Parcelle: $pName",
+                                      style: const TextStyle(fontSize: 14),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           );
                         }).toList(),

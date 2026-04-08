@@ -123,7 +123,15 @@ class _IncidentMapState extends State<IncidentMap> {
         : LatLng(36.8, 10.18);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Incident Map')),
+      appBar: AppBar(
+        title: Row(
+          children: [
+            Image.asset('assets/images/logoApp.jpeg', height: 80),
+            const SizedBox(width: 12),
+            const Text("Incident Map"),
+          ],
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: Row(

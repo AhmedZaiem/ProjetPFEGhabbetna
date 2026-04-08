@@ -39,7 +39,15 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Profile")),
+      appBar: AppBar(
+        title: Row(
+          children: [
+            Image.asset('assets/images/logoApp.jpeg', height: 80),
+            const SizedBox(width: 12),
+            const Text("Profile"),
+          ],
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: userData != null

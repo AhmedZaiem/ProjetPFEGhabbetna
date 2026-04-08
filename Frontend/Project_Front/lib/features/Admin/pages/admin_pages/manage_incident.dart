@@ -146,48 +146,99 @@ class _ManageIncidentState extends State<ManageIncident> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      elevation: 4,
+                      elevation: 5,
                       child: Padding(
-                        padding: const EdgeInsets.all(12),
+                        padding: const EdgeInsets.all(16),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              incident.type,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 6),
-                            Text('Description: ${incident.description}'),
-                            Text(
-                              'Location: ${incident.location}, ${incident.region}',
-                            ),
-                            Text(
-                              'Coordinates: ${incident.latitude.toStringAsFixed(6)}, ${incident.longitude.toStringAsFixed(6)}',
-                            ),
-                            if (incident.status != null)
-                              Padding(
-                                padding: const EdgeInsets.only(top: 6),
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 4,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.black,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
+                            // Type with icon
+                            Row(
+                              children: [
+                                const Icon(
+                                  Icons.warning,
+                                  color: Colors.yellowAccent,
+                                ),
+                                const SizedBox(width: 8),
+                                Expanded(
                                   child: Text(
-                                    incident.status!,
+                                    incident.type,
                                     style: const TextStyle(
-                                      color: Colors.white,
+                                      fontSize: 18,
                                       fontWeight: FontWeight.bold,
+                                      color: Colors.white,
                                     ),
                                   ),
                                 ),
+                              ],
+                            ),
+                            const SizedBox(height: 8),
+
+                            // Description
+                            Text(
+                              incident.description,
+                              style: const TextStyle(color: Colors.white70),
+                            ),
+                            const SizedBox(height: 6),
+
+                            // Location with icon
+                            Row(
+                              children: [
+                                const Icon(
+                                  Icons.location_on,
+                                  size: 16,
+                                  color: Colors.white70,
+                                ),
+                                const SizedBox(width: 4),
+                                Expanded(
+                                  child: Text(
+                                    '${incident.location}, ${incident.region}',
+                                    style: const TextStyle(
+                                      color: Colors.white70,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 4),
+
+                            // Coordinates
+                            Row(
+                              children: [
+                                const Icon(
+                                  Icons.map,
+                                  size: 16,
+                                  color: Colors.white70,
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  '${incident.latitude.toStringAsFixed(6)}, ${incident.longitude.toStringAsFixed(6)}',
+                                  style: const TextStyle(color: Colors.white70),
+                                ),
+                              ],
+                            ),
+
+                            // Status tag
+                            if (incident.status != null) ...[
+                              const SizedBox(height: 8),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 6,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.black87,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Text(
+                                  incident.status!,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ),
+                            ],
                           ],
                         ),
                       ),
