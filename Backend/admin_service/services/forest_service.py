@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from models.forest import Forest
 from schemas.forest_schema import ForestCreate, Coordinates
-from shapely.geometry import Polygon
+from shapely.geometry import Polygon, MultiPoint
 from geoalchemy2.shape import from_shape,to_shape
 from typing import List
 from shapely.ops import transform
@@ -11,9 +11,13 @@ from sqlalchemy import func
 
 def create_forest(db: Session, forest_in: ForestCreate) -> Forest:
     coords = [(p.lng, p.lat) for p in forest_in.boundary]
-    if coords[0] != coords[-1]:
-        coords.append(coords[0])
-    geom = from_shape(Polygon(coords), srid=4326)
+
+    polygon = MultiPoint(coords).convex_hull
+
+    if not polygon.is_valid:
+        polygon = polygon.buffer(0)
+
+    geom = from_shape(polygon, srid=4326)
 
     if forest_overlap(db, geom):
         raise ValueError("Forest boundary overlaps with an existing forest")
@@ -23,8 +27,9 @@ def create_forest(db: Session, forest_in: ForestCreate) -> Forest:
         description=forest_in.description,
         area_hectares=calculate_area_hectares(geom),
         region=forest_in.region,
-        boundary=geom, 
+        boundary=geom,
     )
+
     db.add(forest)
     db.commit()
     db.refresh(forest)

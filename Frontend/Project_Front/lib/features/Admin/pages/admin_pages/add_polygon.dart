@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
+import 'dart:math';
 
 import 'package:authproject/features/Admin/models/coordinates.dart';
 import 'package:authproject/features/Admin/models/forest_model.dart';
@@ -44,6 +45,21 @@ class _AddPolygonPageState extends State<AddPolygonPage> {
   void addPoint(LatLng point) {
     setState(() {
       points.add(point);
+
+      if (points.length >= 3) {
+        final centerLat =
+            points.map((p) => p.latitude).reduce((a, b) => a + b) /
+            points.length;
+        final centerLng =
+            points.map((p) => p.longitude).reduce((a, b) => a + b) /
+            points.length;
+
+        points.sort((a, b) {
+          final angleA = atan2(a.latitude - centerLat, a.longitude - centerLng);
+          final angleB = atan2(b.latitude - centerLat, b.longitude - centerLng);
+          return angleA.compareTo(angleB);
+        });
+      }
     });
   }
 
@@ -364,21 +380,21 @@ class _AddPolygonPageState extends State<AddPolygonPage> {
                             urlTemplate:
                                 "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                           ),
+
+                          /// Currently drawn polygon (light blue)
                           if (points.length >= 3)
                             PolygonLayer(
                               polygons: [
                                 Polygon(
                                   points: points,
-                                  color: mode == PolygonMode.forest
-                                      ? Colors.green.withOpacity(0.4)
-                                      : Colors.orange.withOpacity(0.4),
-                                  borderColor: mode == PolygonMode.forest
-                                      ? Colors.green
-                                      : Colors.orange,
+                                  color: Colors.lightBlue.withOpacity(0.3),
+                                  borderColor: Colors.blue,
                                   borderStrokeWidth: 3,
                                 ),
                               ],
                             ),
+
+                          /// Points markers
                           MarkerLayer(
                             markers: points.map((p) {
                               return Marker(
@@ -392,6 +408,8 @@ class _AddPolygonPageState extends State<AddPolygonPage> {
                               );
                             }).toList(),
                           ),
+
+                          /// Existing forests
                           PolygonLayer(
                             polygons: forests.map((forest) {
                               return Polygon(
@@ -404,6 +422,8 @@ class _AddPolygonPageState extends State<AddPolygonPage> {
                               );
                             }).toList(),
                           ),
+
+                          /// Existing parcels
                           PolygonLayer(
                             polygons: parcels.map((parcel) {
                               return Polygon(
