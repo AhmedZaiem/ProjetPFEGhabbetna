@@ -20,6 +20,9 @@ class _AssignAgentState extends State<AssignAgent> {
   List<Parcel> parcels = [];
   List<UserModel> unassignedAgents = [];
 
+  Map<int, UserModel> assignedAgents = {}; // agentId -> UserModel
+  Map<int, String> agentParcelMap = {}; // agentId -> parcel name
+
   Parcel? selectedParcel;
   UserModel? selectedUserForParcel;
 
@@ -34,21 +37,41 @@ class _AssignAgentState extends State<AssignAgent> {
   Future<void> loadData() async {
     setState(() => loading = true);
     try {
-      final allParcels = await parcelService.getFreeParcels();
-      print('Unassigned parcels: ${allParcels.map((p) => p.name).toList()}');
+      final allParcels = await parcelService.getParcels();
+      final unassigned = await userService.getUnassignedAgents();
 
-      final fetchedUnassignedAgents = await userService.getUnassignedAgents();
-      print(
-        'Unassigned agents: ${fetchedUnassignedAgents.map((u) => u.username).toList()}',
-      );
-
+      // Map assigned agents to parcels
+      assignedAgents.clear();
+      agentParcelMap.clear();
+      final allUsers = await userService
+          .fetchUsers(); // fetch all users for mapping
+      for (var p in allParcels) {
+        if (p.agentId != null) {
+          agentParcelMap[p.agentId!] = p.name;
+          final u = allUsers.firstWhere(
+            (user) => user.id == p.agentId,
+            orElse: () => UserModel(
+              id: p.agentId!,
+              username: "Unknown",
+              firstname: "",
+              lastname: "",
+              email: "",
+              region: "",
+              role_name: "agent",
+              age: 0,
+              cin: "",
+              isVerified: false,
+              isBlocked: false,
+            ),
+          );
+          assignedAgents[p.agentId!] = u;
+        }
+      }
       setState(() {
-        parcels = allParcels;
-        unassignedAgents = fetchedUnassignedAgents;
-
+        parcels = allParcels.where((p) => p.agentId == null).toList();
+        unassignedAgents = unassigned;
         selectedParcel = null;
         selectedUserForParcel = null;
-
         loading = false;
       });
     } catch (e) {
@@ -78,9 +101,8 @@ class _AssignAgentState extends State<AssignAgent> {
 
   @override
   Widget build(BuildContext context) {
-    if (loading) {
+    if (loading)
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
-    }
 
     return Scaffold(
       appBar: AppBar(
@@ -96,9 +118,7 @@ class _AssignAgentState extends State<AssignAgent> {
         padding: const EdgeInsets.all(16),
         child: Center(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(
-              maxWidth: 700,
-            ),
+            constraints: const BoxConstraints(maxWidth: 700),
             child: Column(
               children: [
                 AssignmentCard(
@@ -112,9 +132,7 @@ class _AssignAgentState extends State<AssignAgent> {
                       onChanged: (u) =>
                           setState(() => selectedUserForParcel = u),
                     ),
-
                     const SizedBox(height: 12),
-
                     CustomDropdown(
                       value: selectedParcel,
                       hint: "Select Parcelle",
@@ -122,9 +140,7 @@ class _AssignAgentState extends State<AssignAgent> {
                       label: (p) => "${p.name} - ${p.region}",
                       onChanged: (p) => setState(() => selectedParcel = p),
                     ),
-
                     const SizedBox(height: 16),
-
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton.icon(
@@ -149,6 +165,62 @@ class _AssignAgentState extends State<AssignAgent> {
                 ),
 
                 const SizedBox(height: 32),
+
+                AssignmentCard(
+                  title: "Assigned Agents",
+                  children: assignedAgents.isEmpty
+                      ? [
+                          const Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: Text(
+                              "No agents assigned yet.",
+                              style: TextStyle(
+                                fontStyle: FontStyle.italic,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ),
+                        ]
+                      : assignedAgents.entries.map((e) {
+                          final u = e.value;
+                          final pName =
+                              agentParcelMap[e.key] ?? "Unknown Parcelle";
+                          return Card(
+                            margin: const EdgeInsets.symmetric(
+                              vertical: 6,
+                              horizontal: 8,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            color: Colors.grey[50],
+                            child: ListTile(
+                              leading: CircleAvatar(
+                                backgroundColor: Colors.blueAccent,
+                                child: Text(
+                                  u.username[0].toUpperCase(),
+                                  style: const TextStyle(color: Colors.white),
+                                ),
+                              ),
+                              title: Text(
+                                "${u.username} (${u.firstname} ${u.lastname})",
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              subtitle: Text(
+                                "Region: ${u.region} | Parcelle: $pName",
+                                style: const TextStyle(color: Colors.black87),
+                              ),
+                              trailing: const Icon(Icons.person),
+                              contentPadding: const EdgeInsets.symmetric(
+                                vertical: 8,
+                                horizontal: 16,
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                ),
               ],
             ),
           ),
