@@ -84,6 +84,23 @@ class _IncidentMapState extends State<IncidentMap> {
     }
   }
 
+  Widget _legendItem(Color color, String label) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: [
+          Container(
+            width: 16,
+            height: 16,
+            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+          ),
+          const SizedBox(width: 8),
+          Text(label, style: const TextStyle(fontSize: 12)),
+        ],
+      ),
+    );
+  }
+
   List<Marker> _buildIncidentMarkers() {
     if (incidentData == null) {
       return [];
@@ -122,9 +139,13 @@ class _IncidentMapState extends State<IncidentMap> {
                   },
                 );
               },
-              child: Icon(
-                Icons.location_on,
-                color: _getStatusColor(incident.status),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: _getStatusColor(incident.status),
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.white, width: 2),
+                ),
+                child: Icon(Icons.warning, color: Colors.white, size: 20),
               ),
             ),
           );
@@ -135,9 +156,7 @@ class _IncidentMapState extends State<IncidentMap> {
 
   @override
   Widget build(BuildContext context) {
-    final mapCenter = incidentData != null && incidentData!.isNotEmpty
-        ? LatLng(incidentData!.first.latitude, incidentData!.first.longitude)
-        : LatLng(36.8, 10.18);
+    final mapCenter = LatLng(37.21, 10.11);
     return Scaffold(
       appBar: AppBar(title: const Text('Incident Map')),
       body: Stack(
@@ -146,22 +165,18 @@ class _IncidentMapState extends State<IncidentMap> {
             child: FlutterMap(
               mapController: _mapController,
               options: MapOptions(
-                initialCameraFit: CameraFit.bounds(
-                  bounds: northTunisiaBounds,
-                  padding: const EdgeInsets.all(16),
-                ),
                 cameraConstraint: CameraConstraint.contain(
                   bounds: northTunisiaBounds,
                 ),
                 minZoom: 8.5,
                 maxZoom: 18,
                 initialCenter: mapCenter,
-                initialZoom: 10,
+                initialZoom: 13,
               ),
               children: [
                 TileLayer(
                   urlTemplate:
-                      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                      'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
                   subdomains: ['a', 'b', 'c'],
                 ),
                 MarkerLayer(markers: _buildIncidentMarkers()),
@@ -194,6 +209,14 @@ class _IncidentMapState extends State<IncidentMap> {
                     _mapController.camera.zoom - 1,
                   ),
                   child: const Icon(Icons.zoom_out),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _legendItem(Colors.green, 'Accepted'),
+                    _legendItem(Colors.orange, 'Pending'),
+                    _legendItem(Colors.red, 'Not Accepted'),
+                  ],
                 ),
               ],
             ),

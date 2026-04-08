@@ -33,7 +33,6 @@ class _UploadState extends State<Upload> {
   final _descriptionController = TextEditingController();
   final _typeController = TextEditingController();
   final _locationController = TextEditingController();
-  final _regionController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
   XFile? _imageFile;
@@ -43,12 +42,40 @@ class _UploadState extends State<Upload> {
   final ParcelService parcelService = ParcelService();
 
   bool? isAssigned;
+  String? selectedRegion;
 
   @override
   void initState() {
     super.initState();
     loadUser();
   }
+
+  List<String> tunisianStates = [
+    "Tunis",
+    "Ariana",
+    "BenArous",
+    "Manouba",
+    "Nabeul",
+    "Zaghouan",
+    "Bizerte",
+    "Béja",
+    "Jendouba",
+    "Kef",
+    "Siliana",
+    "Sousse",
+    "Monastir",
+    "Mahdia",
+    "Sfax",
+    "Kairouan",
+    "Kasserine",
+    "SidiBouzid",
+    "Gabès",
+    "Medenine",
+    "Tataouine",
+    "Gafsa",
+    "Tozeur",
+    "Kebili",
+  ];
 
   void loadUser() async {
     final result = await authService.getCurrentUser();
@@ -108,6 +135,7 @@ class _UploadState extends State<Upload> {
       );
 
       Position position;
+      String? selectedRegion = this.selectedRegion;
       try {
         position = await getCurrentLocation();
       } catch (e) {
@@ -134,7 +162,7 @@ class _UploadState extends State<Upload> {
         description: _descriptionController.text,
         type: _typeController.text,
         location: _locationController.text,
-        region: _regionController.text,
+        region: selectedRegion!,
         latitude: position.latitude,
         longitude: position.longitude,
         forestId: parcelleDetails.forestId,
@@ -258,14 +286,28 @@ class _UploadState extends State<Upload> {
                             ),
                             SizedBox(height: 16),
 
-                            TextFormField(
-                              controller: _regionController,
+                            DropdownButtonFormField<String>(
+                              value: selectedRegion,
                               decoration: InputDecoration(
                                 labelText: 'Region',
-                                border: OutlineInputBorder(),
+                                prefixIcon: Icon(Icons.location_city),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
                               ),
-                              validator: (value) =>
-                                  value!.isEmpty ? "Required" : null,
+                              items: tunisianStates
+                                  .map(
+                                    (s) => DropdownMenuItem(
+                                      value: s,
+                                      child: Text(s),
+                                    ),
+                                  )
+                                  .toList(),
+                              onChanged: (v) =>
+                                  setState(() => selectedRegion = v),
+                              validator: (v) => v == null || v.isEmpty
+                                  ? 'Region is required'
+                                  : null,
                             ),
                             SizedBox(height: 24),
 
