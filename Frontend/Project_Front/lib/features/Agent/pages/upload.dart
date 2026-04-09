@@ -136,20 +136,6 @@ class _UploadState extends State<Upload> {
         return;
       }
 
-      final parcelleResult = await incidentService.checkAssignedParcelle(
-        userData!['id'],
-      );
-      final parcelleId = parcelleResult['parcelle']?['id'];
-
-      final parcelleDetails = await parcelService.getParcelById(parcelleId);
-
-      if (parcelleDetails.forestId == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Parcelle is not linked to a forest.")),
-        );
-        return;
-      }
-
       final incident = Incident(
         description: _descriptionController.text,
         type: selectedType!,
@@ -157,7 +143,6 @@ class _UploadState extends State<Upload> {
         region: selectedRegion!,
         latitude: position.latitude,
         longitude: position.longitude,
-        forestId: parcelleDetails.forestId,
       );
 
       final success = await incidentService.submitIncident(

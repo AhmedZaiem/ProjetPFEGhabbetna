@@ -11,6 +11,7 @@ import os
 import uuid
 from geoalchemy2.shape import to_shape
 from shapely.geometry import Point
+import httpx
 
 
 router = APIRouter(prefix="/incidents", tags=["Incidents"])
@@ -18,8 +19,10 @@ router = APIRouter(prefix="/incidents", tags=["Incidents"])
 UPLOAD_FOLDER = "uploads/incidents"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
+Admin_SERVICE_URL = "http://localhost:8002"
+
 @router.post("/add")
-def create_incident_route(
+async def create_incident_route(
     description: str = Form(...),
     type: str = Form(...),
     location: str = Form(...),
@@ -27,7 +30,6 @@ def create_incident_route(
     image: UploadFile = File(...),
     latitude: str = Form(...),
     longitude: str = Form(...),
-    forest_id: int = Form(...),
     db: Session = Depends(get_db),
     current_user_id= Depends(get_current_user)
 ):
@@ -39,6 +41,23 @@ def create_incident_route(
         lon = float(longitude.replace(',', '.'))
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Invalid latitude/longitude: {e}")
+
+    async def get_forest_id():
+        try:
+            async with httpx.AsyncClient() as client:
+                response = await client.get(
+                    f"{Admin_SERVICE_URL}/forest/by_location/",
+                    params={"lat": lat, "lon": lon}
+                )
+                if response.status_code == 200:
+                    return response.json().get("forest_id")
+            return None
+        except httpx.RequestError :
+            return None
+    
+    forest_id = await get_forest_id()
+    if not forest_id:
+        raise HTTPException(status_code=404, detail="No forest found at the given location")
 
     ext=image.filename.split(".")[-1]
     filename = f"{safe_filename(type)}_{safe_filename(location)}_{safe_filename(region)}_{uuid.uuid4().hex[:8]}.{ext}"

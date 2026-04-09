@@ -2,6 +2,8 @@ from models.forest import Forest
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from db.database import get_db
+from shapely.geometry import Point
+from geoalchemy2.shape import to_shape
 from schemas.forest_schema import ForestCreate, ForestOut
 from services.forest_service import create_forest, delete_forest, get_all_forests, get_forest_by_id, convert_forest_boundary,assign_supervisor, get_forests_by_supervisor_id,get_non_occupied_forests
 from services.user_service import get_user_by_id
@@ -52,6 +54,16 @@ def get_non_supervised_forests(db: Session = Depends(get_db)):
             region=f.region
         ) for f in forests
     ]
+
+@router.get("/by_location/")
+def get_forest_by_location(lat: float, lon: float, db: Session = Depends(get_db)):
+    point = Point(lon, lat)
+    forests = db.query(Forest).all()
+    for forest in forests:
+        polygon = to_shape(forest.boundary)
+        if polygon.contains(point):
+            return {"forest_id": forest.id}
+    raise HTTPException(status_code=404, detail="No forest found")
 
 
 @router.get("/{forest_id}", response_model=ForestOut)

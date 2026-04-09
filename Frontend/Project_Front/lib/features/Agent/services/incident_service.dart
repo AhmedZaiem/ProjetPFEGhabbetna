@@ -39,7 +39,7 @@ class IncidentService {
 
     var response = await request.send();
 
-    return response.statusCode == 200;
+    return response.statusCode == 200 || response.statusCode == 201;
   }
 
   Future<Map<String, dynamic>> checkAssignedParcelle(int userId) async {
