@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:exif/exif.dart';
+import 'dart:io';
 import 'package:authproject/features/Auth/services/auth_service.dart';
 
 class Upload extends StatefulWidget {
@@ -126,13 +128,38 @@ class _UploadState extends State<Upload> {
         builder: (_) => const Center(child: CircularProgressIndicator()),
       );
 
-      Position position;
+      double? lat;
+      double? lon;
+
       try {
-        position = await getCurrentLocation();
+        final fileBytes = await _imageFile!.readAsBytes();
+        final tags = await readExifFromBytes(fileBytes);
+        if (tags.containsKey('GPS GPSLatitude') &&
+            tags.containsKey('GPS GPSLatitudeRef') &&
+            tags.containsKey('GPS GPSLongitude') &&
+            tags.containsKey('GPS GPSLongitudeRef')) {
+          lat = _convertToDecimal(
+            tags['GPS GPSLatitude']!.values.toList(),
+            tags['GPS GPSLatitudeRef']!.printable,
+          );
+          lon = _convertToDecimal(
+            tags['GPS GPSLongitude']!.values.toList(),
+            tags['GPS GPSLongitudeRef']!.printable,
+          );
+        }
       } catch (e) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text("Could not get location: $e")));
+        print("Failed to read EXIF data: $e");
+      }
+
+      if (lat == null || lon == null) {
+        Navigator.pop(context); // Close the loading dialog
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              "Failed to extract location from image. Please ensure the image has GPS data.",
+            ),
+          ),
+        );
         return;
       }
 
@@ -141,8 +168,8 @@ class _UploadState extends State<Upload> {
         type: selectedType!,
         location: _locationController.text,
         region: selectedRegion!,
-        latitude: position.latitude,
-        longitude: position.longitude,
+        latitude: lat,
+        longitude: lon,
       );
 
       final success = await incidentService.submitIncident(
@@ -164,6 +191,23 @@ class _UploadState extends State<Upload> {
         );
       }
     }
+  }
+
+  double _convertToDecimal(List values, String ref) {
+    double toDouble(value) {
+      if (value is num) return value.toDouble();
+      if (value is Ratio) return value.numerator / value.denominator;
+      return 0.0;
+    }
+
+    final deg = toDouble(values[0]);
+    final min = toDouble(values[1]);
+    final sec = toDouble(values[2]);
+
+    double decimal = deg + (min / 60) + (sec / 3600);
+    if (ref == 'S' || ref == 'W') decimal = -decimal;
+
+    return decimal;
   }
 
   void showImageSourcePicker() {
@@ -318,6 +362,10 @@ class _UploadState extends State<Upload> {
                                       return const CircularProgressIndicator();
                                     },
                                   ),
+
+                            const SizedBox(height: 24),
+
+                            Text("Make sure camera location is enabled 📍"),
 
                             const SizedBox(height: 24),
 
