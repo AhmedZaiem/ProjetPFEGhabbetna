@@ -127,9 +127,21 @@ class _IncidentMapState extends State<IncidentMap> {
                   },
                 );
               },
-              child: Icon(
-                Icons.location_on,
-                color: _getStatusColor(incident.status),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: _getStatusColor(incident.status),
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 6,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                  border: Border.all(color: Colors.white, width: 2),
+                ),
+                padding: EdgeInsets.all(8),
+                child: Icon(Icons.warning, color: Colors.white, size: 18),
               ),
             ),
           ),
@@ -200,6 +212,27 @@ class _IncidentMapState extends State<IncidentMap> {
                   child: const Icon(Icons.zoom_out),
                 ),
               ],
+            ),
+          ),
+
+          Positioned(
+            left: 16,
+            bottom: 20,
+            child: Container(
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 5)],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _legendItem(Colors.green, 'Accepted'),
+                  _legendItem(Colors.orange, 'Pending'),
+                  _legendItem(Colors.red, 'Not Accepted'),
+                ],
+              ),
             ),
           ),
         ],
