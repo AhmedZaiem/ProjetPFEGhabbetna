@@ -8,24 +8,23 @@ upload_incident_URL="http://localhost:8003"
 
 @router.post("/add")
 async def create_incident(request: Request):
-    form = await request.form()
-
-    data = {
-        "description": form.get("description"),
-        "type": form.get("type"),
-        "location": form.get("location"),
-        "region": form.get("region"),
-        "latitude": form.get("latitude"),
-        "longitude": form.get("longitude"),
-    }
-    files = {"image": (form["image"].filename, await form["image"].read(), form["image"].content_type)}
-    
     headers = {
         "Authorization": request.headers.get("Authorization")
     }
 
+    body = await request.body()
+
+    content_type = request.headers.get("content-type")
+
     async with httpx.AsyncClient() as client:
-        response = await client.post(f"{upload_incident_URL}/incidents/add", data=data, files=files, headers=headers)
+        response = await client.post(
+            f"{upload_incident_URL}/incidents/add",
+            content=body,
+            headers={
+                "Authorization": headers["Authorization"],
+                "Content-Type": content_type
+            }
+        )
 
     return Response(
         content=response.content,

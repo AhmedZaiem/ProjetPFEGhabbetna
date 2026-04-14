@@ -31,6 +31,7 @@ class _UploadState extends State<Upload> {
 
   final _formKey = GlobalKey<FormState>();
   XFile? _imageFile;
+  ImageSource? _imageSource;
   final ImagePicker _picker = ImagePicker();
   final AuthService authService = AuthService();
   final IncidentService incidentService = IncidentService();
@@ -116,7 +117,10 @@ class _UploadState extends State<Upload> {
   Future<void> pickImage(ImageSource source) async {
     final pickedFile = await _picker.pickImage(source: source);
     if (pickedFile != null) {
-      setState(() => _imageFile = pickedFile);
+      setState(() {
+        _imageFile = pickedFile;
+        _imageSource = source;
+      });
     }
   }
 
@@ -131,36 +135,52 @@ class _UploadState extends State<Upload> {
       double? lat;
       double? lon;
 
-      try {
-        final fileBytes = await _imageFile!.readAsBytes();
-        final tags = await readExifFromBytes(fileBytes);
-        if (tags.containsKey('GPS GPSLatitude') &&
-            tags.containsKey('GPS GPSLatitudeRef') &&
-            tags.containsKey('GPS GPSLongitude') &&
-            tags.containsKey('GPS GPSLongitudeRef')) {
-          lat = _convertToDecimal(
-            tags['GPS GPSLatitude']!.values.toList(),
-            tags['GPS GPSLatitudeRef']!.printable,
-          );
-          lon = _convertToDecimal(
-            tags['GPS GPSLongitude']!.values.toList(),
-            tags['GPS GPSLongitudeRef']!.printable,
-          );
+      if (_imageSource == ImageSource.camera) {
+        try {
+          final position = await getCurrentLocation();
+          lat = position.latitude;
+          lon = position.longitude;
+        } catch (e) {
+          Navigator.pop(context); // Close the loading dialog
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text("Failed to get location: $e")));
+          return;
         }
-      } catch (e) {
-        print("Failed to read EXIF data: $e");
       }
 
-      if (lat == null || lon == null) {
-        Navigator.pop(context); // Close the loading dialog
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-              "Failed to extract location from image. Please ensure the image has GPS data.",
+      if (_imageSource == ImageSource.gallery) {
+        try {
+          final fileBytes = await _imageFile!.readAsBytes();
+          final tags = await readExifFromBytes(fileBytes);
+          if (tags.containsKey('GPS GPSLatitude') &&
+              tags.containsKey('GPS GPSLatitudeRef') &&
+              tags.containsKey('GPS GPSLongitude') &&
+              tags.containsKey('GPS GPSLongitudeRef')) {
+            lat = _convertToDecimal(
+              tags['GPS GPSLatitude']!.values.toList(),
+              tags['GPS GPSLatitudeRef']!.printable,
+            );
+            lon = _convertToDecimal(
+              tags['GPS GPSLongitude']!.values.toList(),
+              tags['GPS GPSLongitudeRef']!.printable,
+            );
+          }
+        } catch (e) {
+          print("Failed to read EXIF data: $e");
+        }
+
+        if (lat == null || lon == null) {
+          Navigator.pop(context); // Close the loading dialog
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                "Failed to extract location from image. Please ensure the image has GPS data.",
+              ),
             ),
-          ),
-        );
-        return;
+          );
+          return;
+        }
       }
 
       final incident = Incident(
@@ -168,8 +188,8 @@ class _UploadState extends State<Upload> {
         type: selectedType!,
         location: _locationController.text,
         region: selectedRegion!,
-        latitude: lat,
-        longitude: lon,
+        latitude: lat!,
+        longitude: lon!,
       );
 
       final success = await incidentService.submitIncident(
@@ -182,6 +202,7 @@ class _UploadState extends State<Upload> {
         _formKey.currentState!.reset();
         setState(() {
           _imageFile = null;
+          _imageSource = null;
           selectedType = null; // ✅ reset
           selectedRegion = null; // ✅ reset
         });
