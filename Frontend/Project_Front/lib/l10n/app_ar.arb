@@ -1,0 +1,13 @@
+{
+  "auth_login": "تسجيل الدخول",
+  "auth_email": "البريد الإلكتروني",
+  "auth_password": "كلمة المرور",
+  "auth_forgot_password": "نسيت كلمة المرور؟",
+
+  "error_title": "خطأ",
+  "error_email_required": "البريد الإلكتروني مطلوب",
+  "error_password_required": "كلمة المرور مطلوبة",
+  "error_password_length": "يجب أن تتكون كلمة المرور من 8 أحرف على الأقل",
+
+  "ok": "حسناً"
+}

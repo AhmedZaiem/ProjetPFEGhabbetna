@@ -1,22 +1,26 @@
 import 'package:authproject/features/Admin/core/admin_routes.dart';
 import 'package:authproject/features/Auth/services/auth_service.dart';
+import 'package:authproject/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:app_links/app_links.dart';
 import 'package:authproject/features/Auth/services/auth_service.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'features/Admin/core/mobile_url_strategy.dart'
     if (dart.library.html) 'features/Admin/core/web_url_strategy.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   configureUrlStrategy();
-  runApp(MainApp(router: adminRouter));
+  runApp(MainApp(key: mainAppKey, router: adminRouter));
 }
+
+final GlobalKey<_MainAppState> mainAppKey = GlobalKey<_MainAppState>();
 
 class MainApp extends StatefulWidget {
   final GoRouter router;
-  const MainApp({super.key, required this.router});
+  const MainApp({Key? key, required this.router}) : super(key: key);
 
   @override
   State<MainApp> createState() => _MainAppState();
@@ -24,6 +28,13 @@ class MainApp extends StatefulWidget {
 
 class _MainAppState extends State<MainApp> {
   final AppLinks _appLinks = AppLinks();
+  Locale _locale = const Locale('ar', 'AR');
+
+  void setLocale(Locale locale) {
+    setState(() {
+      _locale = locale;
+    });
+  }
 
   @override
   void initState() {
@@ -60,6 +71,21 @@ class _MainAppState extends State<MainApp> {
       title: "Ghabetna",
       routerConfig: widget.router,
       debugShowCheckedModeBanner: false,
+
+      locale: _locale,
+
+      supportedLocales: const [
+        Locale('en', 'US'),
+        Locale('fr', 'FR'),
+        Locale('ar', 'AR'),
+      ],
+
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
 
       theme: ThemeData(
         // BACKGROUND COLOR

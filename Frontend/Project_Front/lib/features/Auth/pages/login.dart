@@ -1,29 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import '../../../config.dart' as config;
 import 'package:authproject/features/Auth/services/auth_service.dart';
+import 'package:authproject/l10n/app_localizations.dart';
+import 'package:authproject/main.dart';
 
-class login extends StatefulWidget {
-  const login({super.key});
+class Login extends StatefulWidget {
+  const Login({super.key});
 
   @override
-  State<login> createState() => _LoginState();
+  State<Login> createState() => _LoginState();
 }
 
-class _LoginState extends State<login> {
+class _LoginState extends State<Login> {
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
-
   bool _obscurePassword = true;
 
-  final storage = FlutterSecureStorage();
-  final String baseUrl = config.baseUrl;
   final AuthService authService = AuthService();
 
   void loginUser() async {
@@ -45,7 +41,7 @@ class _LoginState extends State<login> {
         context.go("/agent");
       }
     } else {
-      _showDialog("Error", result['message']);
+      _showDialog(AppLocalizations.of(context)!.error_title, result['message']);
     }
   }
 
@@ -56,7 +52,10 @@ class _LoginState extends State<login> {
         title: Text(title),
         content: Text(message),
         actions: [
-          TextButton(onPressed: () => context.pop(), child: const Text("OK")),
+          TextButton(
+            onPressed: () => context.pop(),
+            child: Text(AppLocalizations.of(context)!.ok),
+          ),
         ],
       ),
     );
@@ -85,41 +84,45 @@ class _LoginState extends State<login> {
             child: Form(
               key: _formKey,
               child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Image.asset('assets/images/logoApp.jpeg', height: 150),
-                  const Text(
-                    "Login",
-                    style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
+
+                  Text(
+                    AppLocalizations.of(context)!.auth_login,
+                    style: const TextStyle(
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
+
                   const SizedBox(height: 30),
+
                   TextFormField(
+                    controller: emailController,
                     decoration: InputDecoration(
-                      labelText: "Email",
+                      labelText: AppLocalizations.of(context)!.auth_email,
                       prefixIcon: const Icon(Icons.email_outlined),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    controller: emailController,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Email is required';
-                      }
-                      if (!RegExp(
-                        r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
-                      ).hasMatch(value)) {
-                        return 'Enter valid email';
+                        return AppLocalizations.of(
+                          context,
+                        )!.error_email_required;
                       }
                       return null;
                     },
                   ),
+
                   const SizedBox(height: 20),
+
                   TextFormField(
+                    controller: passwordController,
+                    obscureText: _obscurePassword,
                     decoration: InputDecoration(
-                      labelText: "Password",
+                      labelText: AppLocalizations.of(context)!.auth_password,
                       prefixIcon: const Icon(Icons.lock_outline),
                       suffixIcon: IconButton(
                         icon: Icon(
@@ -137,19 +140,23 @@ class _LoginState extends State<login> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    obscureText: _obscurePassword,
-                    controller: passwordController,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Password is required';
+                        return AppLocalizations.of(
+                          context,
+                        )!.error_password_required;
                       }
                       if (value.length < 8) {
-                        return 'Password must be at least 8 characters';
+                        return AppLocalizations.of(
+                          context,
+                        )!.error_password_length;
                       }
                       return null;
                     },
                   ),
+
                   const SizedBox(height: 30),
+
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton.icon(
@@ -159,7 +166,7 @@ class _LoginState extends State<login> {
                         }
                       },
                       icon: const Icon(Icons.login),
-                      label: const Text('Login'),
+                      label: Text(AppLocalizations.of(context)!.auth_login),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF1B5E20),
                         padding: const EdgeInsets.symmetric(vertical: 16),
@@ -169,15 +176,52 @@ class _LoginState extends State<login> {
                       ),
                     ),
                   ),
+
                   const SizedBox(height: 15),
-                  Align(
-                    alignment: Alignment.center,
-                    child: TextButton(
-                      onPressed: () {
-                        context.push('/forgot_password');
-                      },
-                      child: const Text('Forget Password ?'),
+
+                  TextButton(
+                    onPressed: () {
+                      context.push('/forgot_password');
+                    },
+                    child: Text(
+                      AppLocalizations.of(context)!.auth_forgot_password,
                     ),
+                  ),
+
+                  SizedBox(height: 20),
+
+                  IconButton(
+                    icon: const Icon(Icons.language),
+                    onPressed: () {
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (context) {
+                          return Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              ListTile(
+                                title: const Text("العربية"),
+                                onTap: () {
+                                  (mainAppKey.currentState)?.setLocale(
+                                    const Locale('ar', 'AR'),
+                                  );
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              ListTile(
+                                title: const Text("Français"),
+                                onTap: () {
+                                  (mainAppKey.currentState)?.setLocale(
+                                    const Locale('fr', 'FR'),
+                                  );
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
                   ),
                 ],
               ),

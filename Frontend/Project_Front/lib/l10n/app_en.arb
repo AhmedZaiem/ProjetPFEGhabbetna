@@ -1,0 +1,13 @@
+{
+  "auth_login": "Login",
+  "auth_email": "Email",
+  "auth_password": "Password",
+  "auth_forgot_password": "Forgot Password?",
+
+  "error_title": "Error",
+  "error_email_required": "Email is required",
+  "error_password_required": "Password is required",
+  "error_password_length": "Password must be at least 8 characters",
+
+  "ok": "OK"
+}

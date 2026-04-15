@@ -1,0 +1,13 @@
+{
+  "auth_login": "Connexion",
+  "auth_email": "Email",
+  "auth_password": "Mot de passe",
+  "auth_forgot_password": "Mot de passe oublié ?",
+
+  "error_title": "Erreur",
+  "error_email_required": "Email requis",
+  "error_password_required": "Mot de passe requis",
+  "error_password_length": "Le mot de passe doit contenir au moins 8 caractères",
+
+  "ok": "OK"
+}
