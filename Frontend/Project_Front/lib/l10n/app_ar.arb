@@ -139,4 +139,8 @@
   "admin_total_users": "إجمالي المستخدمين",
   "admin_total_agents": "إجمالي الوكلاء",
   "admin_total_supervisors": "إجمالي المشرفين",
+
+  "admin_verified": "موثّق",
+  "admin_actions": "الإجراءات",
+  "admin_view_parcels": "عرض القطع",
 }

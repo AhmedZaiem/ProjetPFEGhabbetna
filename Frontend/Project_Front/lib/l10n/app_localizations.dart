@@ -253,6 +253,11 @@ abstract class AppLocalizations {
   String get admin_total_users;
   String get admin_total_agents;
   String get admin_total_supervisors;
+
+  // others
+  String get admin_verified;
+  String get admin_actions;
+  String get admin_view_parcels;
 }
 
 class _AppLocalizationsDelegate

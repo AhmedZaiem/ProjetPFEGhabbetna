@@ -346,4 +346,13 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get admin_total_supervisors => "إجمالي المشرفين";
+
+  @override
+  String get admin_verified => "موثّق";
+
+  @override
+  String get admin_actions => "الإجراءات";
+
+  @override
+  String get admin_view_parcels => "عرض القطع";
 }

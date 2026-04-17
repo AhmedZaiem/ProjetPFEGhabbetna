@@ -138,4 +138,8 @@
   "admin_total_users": "Total des utilisateurs",
   "admin_total_agents": "Total des agents",
   "admin_total_supervisors": "Total des superviseurs",
+
+  "admin_verified": "Vérifié",
+  "admin_actions": "Actions",
+  "admin_view_parcels": "Voir les parcelles",
 }

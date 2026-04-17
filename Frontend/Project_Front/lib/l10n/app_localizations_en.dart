@@ -345,4 +345,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get admin_total_supervisors => "Total Supervisors";
+
+  @override
+  String get admin_verified => "Verified";
+
+  @override
+  String get admin_actions => "Actions";
+
+  @override
+  String get admin_view_parcels => "View Parcels";
 }

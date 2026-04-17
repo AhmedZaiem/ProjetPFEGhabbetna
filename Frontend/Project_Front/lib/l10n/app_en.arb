@@ -137,4 +137,8 @@
   "admin_total_users": "Total Users",
   "admin_total_agents": "Total Agents",
   "admin_total_supervisors": "Total Supervisors",
+
+  "admin_verified": "Verified",
+  "admin_actions": "Actions",
+  "admin_view_parcels": "View Parcels",
 }
