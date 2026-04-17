@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:authproject/features/Admin/models/incident.dart';
 import 'package:authproject/features/Admin/services/incident_service.dart';
 
+import 'package:authproject/l10n/app_localizations.dart';
+
 class ManageIncident extends StatefulWidget {
   const ManageIncident({super.key});
 
@@ -62,13 +64,14 @@ class _ManageIncidentState extends State<ManageIncident> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         title: Row(
           children: [
             Image.asset('assets/images/logoApp.jpeg', height: 80),
             const SizedBox(width: 12),
-            const Text("Manage Incidents"),
+            Text(t.admin_manage_incidents),
           ],
         ),
       ),
@@ -102,28 +105,28 @@ class _ManageIncidentState extends State<ManageIncident> {
                 Row(
                   children: [
                     _buildCard(
-                      "Total Incidents",
+                      t.admin_total_incidents,
                       totalIncidents.toString(),
                       Icons.report,
                       const Color.fromARGB(255, 0, 0, 0),
                     ),
                     const SizedBox(width: 12),
                     _buildCard(
-                      "Pending Incidents",
+                      t.admin_pending_incidents,
                       pendingIncidents.toString(),
                       Icons.verified,
                       const Color.fromARGB(255, 0, 128, 0),
                     ),
                     const SizedBox(width: 12),
                     _buildCard(
-                      "Accepted Incidents",
+                      t.admin_accepted_incidents,
                       acceptedIncidents.toString(),
                       Icons.check_circle,
                       Colors.blue,
                     ),
                     const SizedBox(width: 12),
                     _buildCard(
-                      "Not Accepted",
+                      t.admin_not_accepted_incidents,
                       notAcceptedIncidents.toString(),
                       Icons.cancel,
                       Colors.red,

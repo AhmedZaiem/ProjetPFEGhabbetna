@@ -2,6 +2,9 @@ import 'package:authproject/features/Admin/models/user_model.dart';
 import 'package:authproject/features/Admin/services/user_service.dart';
 import 'package:flutter/material.dart';
 
+import 'package:authproject/l10n/app_localizations.dart';
+
+
 class UserList extends StatefulWidget {
   const UserList({super.key});
 
@@ -65,13 +68,15 @@ class _UserListState extends State<UserList> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
         title: Row(
           children: [
             Image.asset('assets/images/logoApp.jpeg', height: 80),
             const SizedBox(width: 12),
-            const Text("User List"),
+            Text(t.admin_users_list),
           ],
         ),
       ),
@@ -96,27 +101,28 @@ class _UserListState extends State<UserList> {
                   : 0;
 
               return SingleChildScrollView(
+                
                 padding: const EdgeInsets.all(12),
                 child: Column(
                   children: [
                     Row(
                       children: [
                         _buildCard(
-                          "Total Users",
+                          t.admin_total_users,
                           totalUsers.toString(),
                           Icons.people,
                           const Color.fromARGB(255, 0, 0, 0),
                         ),
                         const SizedBox(width: 12),
                         _buildCard(
-                          "Total Agents",
+                          t.admin_total_agents,
                           totalAgents.toString(),
                           Icons.person_outline,
                           const Color.fromARGB(255, 0, 0, 0),
                         ),
                         const SizedBox(width: 12),
                         _buildCard(
-                          "Total Supervisors",
+                          t.admin_total_supervisors,
                           totalSupervisors.toString(),
                           Icons.supervised_user_circle,
                           const Color.fromARGB(255, 0, 0, 0),
@@ -137,6 +143,7 @@ class _UserListState extends State<UserList> {
                               5: FlexColumnWidth(2),
                             },
                             children: [
+                              
                               const TableRow(
                                 decoration: BoxDecoration(
                                   color: Color.fromARGB(255, 212, 198, 198),

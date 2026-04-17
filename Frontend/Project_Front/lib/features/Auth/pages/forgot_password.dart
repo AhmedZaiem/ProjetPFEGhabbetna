@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../config.dart' as config;
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:authproject/features/Auth/services/auth_service.dart';
+import 'package:authproject/l10n/app_localizations.dart';
+import 'package:authproject/main.dart';
 
 class ForgetPassword extends StatefulWidget {
   const ForgetPassword({super.key});
@@ -16,18 +16,24 @@ class _ForgetPasswordState extends State<ForgetPassword> {
   var emailController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
-
-  final String baseUrl = config.baseUrl;
   final AuthService authService = AuthService();
 
   void sendResetEmail() async {
+    final loc = AppLocalizations.of(context)!;
+
     final result = await authService.forgetPassword(
       email: emailController.text.trim(),
     );
-    _showDialog(result['success'] ? "Success" : "Error", result['message']);
+
+    _showDialog(
+      result['success'] ? loc.success_title : loc.error_title,
+      result['message'],
+    );
   }
 
   void _showDialog(String title, String message) {
+    final loc = AppLocalizations.of(context)!;
+
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
@@ -37,17 +43,45 @@ class _ForgetPasswordState extends State<ForgetPassword> {
           TextButton(
             onPressed: () {
               context.pop();
-              if (title == "Success") context.replace('/');
+              if (title == loc.success_title) context.replace('/');
             },
-            child: Text("OK"),
+            child: Text(loc.ok),
           ),
         ],
       ),
     );
   }
 
+  Widget _buildLanguageSelector() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        _langButton("EN", const Locale('en', 'US')),
+        const SizedBox(width: 10),
+        _langButton("FR", const Locale('fr', 'FR')),
+        const SizedBox(width: 10),
+        _langButton("AR", const Locale('ar', 'AR')),
+      ],
+    );
+  }
+
+  Widget _langButton(String label, Locale locale) {
+    return OutlinedButton(
+      onPressed: () {
+        (mainAppKey.currentState)?.setLocale(locale);
+      },
+      style: OutlinedButton.styleFrom(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+      child: Text(label),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return Scaffold(
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 60),
@@ -69,39 +103,47 @@ class _ForgetPasswordState extends State<ForgetPassword> {
             child: Form(
               key: _formKey,
               child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Image.asset('assets/images/logoApp.jpeg', height: 150),
 
-                  const Text(
-                    "Forgot Password",
-                    style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
+                  Text(
+                    loc.auth_forgot_password_title,
+                    style: const TextStyle(
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
+
+                  const SizedBox(height: 20),
+
+                  _buildLanguageSelector(),
+
                   const SizedBox(height: 30),
+
                   TextFormField(
+                    controller: emailController,
                     decoration: InputDecoration(
-                      labelText: "Email",
+                      labelText: loc.auth_email,
                       prefixIcon: const Icon(Icons.email_outlined),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    controller: emailController,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Email is required';
+                        return loc.error_email_required;
                       }
                       if (!RegExp(
                         r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
                       ).hasMatch(value)) {
-                        return 'Enter valid email';
+                        return loc.error_invalid_email;
                       }
                       return null;
                     },
                   ),
+
                   const SizedBox(height: 30),
+
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
@@ -110,7 +152,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                           sendResetEmail();
                         }
                       },
-                      child: const Text("Send Email"),
+                      child: Text(loc.auth_send_email),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF1B5E20),
                         padding: const EdgeInsets.symmetric(vertical: 16),

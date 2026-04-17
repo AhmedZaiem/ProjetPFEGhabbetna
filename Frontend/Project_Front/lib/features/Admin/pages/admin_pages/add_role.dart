@@ -1,6 +1,7 @@
 import 'package:authproject/features/Admin/models/role_model.dart';
 import 'package:authproject/features/Admin/services/user_service.dart';
 import 'package:flutter/material.dart';
+import 'package:authproject/l10n/app_localizations.dart';
 
 class AddRole extends StatefulWidget {
   const AddRole({super.key});
@@ -29,6 +30,8 @@ class _AddRoleState extends State<AddRole> {
   }
 
   Future<void> _addRole() async {
+    final loc = AppLocalizations.of(context)!;
+
     if (_roleController.text.trim().isEmpty) return;
 
     try {
@@ -36,22 +39,24 @@ class _AddRoleState extends State<AddRole> {
       _roleController.clear();
       await _refreshRoles();
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Role created successfully")),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(loc.success_role_created)));
     } catch (e) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text("Error: $e")));
+      ).showSnackBar(SnackBar(content: Text("${loc.error_service}: $e")));
     }
   }
 
   Future<void> _deleteRole() async {
+    final loc = AppLocalizations.of(context)!;
+
     final roleName = _roleController.text.trim();
     if (roleName.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please enter a role name to delete")),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(loc.error_role_empty)));
       return;
     }
 
@@ -60,26 +65,26 @@ class _AddRoleState extends State<AddRole> {
       _roleController.clear();
       await _refreshRoles();
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Role deleted successfully")),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(loc.success_role_deleted)));
     } catch (e) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text("Error: $e")));
+      ).showSnackBar(SnackBar(content: Text("${loc.error_service}: $e")));
     }
   }
 
   Future<void> _modifyRole() async {
+    final loc = AppLocalizations.of(context)!;
+
     final oldName = _roleController.text.trim();
     final newName = _newRoleController.text.trim();
 
     if (oldName.isEmpty || newName.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Please enter both old and new role names"),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(loc.error_role_both_required)));
       return;
     }
 
@@ -89,25 +94,27 @@ class _AddRoleState extends State<AddRole> {
       _newRoleController.clear();
       await _refreshRoles();
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Role modified successfully")),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(loc.success_role_modified)));
     } catch (e) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text("Error: $e")));
+      ).showSnackBar(SnackBar(content: Text("${loc.error_service}: $e")));
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
         title: Row(
           children: [
             Image.asset('assets/images/logoApp.jpeg', height: 80),
             const SizedBox(width: 12),
-            const Text("Add Role"),
+            Text(loc.admin_roles),
           ],
         ),
       ),
@@ -123,9 +130,9 @@ class _AddRoleState extends State<AddRole> {
                     Expanded(
                       child: TextField(
                         controller: _roleController,
-                        decoration: const InputDecoration(
-                          labelText: "Role Name",
-                          border: OutlineInputBorder(),
+                        decoration: InputDecoration(
+                          labelText: loc.admin_role_name,
+                          border: const OutlineInputBorder(),
                         ),
                       ),
                     ),
@@ -136,28 +143,30 @@ class _AddRoleState extends State<AddRole> {
                         backgroundColor: const Color.fromARGB(255, 3, 5, 3),
                         foregroundColor: Colors.white,
                       ),
-                      child: const Text("Add"),
+                      child: Text(loc.admin_add),
                     ),
                     const SizedBox(width: 10),
                     ElevatedButton(
                       onPressed: _deleteRole,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red[700],
+                        backgroundColor: Colors.red,
                         foregroundColor: Colors.white,
                       ),
-                      child: const Text("Delete"),
+                      child: Text(loc.admin_delete),
                     ),
                   ],
                 ),
+
                 const SizedBox(height: 10),
+
                 Row(
                   children: [
                     Expanded(
                       child: TextField(
                         controller: _newRoleController,
-                        decoration: const InputDecoration(
-                          labelText: "New Role Name",
-                          border: OutlineInputBorder(),
+                        decoration: InputDecoration(
+                          labelText: loc.admin_new_role_name,
+                          border: const OutlineInputBorder(),
                         ),
                       ),
                     ),
@@ -168,7 +177,7 @@ class _AddRoleState extends State<AddRole> {
                         backgroundColor: const Color.fromARGB(255, 3, 5, 3),
                         foregroundColor: Colors.white,
                       ),
-                      child: const Text("Modify"),
+                      child: Text(loc.admin_modify),
                     ),
                   ],
                 ),
@@ -184,9 +193,11 @@ class _AddRoleState extends State<AddRole> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
+                  return Center(
+                    child: Text("${loc.error_service}: ${snapshot.error}"),
+                  );
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(child: Text('No roles found'));
+                  return Center(child: Text(loc.error_service));
                 } else {
                   final roles = snapshot.data!;
                   return RefreshIndicator(
@@ -200,7 +211,6 @@ class _AddRoleState extends State<AddRole> {
                             Icons.admin_panel_settings_rounded,
                           ),
                           title: Text(role.name),
-                          subtitle: Text("ID: ${role.id}"),
                         );
                       },
                     ),

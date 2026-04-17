@@ -4,6 +4,8 @@ import 'package:authproject/features/Admin/models/parcelle_model.dart';
 import 'package:authproject/features/Admin/services/forest_service.dart';
 import 'package:authproject/features/Admin/services/parcelle_service.dart';
 
+import 'package:authproject/l10n/app_localizations.dart';
+
 class ForestList extends StatefulWidget {
   const ForestList({super.key});
 
@@ -111,6 +113,7 @@ class _ForestListState extends State<ForestList> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     if (loading) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
@@ -125,7 +128,7 @@ class _ForestListState extends State<ForestList> {
               fit: BoxFit.contain,
             ),
             const SizedBox(width: 12),
-            const Text("Forest List"),
+            Text(t.admin_forests_list),
           ],
         ),
       ),
@@ -137,12 +140,16 @@ class _ForestListState extends State<ForestList> {
             child: Row(
               children: [
                 _buildTopCard(
-                  "Total Forests",
+                  t.admin_total_forests,
                   forests.length.toString(),
                   Icons.forest,
                 ),
                 const SizedBox(width: 12),
-                _buildTopCard("Total Parcels", parcels.length.toString(), Icons.map),
+                _buildTopCard(
+                  t.admin_total_parcels,
+                  parcels.length.toString(),
+                  Icons.map,
+                ),
                 const SizedBox(width: 12),
                 _buildTopCard("Another Stat", "-", Icons.dashboard),
               ],
@@ -198,21 +205,6 @@ class _ForestListState extends State<ForestList> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.05),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Text(
-                "ID: ${forest.id}",
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-            const SizedBox(height: 8),
             Text(
               forest.name,
               style: const TextStyle(

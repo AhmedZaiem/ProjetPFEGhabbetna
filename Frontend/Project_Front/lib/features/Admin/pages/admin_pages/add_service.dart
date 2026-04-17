@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-
 import 'package:authproject/features/Admin/models/service_model.dart';
 import 'package:authproject/features/Admin/services/service_methodes.dart';
+import 'package:authproject/l10n/app_localizations.dart';
 
 class AddService extends StatefulWidget {
   const AddService({super.key});
@@ -39,12 +39,13 @@ class _AddServiceState extends State<AddService> {
         loading = false;
       });
     } catch (e) {
-      print(e);
       setState(() => loading = false);
     }
   }
 
   Future<void> createService() async {
+    final loc = AppLocalizations.of(context)!;
+
     try {
       await serviceService.createService(
         name: nameController.text,
@@ -57,15 +58,17 @@ class _AddServiceState extends State<AddService> {
 
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text("Service created")));
+      ).showSnackBar(SnackBar(content: Text(loc.success_service_created)));
     } catch (e) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text("Error: $e")));
+      ).showSnackBar(SnackBar(content: Text(loc.error_service)));
     }
   }
 
   Future<void> updateService() async {
+    final loc = AppLocalizations.of(context)!;
+
     if (selectedService == null) return;
 
     try {
@@ -81,26 +84,28 @@ class _AddServiceState extends State<AddService> {
 
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text("Service updated")));
+      ).showSnackBar(SnackBar(content: Text(loc.success_service_updated)));
     } catch (e) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text("Error: $e")));
+      ).showSnackBar(SnackBar(content: Text(loc.error_service)));
     }
   }
 
   Future<void> deleteService(int id) async {
+    final loc = AppLocalizations.of(context)!;
+
     try {
       await serviceService.deleteService(id);
       await loadServices();
 
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text("Service deleted")));
+      ).showSnackBar(SnackBar(content: Text(loc.success_service_deleted)));
     } catch (e) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text("Error: $e")));
+      ).showSnackBar(SnackBar(content: Text(loc.error_service)));
     }
   }
 
@@ -122,13 +127,15 @@ class _AddServiceState extends State<AddService> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
         title: Row(
           children: [
             Image.asset('assets/images/logoApp.jpeg', height: 80),
             const SizedBox(width: 12),
-            const Text("Manage Services"),
+            Text(loc.admin_services),
           ],
         ),
       ),
@@ -136,9 +143,7 @@ class _AddServiceState extends State<AddService> {
           ? const Center(child: CircularProgressIndicator())
           : Center(
               child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxWidth: 1000,
-                ),
+                constraints: const BoxConstraints(maxWidth: 1000),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 80,
@@ -146,11 +151,7 @@ class _AddServiceState extends State<AddService> {
                   ),
                   child: Column(
                     children: [
-                      /// FORM
                       Container(
-                        margin: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                        ),
                         padding: const EdgeInsets.all(24),
                         decoration: BoxDecoration(
                           color: Colors.white,
@@ -163,47 +164,46 @@ class _AddServiceState extends State<AddService> {
                           children: [
                             TextField(
                               controller: nameController,
-                              decoration: const InputDecoration(
-                                labelText: "Name",
+                              decoration: InputDecoration(
+                                labelText: loc.admin_name,
                               ),
                             ),
                             const SizedBox(height: 14),
                             TextField(
                               controller: typeController,
-                              decoration: const InputDecoration(
-                                labelText: "Type",
+                              decoration: InputDecoration(
+                                labelText: loc.admin_type,
                               ),
                             ),
                             const SizedBox(height: 14),
                             TextField(
                               controller: descController,
-                              decoration: const InputDecoration(
-                                labelText: "Description",
+                              decoration: InputDecoration(
+                                labelText: loc.admin_description,
                               ),
                             ),
                             const SizedBox(height: 24),
 
-                            /// BUTTONS
                             Row(
                               children: [
                                 Expanded(
                                   child: ElevatedButton(
                                     onPressed: createService,
-                                    child: const Text("Create"),
+                                    child: Text(loc.admin_create),
                                   ),
                                 ),
                                 const SizedBox(width: 12),
                                 Expanded(
                                   child: ElevatedButton(
                                     onPressed: updateService,
-                                    child: const Text("Update"),
+                                    child: Text(loc.admin_update),
                                   ),
                                 ),
                                 const SizedBox(width: 12),
                                 Expanded(
                                   child: ElevatedButton(
                                     onPressed: clearFields,
-                                    child: const Text("Clear"),
+                                    child: Text(loc.admin_clear),
                                   ),
                                 ),
                               ],
@@ -214,7 +214,6 @@ class _AddServiceState extends State<AddService> {
 
                       const SizedBox(height: 30),
 
-                      /// LIST
                       Expanded(
                         child: ListView.builder(
                           itemCount: services.length,
@@ -222,15 +221,7 @@ class _AddServiceState extends State<AddService> {
                             final service = services[index];
 
                             return Card(
-                              margin: const EdgeInsets.symmetric(
-                                vertical: 10,
-                                horizontal: 20, 
-                              ),
                               child: ListTile(
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 20,
-                                  vertical: 10,
-                                ),
                                 title: Text(service.name),
                                 subtitle: Text(
                                   "${service.type} - ${service.description ?? ''}",

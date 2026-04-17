@@ -5,6 +5,7 @@ import 'package:authproject/features/Admin/services/parcelle_service.dart';
 import 'package:authproject/features/Admin/services/user_service.dart';
 import 'package:authproject/features/Admin/ui_components/assignment_card.dart';
 import 'package:authproject/features/Admin/ui_components/custom_dropdown.dart';
+import 'package:authproject/l10n/app_localizations.dart';
 
 class AssignAgent extends StatefulWidget {
   const AssignAgent({super.key});
@@ -20,8 +21,8 @@ class _AssignAgentState extends State<AssignAgent> {
   List<Parcel> parcels = [];
   List<UserModel> unassignedAgents = [];
 
-  Map<int, UserModel> assignedAgents = {}; // agentId -> UserModel
-  Map<int, String> agentParcelMap = {}; // agentId -> parcel name
+  Map<int, UserModel> assignedAgents = {};
+  Map<int, String> agentParcelMap = {};
 
   Parcel? selectedParcel;
   UserModel? selectedUserForParcel;
@@ -40,14 +41,15 @@ class _AssignAgentState extends State<AssignAgent> {
       final allParcels = await parcelService.getParcels();
       final unassigned = await userService.getUnassignedAgents();
 
-      // Map assigned agents to parcels
       assignedAgents.clear();
       agentParcelMap.clear();
-      final allUsers = await userService
-          .fetchUsers(); // fetch all users for mapping
+
+      final allUsers = await userService.fetchUsers();
+
       for (var p in allParcels) {
         if (p.agentId != null) {
           agentParcelMap[p.agentId!] = p.name;
+
           final u = allUsers.firstWhere(
             (user) => user.id == p.agentId,
             orElse: () => UserModel(
@@ -64,9 +66,11 @@ class _AssignAgentState extends State<AssignAgent> {
               isBlocked: false,
             ),
           );
+
           assignedAgents[p.agentId!] = u;
         }
       }
+
       setState(() {
         parcels = allParcels.where((p) => p.agentId == null).toList();
         unassignedAgents = unassigned;
@@ -88,21 +92,26 @@ class _AssignAgentState extends State<AssignAgent> {
         selectedParcel!.id,
         selectedUserForParcel!.id,
       );
+
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Agent assigned successfully")),
+        SnackBar(content: Text(AppLocalizations.of(context)!.admin_success)),
       );
+
       await loadData();
     } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Error: $e")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context)!.admin_error)),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (loading)
+    final t = AppLocalizations.of(context)!;
+
+    if (loading) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -110,7 +119,7 @@ class _AssignAgentState extends State<AssignAgent> {
           children: [
             Image.asset('assets/images/logoApp.jpeg', height: 80),
             const SizedBox(width: 12),
-            const Text("Assign Agent"),
+            Text(t.admin_assign_agent_title),
           ],
         ),
       ),
@@ -122,11 +131,11 @@ class _AssignAgentState extends State<AssignAgent> {
             child: Column(
               children: [
                 AssignmentCard(
-                  title: "Assign Agent to Parcelle",
+                  title: t.admin_assign_agent_title,
                   children: [
                     CustomDropdown(
                       value: selectedUserForParcel,
-                      hint: "Select Agent",
+                      hint: t.admin_select,
                       items: unassignedAgents,
                       label: (u) => "${u.username} - ${u.region}",
                       onChanged: (u) =>
@@ -135,7 +144,7 @@ class _AssignAgentState extends State<AssignAgent> {
                     const SizedBox(height: 12),
                     CustomDropdown(
                       value: selectedParcel,
-                      hint: "Select Parcelle",
+                      hint: t.admin_assign_agent_parcelle,
                       items: parcels,
                       label: (p) => "${p.name} - ${p.region}",
                       onChanged: (p) => setState(() => selectedParcel = p),
@@ -150,7 +159,7 @@ class _AssignAgentState extends State<AssignAgent> {
                             ? assignAgent
                             : null,
                         icon: const Icon(Icons.assignment_turned_in),
-                        label: const Text("Assign Agent"),
+                        label: Text(t.admin_assign_button),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.teal.shade700,
                           foregroundColor: Colors.white,
@@ -167,14 +176,14 @@ class _AssignAgentState extends State<AssignAgent> {
                 const SizedBox(height: 32),
 
                 AssignmentCard(
-                  title: "Assigned Agents",
+                  title: t.admin_assigned_agents,
                   children: assignedAgents.isEmpty
                       ? [
-                          const Padding(
-                            padding: EdgeInsets.all(16.0),
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
                             child: Text(
-                              "No agents assigned yet.",
-                              style: TextStyle(
+                              t.admin_no_agents_assigned,
+                              style: const TextStyle(
                                 fontStyle: FontStyle.italic,
                                 color: Colors.grey,
                                 fontSize: 16,
@@ -185,7 +194,8 @@ class _AssignAgentState extends State<AssignAgent> {
                       : assignedAgents.entries.map((e) {
                           final u = e.value;
                           final pName =
-                              agentParcelMap[e.key] ?? "Unknown Parcelle";
+                              agentParcelMap[e.key] ?? t.admin_no_data;
+
                           return Container(
                             margin: const EdgeInsets.symmetric(
                               vertical: 8,
@@ -194,7 +204,7 @@ class _AssignAgentState extends State<AssignAgent> {
                             decoration: BoxDecoration(
                               color: Colors.grey[50],
                               borderRadius: BorderRadius.circular(14),
-                              boxShadow: [
+                              boxShadow: const [
                                 BoxShadow(
                                   color: Colors.black26,
                                   blurRadius: 6,
@@ -219,7 +229,7 @@ class _AssignAgentState extends State<AssignAgent> {
                                     ),
                                     const SizedBox(width: 12),
                                     Text(
-                                      "Username: ${u.username}",
+                                      "${t.admin_username}: ${u.username}",
                                       style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 16,
@@ -228,42 +238,24 @@ class _AssignAgentState extends State<AssignAgent> {
                                   ],
                                 ),
                                 const SizedBox(height: 12),
-                                Text(
-                                  "First Name: ${u.firstname}",
-                                  style: const TextStyle(fontSize: 14),
-                                ),
+                                Text("${t.admin_first_name}: ${u.firstname}"),
                                 const SizedBox(height: 4),
-                                Text(
-                                  "Last Name: ${u.lastname}",
-                                  style: const TextStyle(fontSize: 14),
-                                ),
+                                Text("${t.admin_last_name}: ${u.lastname}"),
                                 const SizedBox(height: 8),
                                 Row(
                                   children: [
-                                    const Icon(
-                                      Icons.location_on,
-                                      size: 16,
-                                      color: Colors.black54,
-                                    ),
+                                    const Icon(Icons.location_on, size: 16),
                                     const SizedBox(width: 4),
-                                    Text(
-                                      "Region: ${u.region}",
-                                      style: const TextStyle(fontSize: 14),
-                                    ),
+                                    Text("${t.admin_region}: ${u.region}"),
                                   ],
                                 ),
                                 const SizedBox(height: 4),
                                 Row(
                                   children: [
-                                    const Icon(
-                                      Icons.map,
-                                      size: 16,
-                                      color: Colors.black54,
-                                    ),
+                                    const Icon(Icons.map, size: 16),
                                     const SizedBox(width: 4),
                                     Text(
-                                      "Parcelle: $pName",
-                                      style: const TextStyle(fontSize: 14),
+                                      "${t.admin_parcel}: $pName",
                                     ),
                                   ],
                                 ),

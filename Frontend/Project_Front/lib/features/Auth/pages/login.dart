@@ -61,8 +61,36 @@ class _LoginState extends State<Login> {
     );
   }
 
+  Widget _buildLanguageSelector() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        _langButton("EN", const Locale('en', 'US')),
+        const SizedBox(width: 10),
+        _langButton("FR", const Locale('fr', 'FR')),
+        const SizedBox(width: 10),
+        _langButton("AR", const Locale('ar', 'AR')),
+      ],
+    );
+  }
+
+  Widget _langButton(String label, Locale locale) {
+    return OutlinedButton(
+      onPressed: () {
+        (mainAppKey.currentState)?.setLocale(locale);
+      },
+      style: OutlinedButton.styleFrom(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+      child: Text(label),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return Scaffold(
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 60),
@@ -88,19 +116,23 @@ class _LoginState extends State<Login> {
                   Image.asset('assets/images/logoApp.jpeg', height: 150),
 
                   Text(
-                    AppLocalizations.of(context)!.auth_login,
+                    loc.auth_login,
                     style: const TextStyle(
                       fontSize: 26,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
 
+                  const SizedBox(height: 20),
+
+                  _buildLanguageSelector(),
+
                   const SizedBox(height: 30),
 
                   TextFormField(
                     controller: emailController,
                     decoration: InputDecoration(
-                      labelText: AppLocalizations.of(context)!.auth_email,
+                      labelText: loc.auth_email,
                       prefixIcon: const Icon(Icons.email_outlined),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -108,9 +140,7 @@ class _LoginState extends State<Login> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return AppLocalizations.of(
-                          context,
-                        )!.error_email_required;
+                        return loc.error_email_required;
                       }
                       return null;
                     },
@@ -122,7 +152,7 @@ class _LoginState extends State<Login> {
                     controller: passwordController,
                     obscureText: _obscurePassword,
                     decoration: InputDecoration(
-                      labelText: AppLocalizations.of(context)!.auth_password,
+                      labelText: loc.auth_password,
                       prefixIcon: const Icon(Icons.lock_outline),
                       suffixIcon: IconButton(
                         icon: Icon(
@@ -142,14 +172,10 @@ class _LoginState extends State<Login> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return AppLocalizations.of(
-                          context,
-                        )!.error_password_required;
+                        return loc.error_password_required;
                       }
                       if (value.length < 8) {
-                        return AppLocalizations.of(
-                          context,
-                        )!.error_password_length;
+                        return loc.error_password_length;
                       }
                       return null;
                     },
@@ -166,7 +192,7 @@ class _LoginState extends State<Login> {
                         }
                       },
                       icon: const Icon(Icons.login),
-                      label: Text(AppLocalizations.of(context)!.auth_login),
+                      label: Text(loc.auth_login),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF1B5E20),
                         padding: const EdgeInsets.symmetric(vertical: 16),
@@ -183,45 +209,7 @@ class _LoginState extends State<Login> {
                     onPressed: () {
                       context.push('/forgot_password');
                     },
-                    child: Text(
-                      AppLocalizations.of(context)!.auth_forgot_password,
-                    ),
-                  ),
-
-                  SizedBox(height: 20),
-
-                  IconButton(
-                    icon: const Icon(Icons.language),
-                    onPressed: () {
-                      showModalBottomSheet(
-                        context: context,
-                        builder: (context) {
-                          return Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              ListTile(
-                                title: const Text("العربية"),
-                                onTap: () {
-                                  (mainAppKey.currentState)?.setLocale(
-                                    const Locale('ar', 'AR'),
-                                  );
-                                  Navigator.pop(context);
-                                },
-                              ),
-                              ListTile(
-                                title: const Text("Français"),
-                                onTap: () {
-                                  (mainAppKey.currentState)?.setLocale(
-                                    const Locale('fr', 'FR'),
-                                  );
-                                  Navigator.pop(context);
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    },
+                    child: Text(loc.auth_forgot_password),
                   ),
                 ],
               ),

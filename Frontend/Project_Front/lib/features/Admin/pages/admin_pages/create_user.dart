@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:authproject/features/Admin/models/role_model.dart';
 import 'package:authproject/features/Admin/services/user_service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:authproject/l10n/app_localizations.dart';
 
 class Create_User extends StatefulWidget {
   const Create_User({super.key});
@@ -20,19 +21,36 @@ class _CreateUserState extends State<Create_User> {
   var ageController = TextEditingController();
 
   List<String> tunisianStates = [
-    "Tunis","Ariana","BenArous","Manouba",
-    "Nabeul","Zaghouan","Bizerte","Béja",
-    "Jendouba","Kef","Siliana",
-    "Sousse","Monastir","Mahdia",
-    "Sfax","Kairouan","Kasserine","SidiBouzid",
-    "Gabès","Medenine","Tataouine",
-    "Gafsa","Tozeur","Kebili",
+    "Tunis",
+    "Ariana",
+    "BenArous",
+    "Manouba",
+    "Nabeul",
+    "Zaghouan",
+    "Bizerte",
+    "Béja",
+    "Jendouba",
+    "Kef",
+    "Siliana",
+    "Sousse",
+    "Monastir",
+    "Mahdia",
+    "Sfax",
+    "Kairouan",
+    "Kasserine",
+    "SidiBouzid",
+    "Gabès",
+    "Medenine",
+    "Tataouine",
+    "Gafsa",
+    "Tozeur",
+    "Kebili",
   ];
 
   String? selectedRegion;
   String? selectedRole;
 
-  final storage = FlutterSecureStorage();
+  final storage = const FlutterSecureStorage();
 
   late Future<List<RoleModel>> _rolesFuture;
   final UserService userService = UserService();
@@ -46,6 +64,8 @@ class _CreateUserState extends State<Create_User> {
   }
 
   void CreateUserAcc() async {
+    final loc = AppLocalizations.of(context)!;
+
     String firstname = firstnameController.text.trim();
     String lastname = lastnameController.text.trim();
     String cin = cinController.text.trim();
@@ -62,7 +82,7 @@ class _CreateUserState extends State<Create_User> {
         age == null ||
         region.isEmpty ||
         selectedRole == null) {
-      _showDialog("Error", "Please fill all fields correctly.");
+      _showDialog(loc.error_title, loc.error_fill_fields);
       return;
     }
 
@@ -77,7 +97,10 @@ class _CreateUserState extends State<Create_User> {
       region: region,
     );
 
-    _showDialog(result['success'] ? "Success" : "Error", result['message']);
+    _showDialog(
+      result['success'] ? loc.success_title : loc.error_title,
+      result['message'],
+    );
 
     if (result['success']) {
       firstnameController.clear();
@@ -97,13 +120,15 @@ class _CreateUserState extends State<Create_User> {
   }
 
   void _showDialog(String title, String message) {
+    final loc = AppLocalizations.of(context)!;
+
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
         title: Text(title, style: const TextStyle(color: Color(0xFF1B5E20))),
         content: Text(message),
         actions: [
-          TextButton(onPressed: () => context.pop(), child: const Text("OK")),
+          TextButton(onPressed: () => context.pop(), child: Text(loc.ok)),
         ],
       ),
     );
@@ -111,6 +136,8 @@ class _CreateUserState extends State<Create_User> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(
@@ -136,53 +163,156 @@ class _CreateUserState extends State<Create_User> {
                   ),
                   child: Column(
                     children: [
-                      Image.asset(
-                        'assets/images/logoApp.jpeg',
-                        height: 150,
-                        fit: BoxFit.contain,
-                      ),
+                      Image.asset('assets/images/logoApp.jpeg', height: 150),
+
                       const SizedBox(height: 10),
-                      const Text(
-                        "Create Account",
-                        style: TextStyle(
+
+                      Text(
+                        loc.admin_create_account,
+                        style: const TextStyle(
                           fontSize: 26,
                           fontWeight: FontWeight.bold,
                           color: Color(0xFF1B5E20),
                         ),
                       ),
+
                       const SizedBox(height: 30),
 
-                      TextFormField(controller: firstnameController, decoration: InputDecoration(labelText: "First Name", prefixIcon: Icon(Icons.person), border: OutlineInputBorder(borderRadius: BorderRadius.circular(12))), validator: (v)=>v==null||v.isEmpty?'First Name is required':!RegExp(r'^[a-zA-Z]+$').hasMatch(v)?'Only letters allowed':null),
+                      TextFormField(
+                        controller: firstnameController,
+                        decoration: InputDecoration(
+                          labelText: loc.admin_first_name,
+                          prefixIcon: const Icon(Icons.person),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        validator: (v) => v == null || v.isEmpty
+                            ? loc.error_first_name_required
+                            : !RegExp(r'^[a-zA-Z]+$').hasMatch(v)
+                            ? loc.error_only_letters
+                            : null,
+                      ),
+
                       const SizedBox(height: 30),
 
-                      TextFormField(controller: lastnameController, decoration: InputDecoration(labelText: "Last Name", prefixIcon: Icon(Icons.person), border: OutlineInputBorder(borderRadius: BorderRadius.circular(12))), validator: (v)=>v==null||v.isEmpty?'Last Name is required':!RegExp(r'^[a-zA-Z]+$').hasMatch(v)?'Only letters allowed':null),
+                      TextFormField(
+                        controller: lastnameController,
+                        decoration: InputDecoration(
+                          labelText: loc.admin_last_name,
+                          prefixIcon: const Icon(Icons.person),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        validator: (v) => v == null || v.isEmpty
+                            ? loc.error_last_name_required
+                            : !RegExp(r'^[a-zA-Z]+$').hasMatch(v)
+                            ? loc.error_only_letters
+                            : null,
+                      ),
+
                       const SizedBox(height: 30),
 
-                      TextFormField(controller: cinController, decoration: InputDecoration(labelText: "Cin", prefixIcon: Icon(Icons.numbers), border: OutlineInputBorder(borderRadius: BorderRadius.circular(12))), validator: (v)=>v==null||v.isEmpty?'Cin is required':v.length!=8?'Cin needs to be 8 Numbers':!RegExp(r'^[0-9]+$').hasMatch(v)?'Only numbers allowed':null),
+                      TextFormField(
+                        controller: cinController,
+                        decoration: InputDecoration(
+                          labelText: loc.admin_cin,
+                          prefixIcon: const Icon(Icons.numbers),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        validator: (v) => v == null || v.isEmpty
+                            ? loc.error_cin_required
+                            : v.length != 8
+                            ? loc.error_cin_invalid
+                            : !RegExp(r'^[0-9]+$').hasMatch(v)
+                            ? loc.error_only_numbers
+                            : null,
+                      ),
+
                       const SizedBox(height: 30),
 
-                      TextFormField(controller: usernameController, decoration: InputDecoration(labelText: 'Username', prefixIcon: Icon(Icons.person), border: OutlineInputBorder(borderRadius: BorderRadius.circular(12))), validator: (v)=>v==null||v.isEmpty?'Username is required':!RegExp(r'^[a-zA-Z0-9]+$').hasMatch(v)?'Only letters and numbers allowed':null),
+                      TextFormField(
+                        controller: usernameController,
+                        decoration: InputDecoration(
+                          labelText: loc.admin_username,
+                          prefixIcon: const Icon(Icons.person),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        validator: (v) => v == null || v.isEmpty
+                            ? loc.error_username_required
+                            : null,
+                      ),
+
                       const SizedBox(height: 20),
 
-                      TextFormField(controller: emailController, decoration: InputDecoration(labelText: 'Email', prefixIcon: Icon(Icons.email_outlined), border: OutlineInputBorder(borderRadius: BorderRadius.circular(12))), validator: (v)=>v==null||v.isEmpty?'Email is required':!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(v)?'Enter valid email':null),
+                      TextFormField(
+                        controller: emailController,
+                        decoration: InputDecoration(
+                          labelText: loc.admin_email,
+                          prefixIcon: const Icon(Icons.email_outlined),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        validator: (v) => v == null || v.isEmpty
+                            ? loc.error_email_invalid
+                            : !RegExp(
+                                r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                              ).hasMatch(v)
+                            ? loc.error_email_invalid
+                            : null,
+                      ),
+
                       const SizedBox(height: 20),
 
-                      TextFormField(controller: ageController, keyboardType: TextInputType.number, decoration: InputDecoration(labelText: 'Age', prefixIcon: Icon(Icons.calendar_today), border: OutlineInputBorder(borderRadius: BorderRadius.circular(12))), validator: (v){if(v==null||v.isEmpty)return'Age is required';final a=int.tryParse(v);if(a==null)return'Enter valid number';if(a<=18)return'Age must be greater than 18';return null;}),
+                      TextFormField(
+                        controller: ageController,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          labelText: loc.admin_age,
+                          prefixIcon: const Icon(Icons.calendar_today),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        validator: (v) {
+                          if (v == null || v.isEmpty) {
+                            return loc.error_age_required;
+                          }
+                          final a = int.tryParse(v);
+                          if (a == null) return loc.error_age_invalid;
+                          if (a <= 18) return loc.error_age_limit;
+                          return null;
+                        },
+                      ),
+
                       const SizedBox(height: 20),
 
                       DropdownButtonFormField<String>(
                         value: selectedRegion,
                         decoration: InputDecoration(
-                          labelText: 'Region',
-                          prefixIcon: Icon(Icons.location_city),
+                          labelText: loc.admin_region,
+                          prefixIcon: const Icon(Icons.location_city),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
-                        items: tunisianStates.map((s)=>DropdownMenuItem(value:s,child:Text(s))).toList(),
-                        onChanged: (v)=>setState(()=>selectedRegion=v),
-                        validator: (v)=>v==null||v.isEmpty?'Region is required':null,
+                        items: tunisianStates
+                            .map(
+                              (s) => DropdownMenuItem(value: s, child: Text(s)),
+                            )
+                            .toList(),
+                        onChanged: (v) => setState(() => selectedRegion = v),
+                        validator: (v) => v == null || v.isEmpty
+                            ? loc.error_region_required
+                            : null,
                       ),
+
                       const SizedBox(height: 20),
 
                       FutureBuilder<List<RoleModel>>(
@@ -191,17 +321,26 @@ class _CreateUserState extends State<Create_User> {
                           return DropdownButtonFormField<String>(
                             value: selectedRole,
                             decoration: InputDecoration(
-                              labelText: 'Select Role',
-                              prefixIcon: Icon(Icons.admin_panel_settings),
+                              labelText: loc.admin_role,
+                              prefixIcon: const Icon(
+                                Icons.admin_panel_settings,
+                              ),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
                             items: (snapshot.data ?? [])
-                                .map((r)=>DropdownMenuItem(value:r.name,child:Text(r.name)))
+                                .map(
+                                  (r) => DropdownMenuItem(
+                                    value: r.name,
+                                    child: Text(r.name),
+                                  ),
+                                )
                                 .toList(),
-                            onChanged: (v)=>setState(()=>selectedRole=v),
-                            validator: (v)=>v==null||v.isEmpty?'Role is required':null,
+                            onChanged: (v) => setState(() => selectedRole = v),
+                            validator: (v) => v == null || v.isEmpty
+                                ? loc.error_role_required
+                                : null,
                           );
                         },
                       ),
@@ -217,10 +356,10 @@ class _CreateUserState extends State<Create_User> {
                             }
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFF1B5E20),
-                            padding: EdgeInsets.symmetric(vertical: 16),
+                            backgroundColor: const Color(0xFF1B5E20),
+                            padding: const EdgeInsets.symmetric(vertical: 16),
                           ),
-                          child: Text('Create Account'),
+                          child: Text(loc.admin_create_button),
                         ),
                       ),
                     ],

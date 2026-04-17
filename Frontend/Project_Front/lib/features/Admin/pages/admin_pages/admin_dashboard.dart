@@ -11,6 +11,9 @@ import 'package:authproject/features/Auth/services/auth_service.dart';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:authproject/main.dart';
+
+import 'package:authproject/l10n/app_localizations.dart';
 
 class AdminDashboard extends StatefulWidget {
   const AdminDashboard({super.key});
@@ -41,6 +44,44 @@ class _AdminDashboardState extends State<AdminDashboard> {
     context.go('/');
   }
 
+  void _setLanguage(Locale locale) {
+    (mainAppKey.currentState)?.setLocale(locale);
+  }
+
+  Widget _langButton(String label, Locale locale) {
+    return Expanded(
+      child: OutlinedButton(
+        onPressed: () => _setLanguage(locale),
+        style: OutlinedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        ),
+        child: Text(label, style: const TextStyle(fontSize: 12)),
+      ),
+    );
+  }
+
+  Widget _languageSelector() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: Column(
+        children: [
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              _langButton("EN", const Locale('en', 'US')),
+              const SizedBox(width: 6),
+              _langButton("FR", const Locale('fr', 'FR')),
+              const SizedBox(width: 6),
+              _langButton("AR", const Locale('ar', 'AR')),
+            ],
+          ),
+          const SizedBox(height: 10),
+        ],
+      ),
+    );
+  }
+
   NavigationRailDestination _buildItem(String text, IconData icon) {
     return NavigationRailDestination(
       icon: Container(
@@ -66,6 +107,8 @@ class _AdminDashboardState extends State<AdminDashboard> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
@@ -74,10 +117,9 @@ class _AdminDashboardState extends State<AdminDashboard> {
             // Sidebar
             Container(
               width: 240,
-              color: Colors.transparent, // transparent background
+              color: Colors.transparent,
               child: Column(
                 children: [
-                  // Logo
                   SizedBox(
                     height: 70,
                     child: Image.asset(
@@ -86,7 +128,6 @@ class _AdminDashboardState extends State<AdminDashboard> {
                     ),
                   ),
 
-                  // Navigation Rail without Theme wrapper
                   Expanded(
                     child: Theme(
                       data: Theme.of(context).copyWith(
@@ -108,22 +149,22 @@ class _AdminDashboardState extends State<AdminDashboard> {
                         groupAlignment: -1.0,
                         minWidth: 220,
                         destinations: [
-                          _buildItem("Users List", Icons.people),
-                          _buildItem("Create Users", Icons.add),
-                          _buildItem("Manage Roles", Icons.account_box_sharp),
-                          _buildItem("Assign Supervisor", Icons.add),
-                          _buildItem("Assign Agent", Icons.add),
-                          _buildItem("Add Forests", Icons.forest),
-                          _buildItem("Forests list", Icons.forest_outlined),
-                          _buildItem("Manage Services", Icons.medical_services),
-                          _buildItem(
-                            "Manage Incidents",
-                            Icons.add_a_photo_outlined,
-                          ),
+                          _buildItem(t.admin_users_list, Icons.people),
+                          _buildItem(t.admin_create_users, Icons.add),
+                          _buildItem(t.admin_manage_roles, Icons.account_box_sharp),
+                          _buildItem(t.admin_assign_supervisor, Icons.add),
+                          _buildItem(t.admin_assign_agent, Icons.add),
+                          _buildItem(t.admin_add_forests, Icons.forest),
+                          _buildItem(t.admin_forests_list, Icons.forest_outlined),
+                          _buildItem(t.admin_manage_services, Icons.medical_services),
+                          _buildItem(t.admin_manage_incidents, Icons.add_a_photo_outlined),
                         ],
                       ),
                     ),
                   ),
+
+                  
+                  _languageSelector(),
 
                   // Logout button
                   Padding(
@@ -133,8 +174,8 @@ class _AdminDashboardState extends State<AdminDashboard> {
                       child: ElevatedButton.icon(
                         onPressed: logout,
                         icon: const Icon(Icons.logout, size: 16),
-                        label: const Text(
-                          "Logout",
+                        label: Text(
+                          t.logout,
                           style: TextStyle(fontSize: 14, color: Colors.white),
                         ),
                         style: ButtonStyle(
@@ -166,7 +207,6 @@ class _AdminDashboardState extends State<AdminDashboard> {
 
             const VerticalDivider(thickness: 1, width: 1),
 
-            // Main content
             Expanded(child: Center(child: _contentWidgets[_selectedIndex])),
           ],
         ),

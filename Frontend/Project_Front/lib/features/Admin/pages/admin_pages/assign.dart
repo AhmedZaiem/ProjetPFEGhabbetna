@@ -6,6 +6,8 @@ import 'package:authproject/features/Admin/services/user_service.dart';
 import 'package:authproject/features/Admin/ui_components/assignment_card.dart';
 import 'package:authproject/features/Admin/ui_components/custom_dropdown.dart';
 
+import 'package:authproject/l10n/app_localizations.dart';
+
 class Assign extends StatefulWidget {
   const Assign({super.key});
 
@@ -20,8 +22,8 @@ class _AssignState extends State<Assign> {
   List<Forest> forests = [];
   List<UserModel> unassignedSupervisor = [];
 
-  Map<int, UserModel> assignedSupervisors = {}; // supervisorId -> UserModel
-  Map<int, String> supervisorForestMap = {}; // supervisorId -> forestName
+  Map<int, UserModel> assignedSupervisors = {};
+  Map<int, String> supervisorForestMap = {};
 
   Forest? selectedForest;
   UserModel? selectedUserForForest;
@@ -40,13 +42,15 @@ class _AssignState extends State<Assign> {
       final allForests = await forestService.getForests();
       final unassigned = await userService.getSupervisors();
 
-      // Map assigned supervisors to forests
       assignedSupervisors.clear();
       supervisorForestMap.clear();
+
       final allUsers = await userService.fetchUsers();
+
       for (var f in allForests) {
         if (f.supervisorId != null) {
           supervisorForestMap[f.supervisorId!] = f.name;
+
           final u = allUsers.firstWhere(
             (user) => user.id == f.supervisorId,
             orElse: () => UserModel(
@@ -63,6 +67,7 @@ class _AssignState extends State<Assign> {
               isBlocked: false,
             ),
           );
+
           assignedSupervisors[f.supervisorId!] = u;
         }
       }
@@ -88,21 +93,28 @@ class _AssignState extends State<Assign> {
         selectedForest!.id,
         selectedUserForForest!.id,
       );
+
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Supervisor assigned successfully")),
+        SnackBar(content: Text("Supervisor assigned successfully")),
       );
+
       await loadData();
     } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Error: $e")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error: $e")),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (loading)
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    final t = AppLocalizations.of(context)!;
+
+    if (loading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -110,7 +122,7 @@ class _AssignState extends State<Assign> {
           children: [
             Image.asset('assets/images/logoApp.jpeg', height: 80),
             const SizedBox(width: 12),
-            const Text("Assign Supervisor"),
+            Text(t.admin_assign_supervisor_title),
           ],
         ),
       ),
@@ -122,23 +134,25 @@ class _AssignState extends State<Assign> {
             child: Column(
               children: [
                 AssignmentCard(
-                  title: "Assign Supervisor to Forest",
+                  title: t.admin_assign_supervisor_title,
                   children: [
                     CustomDropdown(
                       value: selectedUserForForest,
-                      hint: "Select Supervisor",
+                      hint: t.admin_select,
                       items: unassignedSupervisor,
-                      label: (u) => "${u.username} - ${u.region}",
+                      label: (u) =>
+                          "${u.username} - ${u.region}",
                       onChanged: (u) =>
                           setState(() => selectedUserForForest = u),
                     ),
                     const SizedBox(height: 12),
                     CustomDropdown(
                       value: selectedForest,
-                      hint: "Select Forest",
+                      hint: t.admin_assign_supervisor_forest,
                       items: forests,
                       label: (p) => "${p.name} - ${p.region}",
-                      onChanged: (p) => setState(() => selectedForest = p),
+                      onChanged: (p) =>
+                          setState(() => selectedForest = p),
                     ),
                     const SizedBox(height: 16),
                     SizedBox(
@@ -146,13 +160,13 @@ class _AssignState extends State<Assign> {
                       child: ElevatedButton.icon(
                         onPressed:
                             (selectedUserForForest != null &&
-                                selectedForest != null)
-                            ? assignSupervisor
-                            : null,
+                                    selectedForest != null)
+                                ? assignSupervisor
+                                : null,
                         icon: const Icon(Icons.supervisor_account),
-                        label: const Text("Assign Supervisor"),
+                        label: Text(t.admin_assign_button),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green.shade700,
+                          backgroundColor: Colors.green,
                           foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
@@ -166,16 +180,15 @@ class _AssignState extends State<Assign> {
 
                 const SizedBox(height: 32),
 
-                // Display assigned supervisors
                 AssignmentCard(
-                  title: "Assigned Supervisors",
+                  title: t.admin_assigned_supervisors,
                   children: assignedSupervisors.isEmpty
                       ? [
-                          const Padding(
-                            padding: EdgeInsets.all(16.0),
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
                             child: Text(
-                              "No supervisors assigned yet.",
-                              style: TextStyle(
+                              t.admin_no_supervisors_assigned,
+                              style: const TextStyle(
                                 fontStyle: FontStyle.italic,
                                 color: Colors.grey,
                                 fontSize: 16,
@@ -186,7 +199,9 @@ class _AssignState extends State<Assign> {
                       : assignedSupervisors.entries.map((e) {
                           final u = e.value;
                           final fName =
-                              supervisorForestMap[e.key] ?? "Unknown Forest";
+                              supervisorForestMap[e.key] ??
+                                  t.admin_no_data;
+
                           return Container(
                             margin: const EdgeInsets.symmetric(
                               vertical: 8,
@@ -195,7 +210,7 @@ class _AssignState extends State<Assign> {
                             decoration: BoxDecoration(
                               color: Colors.green[50],
                               borderRadius: BorderRadius.circular(14),
-                              boxShadow: [
+                              boxShadow: const [
                                 BoxShadow(
                                   color: Colors.black26,
                                   blurRadius: 6,
@@ -220,7 +235,7 @@ class _AssignState extends State<Assign> {
                                     ),
                                     const SizedBox(width: 12),
                                     Text(
-                                      "Username: ${u.username}",
+                                      "${t.admin_username}: ${u.username}",
                                       style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 16,
@@ -230,12 +245,12 @@ class _AssignState extends State<Assign> {
                                 ),
                                 const SizedBox(height: 12),
                                 Text(
-                                  "First Name: ${u.firstname}",
+                                  "${t.admin_first_name}: ${u.firstname}",
                                   style: const TextStyle(fontSize: 14),
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
-                                  "Last Name: ${u.lastname}",
+                                  "${t.admin_last_name}: ${u.lastname}",
                                   style: const TextStyle(fontSize: 14),
                                 ),
                                 const SizedBox(height: 8),
@@ -248,7 +263,7 @@ class _AssignState extends State<Assign> {
                                     ),
                                     const SizedBox(width: 4),
                                     Text(
-                                      "Region: ${u.region}",
+                                      "${t.admin_region}: ${u.region}",
                                       style: const TextStyle(fontSize: 14),
                                     ),
                                   ],
@@ -263,7 +278,7 @@ class _AssignState extends State<Assign> {
                                     ),
                                     const SizedBox(width: 4),
                                     Text(
-                                      "Forest: $fName",
+                                      "${t.admin_forest_name}: $fName",
                                       style: const TextStyle(fontSize: 14),
                                     ),
                                   ],

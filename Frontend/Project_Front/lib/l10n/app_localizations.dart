@@ -63,7 +63,8 @@ import 'app_localizations_fr.dart';
 /// be consistent with the languages listed in the AppLocalizations.supportedLocales
 /// property.
 abstract class AppLocalizations {
-  AppLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  AppLocalizations(String locale)
+    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -71,7 +72,8 @@ abstract class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate =
+      _AppLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -83,76 +85,178 @@ abstract class AppLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
-    delegate,
-    GlobalMaterialLocalizations.delegate,
-    GlobalCupertinoLocalizations.delegate,
-    GlobalWidgetsLocalizations.delegate,
-  ];
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
+      <LocalizationsDelegate<dynamic>>[
+        delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ];
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('ar'),
     Locale('en'),
-    Locale('fr')
+    Locale('fr'),
   ];
 
-  /// No description provided for @auth_login.
-  ///
   /// In en, this message translates to:
   /// **'Login'**
   String get auth_login;
-
-  /// No description provided for @auth_email.
-  ///
-  /// In en, this message translates to:
-  /// **'Email'**
   String get auth_email;
-
-  /// No description provided for @auth_password.
-  ///
-  /// In en, this message translates to:
-  /// **'Password'**
   String get auth_password;
-
-  /// No description provided for @auth_forgot_password.
-  ///
-  /// In en, this message translates to:
-  /// **'Forgot Password?'**
   String get auth_forgot_password;
-
-  /// No description provided for @error_title.
-  ///
-  /// In en, this message translates to:
-  /// **'Error'**
   String get error_title;
-
-  /// No description provided for @error_email_required.
-  ///
-  /// In en, this message translates to:
-  /// **'Email is required'**
   String get error_email_required;
-
-  /// No description provided for @error_password_required.
-  ///
-  /// In en, this message translates to:
-  /// **'Password is required'**
   String get error_password_required;
-
-  /// No description provided for @error_password_length.
-  ///
-  /// In en, this message translates to:
-  /// **'Password must be at least 8 characters'**
   String get error_password_length;
-
-  /// No description provided for @ok.
-  ///
-  /// In en, this message translates to:
-  /// **'OK'**
   String get ok;
+
+  /// Forgot password page
+  String get auth_forgot_password_title;
+  String get auth_send_email;
+  String get error_invalid_email;
+  String get success_title;
+
+  /// reset password page
+  String get auth_reset_password_title;
+  String get auth_new_password;
+  String get auth_update_password;
+  String get error_invalid_password;
+  String get success_reset_password;
+
+  /// activation page
+  String get auth_activation_title;
+  String get auth_activate_account;
+  String get auth_password_label;
+  String get auth_activate_button;
+  String get success_activation;
+
+  /// create user page
+  String get admin_create_account;
+  String get admin_first_name;
+  String get admin_last_name;
+  String get admin_cin;
+  String get admin_username;
+  String get admin_email;
+  String get admin_age;
+  String get admin_region;
+  String get admin_role;
+  String get admin_create_button;
+  String get error_fill_fields;
+  String get error_first_name_required;
+  String get error_last_name_required;
+  String get error_only_letters;
+  String get error_only_numbers;
+  String get error_cin_required;
+  String get error_cin_invalid;
+  String get error_username_required;
+  String get error_email_invalid;
+  String get error_age_required;
+  String get error_age_invalid;
+  String get error_age_limit;
+  String get error_region_required;
+  String get error_role_required;
+
+  /// create service page
+  String get admin_services;
+  String get admin_name;
+  String get admin_type;
+  String get admin_description;
+
+  String get admin_create;
+  String get admin_update;
+  String get admin_clear;
+  String get admin_delete;
+
+  String get success_service_created;
+  String get success_service_updated;
+  String get success_service_deleted;
+
+  String get error_service;
+
+  String get admin_roles;
+  String get admin_role_name;
+  String get admin_new_role_name;
+
+  String get admin_add;
+  String get admin_modify;
+
+  String get success_role_created;
+  String get success_role_deleted;
+  String get success_role_modified;
+
+  String get error_role_empty;
+  String get error_role_both_required;
+
+  /// create forest/parcel page
+  String get admin_forest_parcel;
+  String get admin_forest;
+  String get admin_parcel;
+
+  String get admin_forest_name;
+  String get admin_parcel_name;
+
+  String get admin_forest_region;
+  String get admin_parcel_region;
+
+  String get admin_undo;
+  String get admin_save;
+
+  String get success_forest_created;
+  String get success_parcel_created;
+
+  String get error_polygon_min_points;
+
+  /// assing agent superviseur page
+  // shared (both pages)
+  String get admin_assign;
+  String get admin_select;
+  String get admin_no_data;
+  String get admin_success;
+  String get admin_error;
+
+  // buttons (shared)
+  String get admin_assign_button;
+
+  // agent specific
+  String get admin_assign_agent_title;
+  String get admin_assign_agent_parcelle;
+  String get admin_assigned_agents;
+  String get admin_no_agents_assigned;
+
+  // supervisor specific
+  String get admin_assign_supervisor_title;
+  String get admin_assign_supervisor_forest;
+  String get admin_assigned_supervisors;
+  String get admin_no_supervisors_assigned;
+
+  // menu admin dashboard
+  String get admin_users_list;
+  String get admin_create_users;
+  String get admin_manage_roles;
+  String get admin_assign_supervisor;
+  String get admin_assign_agent;
+  String get admin_add_forests;
+  String get admin_forests_list;
+  String get admin_manage_services;
+  String get admin_manage_incidents;
+  String get logout;
+
+  // stat admin
+  String get admin_total_forests;
+  String get admin_total_parcels;
+  String get admin_total_incidents;
+  String get admin_pending_incidents;
+  String get admin_accepted_incidents;
+  String get admin_not_accepted_incidents;
+  String get admin_total_users;
+  String get admin_total_agents;
+  String get admin_total_supervisors;
 }
 
-class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate
+    extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override
@@ -161,26 +265,28 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   }
 
   @override
-  bool isSupported(Locale locale) => <String>['ar', 'en', 'fr'].contains(locale.languageCode);
+  bool isSupported(Locale locale) =>
+      <String>['ar', 'en', 'fr'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
-
-
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'ar': return AppLocalizationsAr();
-    case 'en': return AppLocalizationsEn();
-    case 'fr': return AppLocalizationsFr();
+    case 'ar':
+      return AppLocalizationsAr();
+    case 'en':
+      return AppLocalizationsEn();
+    case 'fr':
+      return AppLocalizationsFr();
   }
 
   throw FlutterError(
     'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
     'an issue with the localizations generation tool. Please file an issue '
     'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.'
+    'that was used.',
   );
 }

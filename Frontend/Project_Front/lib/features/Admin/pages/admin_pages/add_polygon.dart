@@ -10,6 +10,8 @@ import 'package:authproject/features/Admin/models/parcelle_model.dart';
 import 'package:authproject/features/Admin/services/forest_service.dart';
 import 'package:authproject/features/Admin/services/parcelle_service.dart';
 
+import 'package:authproject/l10n/app_localizations.dart';
+
 enum PolygonMode { forest, parcel }
 
 class AddPolygonPage extends StatefulWidget {
@@ -92,10 +94,11 @@ class _AddPolygonPageState extends State<AddPolygonPage> {
   }
 
   Future<void> savePolygon() async {
+    final t = AppLocalizations.of(context)!;
     if (points.length < 3) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text("Need at least 3 points")));
+      ).showSnackBar(SnackBar(content: Text(t.error_polygon_min_points)));
       return;
     }
 
@@ -122,14 +125,13 @@ class _AddPolygonPageState extends State<AddPolygonPage> {
           ),
         );
       }
-
       /// success message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
             mode == PolygonMode.forest
-                ? "Forest added successfully"
-                : "Parcel added successfully",
+                ? t.success_forest_created
+                : t.success_parcel_created,
           ),
         ),
       );
@@ -155,13 +157,15 @@ class _AddPolygonPageState extends State<AddPolygonPage> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
         title: Row(
           children: [
             Image.asset('assets/images/logoApp.jpeg', height: 80),
             const SizedBox(width: 12),
-            const Text("Add Forest or Parcel"),
+            Text(t.admin_forest_parcel),
           ],
         ),
       ),
@@ -181,18 +185,18 @@ class _AddPolygonPageState extends State<AddPolygonPage> {
                   mode = index == 0 ? PolygonMode.forest : PolygonMode.parcel;
                 });
               },
-              children: const [
+              children: [
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 25, vertical: 8),
                   child: Text(
-                    "Forest",
+                    t.admin_forest,
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 25, vertical: 8),
                   child: Text(
-                    "Parcel",
+                    t.admin_parcel,
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -210,8 +214,8 @@ class _AddPolygonPageState extends State<AddPolygonPage> {
                     controller: nameController,
                     decoration: InputDecoration(
                       labelText: mode == PolygonMode.forest
-                          ? "Forest name"
-                          : "Parcel name",
+                          ? t.admin_forest_name
+                          : t.admin_parcel_name,
                       prefixIcon: Icon(
                         mode == PolygonMode.forest ? Icons.forest : Icons.map,
                       ),
@@ -225,8 +229,8 @@ class _AddPolygonPageState extends State<AddPolygonPage> {
                     controller: regionController,
                     decoration: InputDecoration(
                       labelText: mode == PolygonMode.forest
-                          ? "Forest region"
-                          : "Parcel region",
+                          ? t.admin_forest_region
+                          : t.admin_parcel_region,
                       prefixIcon: Icon(
                         mode == PolygonMode.forest ? Icons.forest : Icons.map,
                       ),
@@ -239,8 +243,8 @@ class _AddPolygonPageState extends State<AddPolygonPage> {
                   if (mode == PolygonMode.forest)
                     TextField(
                       controller: descriptionController,
-                      decoration: const InputDecoration(
-                        labelText: "Description",
+                      decoration: InputDecoration(
+                        labelText: t.admin_description,
                         prefixIcon: Icon(Icons.description),
                         border: OutlineInputBorder(),
                       ),
@@ -262,7 +266,7 @@ class _AddPolygonPageState extends State<AddPolygonPage> {
                     children: [
                       ElevatedButton.icon(
                         icon: const Icon(Icons.undo),
-                        label: const Text("Undo"),
+                        label: Text(t.admin_undo),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.grey.shade800,
                           foregroundColor: Colors.white,
@@ -279,7 +283,7 @@ class _AddPolygonPageState extends State<AddPolygonPage> {
                       const SizedBox(height: 15),
                       ElevatedButton.icon(
                         icon: const Icon(Icons.clear),
-                        label: const Text("Clear"),
+                        label: Text(t.admin_clear),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blueGrey,
                           foregroundColor: Colors.white,
@@ -296,7 +300,7 @@ class _AddPolygonPageState extends State<AddPolygonPage> {
                       const SizedBox(height: 15),
                       ElevatedButton.icon(
                         icon: const Icon(Icons.save),
-                        label: const Text("Save"),
+                        label: Text(t.admin_save),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.teal,
                           foregroundColor: Colors.white,

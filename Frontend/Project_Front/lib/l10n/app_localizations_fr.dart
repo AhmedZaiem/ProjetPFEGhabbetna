@@ -30,8 +30,322 @@ class AppLocalizationsFr extends AppLocalizations {
   String get error_password_required => 'Mot de passe requis';
 
   @override
-  String get error_password_length => 'Le mot de passe doit contenir au moins 8 caractères';
+  String get error_password_length =>
+      'Le mot de passe doit contenir au moins 8 caractères';
 
   @override
   String get ok => 'OK';
+
+  @override
+  String get auth_forgot_password_title => 'Mot de passe oublié';
+
+  @override
+  String get auth_send_email => 'Envoyer Email';
+
+  @override
+  String get error_invalid_email => 'Email invalide';
+
+  @override
+  String get success_title => 'Succès';
+
+  @override
+  String get auth_reset_password_title => 'Réinitialiser le mot de passe';
+
+  @override
+  String get auth_new_password => 'Nouveau mot de passe';
+
+  @override
+  String get auth_update_password => 'Mettre à jour le mot de passe';
+
+  @override
+  String get error_invalid_password =>
+      'Le mot de passe doit contenir au moins 8 caractères';
+
+  @override
+  String get success_reset_password => 'Mot de passe mis à jour avec succès';
+
+  @override
+  String get auth_activation_title => 'Activation';
+
+  @override
+  String get auth_activate_account => 'Activer le compte';
+
+  @override
+  String get auth_password_label => 'Mot de passe';
+
+  @override
+  String get auth_activate_button => 'Activer';
+
+  @override
+  String get success_activation => 'Compte activé avec succès';
+
+  @override
+  String get admin_create_account => 'Créer un compte';
+
+  @override
+  String get admin_first_name => 'Prénom';
+
+  @override
+  String get admin_last_name => 'Nom';
+
+  @override
+  String get admin_cin => 'CIN';
+
+  @override
+  String get admin_username => 'Nom utilisateur';
+
+  @override
+  String get admin_email => 'Email';
+
+  @override
+  String get admin_age => 'Âge';
+
+  @override
+  String get admin_region => 'Région';
+
+  @override
+  String get admin_role => 'Sélectionner rôle';
+
+  @override
+  String get admin_create_button => 'Créer compte';
+
+  @override
+  String get error_fill_fields => 'Veuillez remplir tous les champs';
+
+  @override
+  String get error_first_name_required => 'Le prénom est requis';
+
+  @override
+  String get error_last_name_required => 'Le nom est requis';
+
+  @override
+  String get error_only_letters => 'Lettres uniquement';
+
+  @override
+  String get error_only_numbers => 'Chiffres uniquement';
+
+  @override
+  String get error_cin_required => 'CIN requis';
+
+  @override
+  String get error_cin_invalid => 'CIN doit contenir 8 chiffres';
+
+  @override
+  String get error_username_required => 'Nom utilisateur requis';
+
+  @override
+  String get error_email_invalid => 'Email invalide';
+
+  @override
+  String get error_age_required => 'Âge requis';
+
+  @override
+  String get error_age_invalid => 'Nombre invalide';
+
+  @override
+  String get error_age_limit => 'L’âge doit être supérieur à 18';
+
+  @override
+  String get error_region_required => 'Région requise';
+
+  @override
+  String get error_role_required => 'Rôle requis';
+
+  /// SERVICES
+  @override
+  String get admin_services => 'Services';
+
+  @override
+  String get admin_name => 'Nom';
+
+  @override
+  String get admin_type => 'Type';
+
+  @override
+  String get admin_description => 'Description';
+
+  @override
+  String get admin_create => 'Créer';
+
+  @override
+  String get admin_update => 'Modifier';
+
+  @override
+  String get admin_clear => 'Vider';
+
+  @override
+  String get admin_delete => 'Supprimer';
+
+  @override
+  String get success_service_created => 'Service créé avec succès';
+
+  @override
+  String get success_service_updated => 'Service mis à jour avec succès';
+
+  @override
+  String get success_service_deleted => 'Service supprimé avec succès';
+
+  @override
+  String get error_service => 'Erreur dans le service';
+
+  @override
+  String get admin_roles => 'Gestion des rôles';
+
+  @override
+  String get admin_role_name => 'Nom du rôle';
+
+  @override
+  String get admin_new_role_name => 'Nouveau nom du rôle';
+
+  @override
+  String get admin_add => 'Ajouter';
+
+  @override
+  String get admin_modify => 'Modifier';
+
+  @override
+  String get success_role_created => 'Rôle créé avec succès';
+
+  @override
+  String get success_role_deleted => 'Rôle supprimé avec succès';
+
+  @override
+  String get success_role_modified => 'Rôle modifié avec succès';
+
+  @override
+  String get error_role_empty => 'Nom du rôle requis';
+
+  @override
+  String get error_role_both_required =>
+      'Veuillez entrer ancien et nouveau nom';
+
+  @override
+  String get admin_forest_parcel => "Ajouter Forêt ou Parcelle";
+
+  @override
+  String get admin_forest => "Forêt";
+
+  @override
+  String get admin_parcel => "Parcelle";
+
+  @override
+  String get admin_forest_name => "Nom de la forêt";
+
+  @override
+  String get admin_parcel_name => "Nom de la parcelle";
+
+  @override
+  String get admin_forest_region => "Région forêt";
+
+  @override
+  String get admin_parcel_region => "Région parcelle";
+
+  @override
+  String get admin_undo => "Annuler";
+
+  @override
+  String get admin_save => "Enregistrer";
+
+  @override
+  String get success_forest_created => "Forêt ajoutée avec succès";
+
+  @override
+  String get success_parcel_created => "Parcelle ajoutée avec succès";
+
+  @override
+  String get error_polygon_min_points => "Minimum 3 points requis";
+
+  // shared assign
+  @override
+  String get admin_assign => "Affecter";
+  @override
+  String get admin_select => "Sélectionner";
+  @override
+  String get admin_no_data => "Aucune donnée";
+  @override
+  String get admin_success => "Succès";
+  @override
+  String get admin_error => "Erreur";
+  @override
+  String get admin_assign_button => "Affecter";
+
+  // agent assign
+  @override
+  String get admin_assign_agent_title => "Affecter un agent à une parcelle";
+  @override
+  String get admin_assign_agent_parcelle => "Sélectionner une parcelle";
+  @override
+  String get admin_assigned_agents => "Agents affectés";
+  @override
+  String get admin_no_agents_assigned => "Aucun agent affecté";
+
+  // supervisor assign
+  @override
+  String get admin_assign_supervisor_title =>
+      "Affecter un superviseur à une forêt";
+  @override
+  String get admin_assign_supervisor_forest => "Sélectionner une forêt";
+  @override
+  String get admin_assigned_supervisors => "Superviseurs affectés";
+  @override
+  String get admin_no_supervisors_assigned => "Aucun superviseur affecté";
+
+  // menu admin dashboard
+  @override
+  String get admin_users_list => "Liste des utilisateurs";
+
+  @override
+  String get admin_create_users => "Créer des utilisateurs";
+
+  @override
+  String get admin_manage_roles => "Gérer les rôles";
+
+  @override
+  String get admin_assign_supervisor => "Assigner un superviseur";
+
+  @override
+  String get admin_assign_agent => "Assigner un agent";
+
+  @override
+  String get admin_add_forests => "Ajouter des forêts";
+
+  @override
+  String get admin_forests_list => "Liste des forêts";
+
+  @override
+  String get admin_manage_services => "Gérer les services";
+
+  @override
+  String get admin_manage_incidents => "Gérer les incidents";
+
+  @override
+  String get logout => "Déconnexion";
+
+  // stat admin
+  @override
+  String get admin_total_forests => "Total des forêts";
+
+  @override
+  String get admin_total_parcels => "Total des parcelles";
+
+  @override
+  String get admin_total_incidents => "Total des incidents";
+
+  @override
+  String get admin_pending_incidents => "Incidents en attente";
+
+  @override
+  String get admin_accepted_incidents => "Incidents acceptés";
+
+  @override
+  String get admin_not_accepted_incidents => "Incidents refusés";
+
+  @override
+  String get admin_total_users => "Total des utilisateurs";
+
+  @override
+  String get admin_total_agents => "Total des agents";
+
+  @override
+  String get admin_total_supervisors => "Total des superviseurs";
 }
