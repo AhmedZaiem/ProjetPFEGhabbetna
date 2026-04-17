@@ -258,6 +258,12 @@ abstract class AppLocalizations {
   String get admin_verified;
   String get admin_actions;
   String get admin_view_parcels;
+
+  // supervisor menu
+  String get supervisor_incident_list;
+  String get supervisor_incident_map;
+  String get supervisor_agent_list;
+  String get supervisor_profile;
 }
 
 class _AppLocalizationsDelegate

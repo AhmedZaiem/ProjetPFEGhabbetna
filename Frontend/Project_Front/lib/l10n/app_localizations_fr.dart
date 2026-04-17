@@ -357,4 +357,16 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get admin_view_parcels => "Voir les parcelles";
+
+  @override
+  String get supervisor_incident_list => "Liste des incidents";
+
+  @override
+  String get supervisor_incident_map => "Carte des incidents";
+
+  @override
+  String get supervisor_agent_list => "Liste des agents";
+
+  @override
+  String get supervisor_profile => "Profil";
 }

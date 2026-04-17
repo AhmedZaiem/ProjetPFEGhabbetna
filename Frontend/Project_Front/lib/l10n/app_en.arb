@@ -141,4 +141,9 @@
   "admin_verified": "Verified",
   "admin_actions": "Actions",
   "admin_view_parcels": "View Parcels",
+
+  "supervisor_incident_list": "Incident List",
+  "supervisor_incident_map": "Incident Map",
+  "supervisor_agent_list": "Agent List",
+  "supervisor_profile": "Profile",
 }

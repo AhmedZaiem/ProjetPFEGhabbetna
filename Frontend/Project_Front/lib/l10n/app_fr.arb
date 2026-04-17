@@ -142,4 +142,9 @@
   "admin_verified": "Vérifié",
   "admin_actions": "Actions",
   "admin_view_parcels": "Voir les parcelles",
+
+  "supervisor_incident_list": "Liste des incidents",
+  "supervisor_incident_map": "Carte des incidents",
+  "supervisor_agent_list": "Liste des agents",
+  "supervisor_profile": "Profil",
 }

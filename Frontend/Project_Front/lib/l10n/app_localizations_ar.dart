@@ -355,4 +355,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get admin_view_parcels => "عرض القطع";
+
+  @override
+  String get supervisor_incident_list => "قائمة الحوادث";
+
+  @override
+  String get supervisor_incident_map => "خريطة الحوادث";
+
+  @override
+  String get supervisor_agent_list => "قائمة الأعوان";
+
+  @override
+  String get supervisor_profile => "الملف الشخصي";
 }

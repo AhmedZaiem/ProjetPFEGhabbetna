@@ -143,4 +143,9 @@
   "admin_verified": "موثّق",
   "admin_actions": "الإجراءات",
   "admin_view_parcels": "عرض القطع",
+
+  "supervisor_incident_list": "قائمة الحوادث",
+  "supervisor_incident_map": "خريطة الحوادث",
+  "supervisor_agent_list": "قائمة الأعوان",
+  "supervisor_profile": "الملف الشخصي",
 }
