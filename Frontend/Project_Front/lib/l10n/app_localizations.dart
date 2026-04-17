@@ -264,6 +264,33 @@ abstract class AppLocalizations {
   String get supervisor_incident_map;
   String get supervisor_agent_list;
   String get supervisor_profile;
+
+
+  // incident
+  String get incidents_status;
+  String get incidents_location;
+
+  String get incident_upload;
+  String get incident_create_title;
+  String get incident_take_photo;
+  String get incident_choose_gallery;
+
+  /// incident types
+  String get incident_fire;
+  String get incident_illegal_logging;
+  String get incident_disease;
+  String get incident_other;
+
+  String get incident_pick_image;
+  String get incident_submit;
+
+  String get incident_not_assigned;
+  String get incident_camera_location;
+
+  // agent menu
+  String get agent_home;
+  String get agent_history;
+  String get agent_upload;
 }
 
 class _AppLocalizationsDelegate

@@ -367,4 +367,56 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get supervisor_profile => "الملف الشخصي";
+
+  @override
+  String get incidents_status => "الحالة";
+
+  @override
+  String get incidents_location => "الموقع";
+
+  @override
+  String get incident_upload => "رفع";
+
+  @override
+  String get incident_create_title => "إنشاء حادث";
+
+  @override
+  String get incident_take_photo => "التقاط صورة";
+
+  @override
+  String get incident_choose_gallery => " اختيار من المعرض";
+
+  @override
+  String get incident_fire => "حريق";
+
+  @override
+  String get incident_illegal_logging => "قطع أشجار غير قانوني";
+
+  @override
+  String get incident_disease => "مرض";
+
+  @override
+  String get incident_other => "أخرى";
+
+  @override
+  String get incident_pick_image => "اختيار صورة";
+
+  @override
+  String get incident_submit => "إرسال الحادث";
+
+  @override
+  String get incident_not_assigned => "أنت غير معين لقطعة أرض";
+
+  @override
+  String get incident_camera_location =>
+      "تأكد من تفعيل موقع الكاميرا";
+
+  @override
+  String get agent_home => "الرئيسية";
+
+  @override
+  String get agent_history => "السجل";
+
+  @override
+  String get agent_upload => "رفع";
 }

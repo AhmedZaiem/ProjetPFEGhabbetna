@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:authproject/features/Supervisor/models/parcelleWithAgent.dart';
 import 'package:authproject/features/Supervisor/services/supervisor_services.dart';
 import 'package:authproject/features/Supervisor/models/agent.dart';
+import 'package:authproject/l10n/app_localizations.dart';
 
 class AgentList extends StatefulWidget {
   const AgentList({super.key});
@@ -89,13 +90,15 @@ class _AgentListState extends State<AgentList> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
         title: Row(
           children: [
             Image.asset('assets/images/logoApp.jpeg', height: 80),
             const SizedBox(width: 12),
-            const Text("Agent List"),
+            Text(t.supervisor_agent_list),
           ],
         ),
       ),
@@ -110,14 +113,13 @@ class _AgentListState extends State<AgentList> {
               child: Table(
                 border: TableBorder.all(color: Colors.grey.shade300),
                 columnWidths: const {
-                  0: FlexColumnWidth(2), // ID
                   1: FlexColumnWidth(3), // Name
                   2: FlexColumnWidth(4), // Email
                 },
                 defaultVerticalAlignment: TableCellVerticalAlignment.middle,
                 children: [
                   // 🔹 Header
-                  const TableRow(
+                  TableRow(
                     decoration: BoxDecoration(
                       color: Color.fromARGB(255, 212, 198, 198),
                     ),
@@ -125,21 +127,14 @@ class _AgentListState extends State<AgentList> {
                       Padding(
                         padding: EdgeInsets.all(8),
                         child: Text(
-                          "ID",
+                          t.admin_name,
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
                       Padding(
                         padding: EdgeInsets.all(8),
                         child: Text(
-                          "Name",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(8),
-                        child: Text(
-                          "Email",
+                          t.admin_email,
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
@@ -150,10 +145,6 @@ class _AgentListState extends State<AgentList> {
                   ...agents.map<TableRow>((agent) {
                     return TableRow(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Text(agent.id.toString()),
-                        ),
                         Padding(
                           padding: const EdgeInsets.all(8),
                           child: Text(agent.name),

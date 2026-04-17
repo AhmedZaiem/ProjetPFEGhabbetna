@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:authproject/features/Agent/models/incident.dart';
 import 'package:authproject/features/Agent/services/incident_service.dart';
 
+import 'package:authproject/l10n/app_localizations.dart';
+
 class History extends StatefulWidget {
   const History({super.key});
 
@@ -15,6 +17,8 @@ class _HistotyState extends State<History> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Incident History"),

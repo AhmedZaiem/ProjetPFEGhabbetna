@@ -83,7 +83,7 @@ def activate_user(user_id: int, payload: dict, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-    user.password_hash = hash_password(payload["password"])
+    user.password_hash = hash_password(payload["password"][:72])
     user.is_verified = True
     db.commit()
     return {"message": "User activated"}

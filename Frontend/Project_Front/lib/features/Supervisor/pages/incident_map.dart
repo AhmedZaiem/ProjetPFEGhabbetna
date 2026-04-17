@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:authproject/features/Supervisor/ui_components/incident_details.dart';
+import 'package:authproject/l10n/app_localizations.dart';
 
 class IncidentMap extends StatefulWidget {
   const IncidentMap({super.key});
@@ -151,11 +152,13 @@ class _IncidentMapState extends State<IncidentMap> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+
     final mapCenter = incidentData != null && incidentData!.isNotEmpty
         ? LatLng(incidentData!.first.latitude, incidentData!.first.longitude)
         : LatLng(36.8, 10.18);
     return Scaffold(
-      appBar: AppBar(title: const Text('Incident Map')),
+      appBar: AppBar(title: Text(t.supervisor_incident_map)),
       body: Stack(
         children: [
           Positioned.fill(

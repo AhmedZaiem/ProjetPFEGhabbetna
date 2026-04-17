@@ -146,4 +146,27 @@
   "supervisor_incident_map": "Incident Map",
   "supervisor_agent_list": "Agent List",
   "supervisor_profile": "Profile",
+
+  "incidents_status": "Status",
+  "incidents_location": "Location",
+
+  "incident_upload": "Upload",
+  "incident_create_title": "Create an Incident",
+  "incident_take_photo": "Take a photo",
+  "incident_choose_gallery": "Choose from gallery",
+
+  "incident_fire": "Fire",
+  "incident_illegal_logging": "Illegal Logging",
+  "incident_disease": "Disease",
+  "incident_other": "Other",
+
+
+  "incident_pick_image": "Pick Image",
+  "incident_submit": "Submit Incident",
+  "incident_not_assigned": "You are not assigned to a parcelle",
+  "incident_camera_location": "Make sure camera location is enabled",
+
+  "agent_home": "Home",
+  "agent_history": "History",
+  "agent_upload": "Upload",
 }

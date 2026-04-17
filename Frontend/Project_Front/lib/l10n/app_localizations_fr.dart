@@ -369,4 +369,57 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get supervisor_profile => "Profil";
+
+  @override
+  String get incidents_status => "Statut";
+
+  @override
+  String get incidents_location => "Localisation";
+
+  @override
+  String get incident_upload => "Télécharger";
+
+  @override
+  String get incident_create_title => "Créer un incident";
+
+  @override
+  String get incident_take_photo => "Prendre une photo";
+
+  @override
+  String get incident_choose_gallery => "Choisir depuis la galerie";
+
+  @override
+  String get incident_fire => "Incendie";
+
+  @override
+  String get incident_illegal_logging => "Coupe illégale";
+
+  @override
+  String get incident_disease => "Maladie";
+
+  @override
+  String get incident_other => "Autre";
+
+  @override
+  String get incident_pick_image => "Choisir une image";
+
+  @override
+  String get incident_submit => "Envoyer l'incident";
+
+  @override
+  String get incident_not_assigned =>
+      "Vous n'êtes pas assigné à une parcelle";
+
+  @override
+  String get incident_camera_location =>
+      "Assurez-vous que la localisation est activée";
+
+  @override
+  String get agent_home => "Accueil";
+
+  @override
+  String get agent_history => "Historique";
+
+  @override
+  String get agent_upload => "Télécharger";
 }

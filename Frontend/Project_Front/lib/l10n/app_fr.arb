@@ -147,4 +147,27 @@
   "supervisor_incident_map": "Carte des incidents",
   "supervisor_agent_list": "Liste des agents",
   "supervisor_profile": "Profil",
+
+  "incidents_status": "Statut",
+  "incidents_location": "Localisation",
+
+  "incident_upload": "Télécharger",
+  "incident_create_title": "Créer un incident",
+  "incident_take_photo": "Prendre une photo",
+  "incident_choose_gallery": "Choisir depuis la galerie",
+
+  "incident_fire": "Incendie",
+  "incident_illegal_logging": "Coupe illégale",
+  "incident_disease": "Maladie",
+  "incident_other": "Autre",
+
+  "incident_pick_image": "Choisir une image",
+  "incident_submit": "Envoyer l'incident",
+  "incident_not_assigned": "Vous n'êtes pas assigné à une parcelle",
+  "incident_camera_location": "Assurez-vous que la localisation est activée",
+
+
+  "agent_home": "Accueil",
+  "agent_history": "Historique",
+  "agent_upload": "Télécharger",
 }
