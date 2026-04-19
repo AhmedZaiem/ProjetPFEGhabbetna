@@ -22,6 +22,9 @@ Widget buildIncidentDetails(
   IncidentOut incident,
   VoidCallback refresh,
 ) {
+  TextEditingController commentController = TextEditingController(
+    text: incident.comment ?? '',
+  );
   return Column(
     mainAxisSize: MainAxisSize.min,
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,6 +88,7 @@ Widget buildIncidentDetails(
                     await supervisorServices.verifyIncident(
                       incident.id!,
                       'accepted',
+                      commentController.text.trim(),
                     );
                     Navigator.pop(context);
                     showDialog(
@@ -116,9 +120,16 @@ Widget buildIncidentDetails(
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
                 onPressed: () async {
                   try {
+                    if (commentController.text.trim().isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("Comment is required")),
+                      );
+                      return;
+                    }
                     await supervisorServices.verifyIncident(
                       incident.id!,
                       'not_accepted',
+                      commentController.text.trim(),
                     );
                     Navigator.pop(
                       context,
@@ -148,6 +159,18 @@ Widget buildIncidentDetails(
             ),
           ],
         ),
+
+      SizedBox(height: 12),
+
+      TextField(
+        enabled: true,
+        maxLines: 3,
+        decoration: InputDecoration(
+          labelText: 'Comment (required)',
+          border: OutlineInputBorder(),
+        ),
+        controller: commentController,
+      ),
     ],
   );
 }

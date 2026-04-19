@@ -84,11 +84,12 @@ async def get_incidents_by_forest_ids(request: Request, forest_ids: list[int] = 
 async def verify_incident(request: Request, incident_id: int):
     data = await request.json()
     status = data.get("status") 
+    comment = data.get("comment")
     headers = {}
 
-    if not incident_id or not status:
+    if not incident_id or not status or comment is None:
         return Response(
-            content='{"detail": "incident_id or status missing"}',
+            content='{"detail": "incident_id, status, or comment missing"}',
             status_code=400,
             media_type="application/json"
         )
@@ -99,7 +100,7 @@ async def verify_incident(request: Request, incident_id: int):
     async with httpx.AsyncClient() as client:
         response = await client.patch(
             f"{upload_incident_URL}/incidents/verify/{incident_id}",
-            json={"incident_id": incident_id, "status": status},
+            json={"incident_id": incident_id, "status": status, "comment": comment},
             headers=headers
 
         )

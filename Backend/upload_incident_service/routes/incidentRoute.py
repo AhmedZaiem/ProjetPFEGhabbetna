@@ -150,7 +150,8 @@ def get_forest_incidents(forest_ids: list[int]=Query(...), db: Session = Depends
 @router.patch("/verify/{incident_id}")
 def verify_incident_route(incident_id: int, body:VerifyIncidentBody, db: Session = Depends(get_db)):
     status = body.status
-    updated_incident = verify_incident(db, incident_id, status)
+    comment = body.comment
+    updated_incident = verify_incident(db, incident_id, status,comment)
     if not updated_incident:
         raise HTTPException(status_code=404, detail="Incident not found")
     return updated_incident

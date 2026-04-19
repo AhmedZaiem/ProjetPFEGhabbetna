@@ -57,12 +57,13 @@ def get_incidents_by_forest_ids(db: Session, forest_ids: list[int]):
     ).all()
 
 
-def verify_incident(db: Session, incident_id: int, new_status: Status):
+def verify_incident(db: Session, incident_id: int, new_status: Status, comment: str):
     incident = db.query(Incident).filter(Incident.id == incident_id).first()
     if not incident:
         return None
 
     incident.status = new_status
+    incident.comment = comment
     db.commit()
     db.refresh(incident)
 

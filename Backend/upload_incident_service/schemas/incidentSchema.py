@@ -15,6 +15,7 @@ class IncidentCreate(BaseModel):
 
 class VerifyIncidentBody(BaseModel):
     status: Status
+    comment: str
 
 
 

@@ -9,6 +9,7 @@ class IncidentOut {
   final double latitude;
   final double longitude;
   final String? status;
+  final String? comment;
   final int? forestId;
   final String? imageUrl;
 
@@ -21,6 +22,7 @@ class IncidentOut {
     required this.latitude,
     required this.longitude,
     this.status,
+    this.comment,
     this.forestId,
     required this.imageUrl,
   });
@@ -54,6 +56,7 @@ class IncidentOut {
       latitude: (json['latitude'] as num).toDouble(),
       longitude: (json['longitude'] as num).toDouble(),
       status: json['status'],
+      comment: json['comment'],
       forestId: json['forest_id'],
       imageUrl: fullImageUrl,
     );

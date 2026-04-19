@@ -39,11 +39,15 @@ class SupervisorServices {
     }
   }
 
-  Future<void> verifyIncident(int incidentId, String status) async {
+  Future<void> verifyIncident(
+    int incidentId,
+    String status,
+    String comment,
+  ) async {
     final response = await http.patch(
       Uri.parse('$baseUrl/incidents/verify/$incidentId'),
       headers: {'Content-Type': 'application/json'},
-      body: json.encode({'status': status}),
+      body: json.encode({'status': status, 'comment': comment}),
     );
     if (response.statusCode == 200) {
       print('Incident verified successfully');
