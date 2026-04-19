@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime,Enum
+from sqlalchemy import Column, Integer, String, DateTime,Enum,Text
 from sqlalchemy.sql import func
 from geoalchemy2 import Geometry
 from db.database import Base
@@ -14,6 +14,7 @@ class Incident(Base):
     location = Column(String, nullable=False, default="ras jabel")
     image_url = Column(String, nullable=False)
     status = Column(Enum(Status), default=Status.pending)
+    comment = Column(Text, nullable=True)
 
     coords = Column(Geometry(geometry_type="POINT",srid=4326),nullable=False)
 

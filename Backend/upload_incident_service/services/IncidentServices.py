@@ -40,6 +40,7 @@ def create_incident(db: Session, incident_data):
         "image_url": new_incident.image_url,
         "user_id": new_incident.user_id,
         "status": new_incident.status,
+        "comment": None,
         "created_at": new_incident.created_at.isoformat(),
         "forest_id": new_incident.forest_id
     }
@@ -74,6 +75,7 @@ def verify_incident(db: Session, incident_id: int, new_status: Status):
         "image_url": incident.image_url,
         "user_id": incident.user_id,
         "status": incident.status.value,
+        "comment": incident.comment,
         "created_at": incident.created_at.isoformat(),
         "forest_id": incident.forest_id
     }

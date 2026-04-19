@@ -97,7 +97,9 @@ def read_all_incidents(db: Session = Depends(get_db)):
             "longitude": point.x,
             "user_id": i.user_id,
             "forest_id": i.forest_id,
-            "status": i.status.value if i.status else None
+            "status": i.status.value if i.status else None,
+            "comment": i.comment
+
         })
     return result
 
@@ -118,7 +120,8 @@ def read_incidents_by_user(user_id: int, db: Session = Depends(get_db)):
             "longitude": point.x,
             "user_id": i.user_id,
             "forest_id": i.forest_id,
-            "status": i.status.value if i.status else None
+            "status": i.status.value if i.status else None,
+            "comment": i.comment
         })
     return result
 
@@ -139,7 +142,8 @@ def get_forest_incidents(forest_ids: list[int]=Query(...), db: Session = Depends
             "longitude": point.x,
             "user_id": i.user_id,
             "forest_id": i.forest_id,
-            "status": i.status.value if i.status else None
+            "status": i.status.value if i.status else None,
+            "comment": i.comment
         })
     return result
 
