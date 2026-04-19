@@ -49,7 +49,7 @@ def get_all_incidents(db: Session) -> List[Incident]:
     return db.query(Incident).all()
 
 def get_incidents_by_user(db: Session, user_id:int) -> List[Incident]:
-    return db.query(Incident).filter(Incident.user_id == user_id).all()
+    return db.query(Incident).filter(Incident.user_id == user_id).order_by(Incident.created_at.desc()).limit(15).all()
 
 def get_incidents_by_forest_ids(db: Session, forest_ids: list[int]):
     return db.query(Incident).filter(

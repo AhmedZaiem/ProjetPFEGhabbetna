@@ -6,6 +6,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../config.dart' as config;
 import 'package:http_parser/http_parser.dart';
+import 'package:authproject/features/Supervisor/models/incidentOut.dart';
 
 class IncidentService {
   final storage = FlutterSecureStorage();
@@ -57,9 +58,10 @@ class IncidentService {
     }
   }
 
-  Future<List<Incident>> getIncidentsByUserId(int userId) async {
+  Future<List<IncidentOut>> getIncidentsByUserId(int userId) async {
     String? token = await storage.read(key: "access_token");
-    if (token == null) return [];
+    if (token == null) throw Exception("User not authenticated");
+    ;
 
     final url = Uri.parse("$baseUrl/incidents/user/$userId");
 
@@ -74,9 +76,9 @@ class IncidentService {
 
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
-        return data.map((json) => Incident.fromJson(json)).toList();
+        return data.map((json) => IncidentOut.fromJson(json)).toList();
       } else {
-        return [];
+        throw Exception("Failed to fetch incidents: ${response.statusCode}");
       }
     } catch (e) {
       print("Error fetching incidents for user $userId: $e");
