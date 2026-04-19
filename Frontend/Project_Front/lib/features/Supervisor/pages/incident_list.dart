@@ -4,6 +4,7 @@ import 'package:authproject/features/Auth/services/auth_service.dart';
 import 'package:authproject/features/Supervisor/services/supervisor_services.dart';
 import 'package:flutter/material.dart';
 import 'package:authproject/features/Supervisor/models/incidentOut.dart';
+import 'package:authproject/l10n/app_localizations.dart';
 
 class IncidentList extends StatefulWidget {
   const IncidentList({super.key});
@@ -81,13 +82,15 @@ class _IncidentListState extends State<IncidentList> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
         title: Row(
           children: [
             Image.asset('assets/images/logoApp.jpeg', height: 80),
             const SizedBox(width: 12),
-            const Text("Incident List"),
+            Text(t.supervisor_incident_list),
           ],
         ),
       ),
@@ -108,9 +111,11 @@ class _IncidentListState extends State<IncidentList> {
                   5: FlexColumnWidth(2), // Location
                 },
                 defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                
                 children: [
                   // Header
-                  const TableRow(
+
+                  TableRow(
                     decoration: BoxDecoration(
                       color: Color.fromARGB(255, 212, 198, 198),
                     ),
@@ -118,7 +123,7 @@ class _IncidentListState extends State<IncidentList> {
                       Padding(
                         padding: EdgeInsets.all(8),
                         child: Text(
-                          "Description",
+                          t.admin_description,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 14,
@@ -128,7 +133,7 @@ class _IncidentListState extends State<IncidentList> {
                       Padding(
                         padding: EdgeInsets.all(8),
                         child: Text(
-                          "Type",
+                          t.admin_type,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 14,
@@ -138,7 +143,7 @@ class _IncidentListState extends State<IncidentList> {
                       Padding(
                         padding: EdgeInsets.all(8),
                         child: Text(
-                          "Region",
+                          t.admin_region,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 14,
@@ -148,7 +153,7 @@ class _IncidentListState extends State<IncidentList> {
                       Padding(
                         padding: EdgeInsets.all(8),
                         child: Text(
-                          "Status",
+                          t.incidents_status,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 14,
@@ -158,17 +163,7 @@ class _IncidentListState extends State<IncidentList> {
                       Padding(
                         padding: EdgeInsets.all(8),
                         child: Text(
-                          "Location",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(8),
-                        child: Text(
-                          "Id",
+                          t.incidents_location,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 14,
@@ -213,10 +208,7 @@ class _IncidentListState extends State<IncidentList> {
                             "${incident.latitude.toStringAsFixed(4)}, ${incident.longitude.toStringAsFixed(4)}",
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Text("${incident.id ?? 'N/A'}"),
-                        ),
+                        
                       ],
                     );
                   }).toList(),

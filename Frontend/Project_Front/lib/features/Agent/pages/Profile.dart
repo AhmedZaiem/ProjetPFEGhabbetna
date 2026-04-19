@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:authproject/features/Auth/services/auth_service.dart';
 import 'package:go_router/go_router.dart';
+import 'package:authproject/l10n/app_localizations.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -38,13 +39,15 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
         title: Row(
           children: [
             Image.asset('assets/images/logoApp.jpeg', height: 80),
             const SizedBox(width: 12),
-            const Text("Profile"),
+            Text(t.supervisor_profile),
           ],
         ),
       ),
@@ -74,19 +77,19 @@ class _ProfileState extends State<Profile> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("First Name: ${userData!['firstname']}"),
+                              Text("${t.admin_first_name}: ${userData!['firstname']}"),
                               SizedBox(height: 16),
-                              Text("Last Name: ${userData!['lastname']}"),
+                              Text("${t.admin_last_name}: ${userData!['lastname']}"),
                               SizedBox(height: 16),
-                              Text("Cin: ${userData!['cin']}"),
+                              Text("${t.admin_cin}: ${userData!['cin']}"),
                               SizedBox(height: 16),
-                              Text("Username: ${userData!['username']}"),
+                              Text("${t.admin_username}: ${userData!['username']}"),
                               SizedBox(height: 16),
-                              Text("Email: ${userData!['email']}"),
+                              Text("${t.admin_email}: ${userData!['email']}"),
                               SizedBox(height: 16),
-                              Text("Age: ${userData!['age']}"),
+                              Text("${t.admin_age}: ${userData!['age']}"),
                               SizedBox(height: 16),
-                              Text("Region: ${userData!['region']}"),
+                              Text("${t.admin_region}: ${userData!['region']}"),
                             ],
                           ),
                         ),
@@ -102,7 +105,7 @@ class _ProfileState extends State<Profile> {
                             padding: EdgeInsets.symmetric(vertical: 10),
                             textStyle: TextStyle(fontSize: 14),
                           ),
-                          child: Text("Logout"),
+                          child: Text(t.logout),
                         ),
                       ),
                     ],

@@ -144,15 +144,16 @@ class _UserListState extends State<UserList> {
                             },
                             children: [
                               
-                              const TableRow(
+                              TableRow(
                                 decoration: BoxDecoration(
                                   color: Color.fromARGB(255, 212, 198, 198),
                                 ),
+                                
                                 children: [
                                   Padding(
                                     padding: EdgeInsets.all(8),
                                     child: Text(
-                                      "Username",
+                                      t.admin_username,
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -161,7 +162,7 @@ class _UserListState extends State<UserList> {
                                   Padding(
                                     padding: EdgeInsets.all(8),
                                     child: Text(
-                                      "Email",
+                                      t.admin_email,
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -170,7 +171,7 @@ class _UserListState extends State<UserList> {
                                   Padding(
                                     padding: EdgeInsets.all(8),
                                     child: Text(
-                                      "Role",
+                                      t.admin_role_name,
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -179,7 +180,7 @@ class _UserListState extends State<UserList> {
                                   Padding(
                                     padding: EdgeInsets.all(8),
                                     child: Text(
-                                      "Age",
+                                      t.admin_age,
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -188,7 +189,7 @@ class _UserListState extends State<UserList> {
                                   Padding(
                                     padding: EdgeInsets.all(8),
                                     child: Text(
-                                      "Verified",
+                                      t.admin_verified,
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
@@ -198,7 +199,7 @@ class _UserListState extends State<UserList> {
                                   Padding(
                                     padding: EdgeInsets.all(8),
                                     child: Text(
-                                      "Actions",
+                                      t.admin_actions,
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,

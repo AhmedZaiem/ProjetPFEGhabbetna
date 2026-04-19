@@ -12,6 +12,8 @@ import 'package:exif/exif.dart';
 import 'dart:io';
 import 'package:authproject/features/Auth/services/auth_service.dart';
 
+import 'package:authproject/l10n/app_localizations.dart';
+
 class Upload extends StatefulWidget {
   const Upload({super.key});
 
@@ -46,8 +48,6 @@ class _UploadState extends State<Upload> {
     super.initState();
     loadUser();
   }
-
-  List<String> incidentTypes = ["Fire", "Illegal Logging", "Disease", "Other"];
 
   List<String> tunisianStates = [
     "Tunis",
@@ -203,8 +203,8 @@ class _UploadState extends State<Upload> {
         setState(() {
           _imageFile = null;
           _imageSource = null;
-          selectedType = null; // ✅ reset
-          selectedRegion = null; // ✅ reset
+          selectedType = null; // reset
+          selectedRegion = null; // reset
         });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -232,6 +232,7 @@ class _UploadState extends State<Upload> {
   }
 
   void showImageSourcePicker() {
+    final t = AppLocalizations.of(context)!;
     showModalBottomSheet(
       context: context,
       builder: (context) => SafeArea(
@@ -239,7 +240,7 @@ class _UploadState extends State<Upload> {
           children: [
             ListTile(
               leading: const Icon(Icons.camera_alt),
-              title: const Text('Take a photo'),
+              title: Text(t.incident_take_photo),
               onTap: () {
                 Navigator.pop(context);
                 pickImage(ImageSource.camera);
@@ -247,7 +248,7 @@ class _UploadState extends State<Upload> {
             ),
             ListTile(
               leading: const Icon(Icons.photo_library),
-              title: const Text('Choose from gallery'),
+              title: Text(t.incident_choose_gallery),
               onTap: () {
                 Navigator.pop(context);
                 pickImage(ImageSource.gallery);
@@ -261,10 +262,19 @@ class _UploadState extends State<Upload> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+
+    List<String> incidentTypes = [
+      t.incident_fire,
+      t.incident_illegal_logging,
+      t.incident_disease,
+      t.incident_other,
+    ];
+
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
-        appBar: AppBar(title: const Text("Upload"), centerTitle: true),
+        appBar: AppBar(title: Text(t.incident_upload), centerTitle: true),
         body: userData == null
             ? Center(
                 child: error != null
@@ -279,8 +289,8 @@ class _UploadState extends State<Upload> {
                 child: Center(
                   child: Column(
                     children: [
-                      const Text(
-                        "Create an Incident",
+                      Text(
+                        t.incident_create_title,
                         style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
@@ -294,8 +304,8 @@ class _UploadState extends State<Upload> {
                           children: [
                             TextFormField(
                               controller: _descriptionController,
-                              decoration: const InputDecoration(
-                                labelText: 'Description',
+                              decoration: InputDecoration(
+                                labelText: t.admin_description,
                                 border: OutlineInputBorder(),
                               ),
                               validator: (v) => v!.isEmpty ? "Required" : null,
@@ -305,7 +315,7 @@ class _UploadState extends State<Upload> {
                             DropdownButtonFormField<String>(
                               value: selectedType,
                               decoration: InputDecoration(
-                                labelText: 'Type',
+                                labelText: t.admin_type,
                                 prefixIcon: const Icon(Icons.category),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
@@ -329,8 +339,8 @@ class _UploadState extends State<Upload> {
 
                             TextFormField(
                               controller: _locationController,
-                              decoration: const InputDecoration(
-                                labelText: 'Location',
+                              decoration: InputDecoration(
+                                labelText: t.incidents_location,
                                 border: OutlineInputBorder(),
                               ),
                               validator: (v) => v!.isEmpty ? "Required" : null,
@@ -341,7 +351,7 @@ class _UploadState extends State<Upload> {
                             DropdownButtonFormField<String>(
                               value: selectedRegion,
                               decoration: InputDecoration(
-                                labelText: 'Region',
+                                labelText: t.admin_region,
                                 prefixIcon: const Icon(Icons.map),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
@@ -368,7 +378,7 @@ class _UploadState extends State<Upload> {
                                 ? TextButton.icon(
                                     onPressed: showImageSourcePicker,
                                     icon: const Icon(Icons.image),
-                                    label: const Text("Pick Image"),
+                                    label: Text(t.incident_pick_image),
                                   )
                                 : FutureBuilder(
                                     future: _imageFile!.readAsBytes(),
@@ -386,13 +396,13 @@ class _UploadState extends State<Upload> {
 
                             const SizedBox(height: 24),
 
-                            Text("Make sure camera location is enabled 📍"),
+                            Text(t.incident_camera_location),
 
                             const SizedBox(height: 24),
 
                             if (isAssigned == false)
-                              const Text(
-                                "You are not assigned to a parcelle",
+                              Text(
+                                t.incident_not_assigned,
                                 style: TextStyle(
                                   color: Colors.red,
                                   fontWeight: FontWeight.bold,
@@ -403,7 +413,7 @@ class _UploadState extends State<Upload> {
                               onPressed: (isAssigned ?? false)
                                   ? submitIncident
                                   : null,
-                              child: const Text("Submit Incident"),
+                              child: Text(t.incident_submit),
                             ),
                           ],
                         ),

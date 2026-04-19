@@ -138,5 +138,36 @@
   "admin_not_accepted_incidents": "الحوادث المرفوضة",
   "admin_total_users": "إجمالي المستخدمين",
   "admin_total_agents": "إجمالي الوكلاء",
-  "admin_total_supervisors": "إجمالي المشرفين"
+  "admin_total_supervisors": "إجمالي المشرفين",
+
+  "admin_verified": "موثّق",
+  "admin_actions": "الإجراءات",
+  "admin_view_parcels": "عرض القطع",
+
+  "supervisor_incident_list": "قائمة الحوادث",
+  "supervisor_incident_map": "خريطة الحوادث",
+  "supervisor_agent_list": "قائمة الأعوان",
+  "supervisor_profile": "الملف الشخصي",
+
+  "incidents_status": "الحالة",
+  "incidents_location": "الموقع",
+
+  "incident_upload": "رفع",
+  "incident_create_title": "إنشاء حادث",
+  "incident_take_photo": "التقاط صورة",
+  "incident_choose_gallery": "اختيار من المعرض",
+  
+  "incident_fire": "حريق",
+  "incident_illegal_logging": "قطع أشجار غير قانوني",
+  "incident_disease": "مرض",
+  "incident_other": "أخرى",
+
+  "incident_pick_image": "اختيار صورة",
+  "incident_submit": "إرسال الحادث",
+  "incident_not_assigned": "أنت غير معين لقطعة أرض",
+  "incident_camera_location": "تأكد من تفعيل موقع الكاميرا",
+
+  "agent_home": "الرئيسية",
+  "agent_history": "السجل",
+  "agent_upload": "رفع"
 }

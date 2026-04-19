@@ -151,19 +151,30 @@ class _AdminDashboardState extends State<AdminDashboard> {
                         destinations: [
                           _buildItem(t.admin_users_list, Icons.people),
                           _buildItem(t.admin_create_users, Icons.add),
-                          _buildItem(t.admin_manage_roles, Icons.account_box_sharp),
+                          _buildItem(
+                            t.admin_manage_roles,
+                            Icons.account_box_sharp,
+                          ),
                           _buildItem(t.admin_assign_supervisor, Icons.add),
                           _buildItem(t.admin_assign_agent, Icons.add),
                           _buildItem(t.admin_add_forests, Icons.forest),
-                          _buildItem(t.admin_forests_list, Icons.forest_outlined),
-                          _buildItem(t.admin_manage_services, Icons.medical_services),
-                          _buildItem(t.admin_manage_incidents, Icons.add_a_photo_outlined),
+                          _buildItem(
+                            t.admin_forests_list,
+                            Icons.forest_outlined,
+                          ),
+                          _buildItem(
+                            t.admin_manage_services,
+                            Icons.medical_services,
+                          ),
+                          _buildItem(
+                            t.admin_manage_incidents,
+                            Icons.add_a_photo_outlined,
+                          ),
                         ],
                       ),
                     ),
                   ),
 
-                  
                   _languageSelector(),
 
                   // Logout button
@@ -207,7 +218,18 @@ class _AdminDashboardState extends State<AdminDashboard> {
 
             const VerticalDivider(thickness: 1, width: 1),
 
-            Expanded(child: Center(child: _contentWidgets[_selectedIndex])),
+            Expanded(
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 400),
+                transitionBuilder: (child, animation) {
+                  return FadeTransition(opacity: animation, child: child);
+                },
+                child: Container(
+                  key: ValueKey(Localizations.localeOf(context)),
+                  child: Center(child: _contentWidgets[_selectedIndex]),
+                ),
+              ),
+            ),
           ],
         ),
       ),

@@ -253,6 +253,44 @@ abstract class AppLocalizations {
   String get admin_total_users;
   String get admin_total_agents;
   String get admin_total_supervisors;
+
+  // others
+  String get admin_verified;
+  String get admin_actions;
+  String get admin_view_parcels;
+
+  // supervisor menu
+  String get supervisor_incident_list;
+  String get supervisor_incident_map;
+  String get supervisor_agent_list;
+  String get supervisor_profile;
+
+
+  // incident
+  String get incidents_status;
+  String get incidents_location;
+
+  String get incident_upload;
+  String get incident_create_title;
+  String get incident_take_photo;
+  String get incident_choose_gallery;
+
+  /// incident types
+  String get incident_fire;
+  String get incident_illegal_logging;
+  String get incident_disease;
+  String get incident_other;
+
+  String get incident_pick_image;
+  String get incident_submit;
+
+  String get incident_not_assigned;
+  String get incident_camera_location;
+
+  // agent menu
+  String get agent_home;
+  String get agent_history;
+  String get agent_upload;
 }
 
 class _AppLocalizationsDelegate

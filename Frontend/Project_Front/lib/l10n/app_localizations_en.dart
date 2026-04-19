@@ -345,4 +345,78 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get admin_total_supervisors => "Total Supervisors";
+
+  @override
+  String get admin_verified => "Verified";
+
+  @override
+  String get admin_actions => "Actions";
+
+  @override
+  String get admin_view_parcels => "View Parcels";
+
+  @override
+  String get supervisor_incident_list => "Incident List";
+
+  @override
+  String get supervisor_incident_map => "Incident Map";
+
+  @override
+  String get supervisor_agent_list => "Agent List";
+
+  @override
+  String get supervisor_profile => "Profile";
+
+  @override
+  String get incidents_status => "Status";
+
+  @override
+  String get incidents_location => "Location";
+
+  @override
+  String get incident_upload => "Upload";
+
+  @override
+  String get incident_create_title => "Create an Incident";
+
+  @override
+  String get incident_take_photo => "Take a photo";
+
+  @override
+  String get incident_choose_gallery => "Choose from gallery";
+
+  @override
+  String get incident_fire => "Fire";
+
+  @override
+  String get incident_illegal_logging => "Illegal Logging";
+
+  @override
+  String get incident_disease => "Disease";
+
+  @override
+  String get incident_other => "Other";
+
+  @override
+  String get incident_pick_image => "Pick Image";
+
+  @override
+  String get incident_submit => "Submit Incident";
+
+  @override
+  String get incident_not_assigned =>
+      "You are not assigned to a parcelle";
+
+  @override
+  String get incident_camera_location =>
+      "Make sure camera location is enabled";
+
+  @override
+  String get agent_home => "Home";
+
+  @override
+  String get agent_history => "History";
+
+  @override
+  String get agent_upload => "Upload";
 }

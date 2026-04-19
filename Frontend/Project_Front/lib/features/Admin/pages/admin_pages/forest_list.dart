@@ -195,6 +195,8 @@ class _ForestListState extends State<ForestList> {
   }
 
   Widget _buildForestCard(Forest forest) {
+    final t = AppLocalizations.of(context)!;
+
     return Card(
       color: Colors.white,
       elevation: 4,
@@ -236,7 +238,7 @@ class _ForestListState extends State<ForestList> {
                 ElevatedButton.icon(
                   onPressed: () => showParcels(forest),
                   icon: const Icon(Icons.view_list),
-                  label: const Text("View Parcels"),
+                  label: Text(t.admin_view_parcels),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black,
                     padding: const EdgeInsets.symmetric(
