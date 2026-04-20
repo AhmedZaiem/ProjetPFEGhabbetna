@@ -216,23 +216,100 @@ class _AddServiceState extends State<AddService> {
 
                       Expanded(
                         child: ListView.builder(
+                          
                           itemCount: services.length,
                           itemBuilder: (context, index) {
                             final service = services[index];
 
                             return Card(
-                              child: ListTile(
-                                title: Text(service.name),
-                                subtitle: Text(
-                                  "${service.type} - ${service.description ?? ''}",
-                                ),
-                                onTap: () => fillFields(service),
-                                trailing: IconButton(
-                                  icon: const Icon(
-                                    Icons.delete,
-                                    color: Colors.red,
-                                  ),
-                                  onPressed: () => deleteService(service.id),
+                              margin: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 6,
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(12),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                   
+                                    Row(
+                                      children: [
+                                        const Icon(Icons.label, size: 18),
+                                        const SizedBox(width: 6),
+                                        Text(
+                                          "${loc.admin_name} : ",
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Text(service.name),
+                                      ],
+                                    ),
+
+                                    const SizedBox(height: 8),
+
+                                    
+                                    Row(
+                                      children: [
+                                        const Icon(Icons.category, size: 18),
+                                        const SizedBox(width: 6),
+                                        Text(
+                                          "${loc.admin_type} : ",
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Text(service.type),
+                                      ],
+                                    ),
+
+                                    const SizedBox(height: 8),
+
+                                    
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Icon(Icons.description, size: 18),
+                                        const SizedBox(width: 6),
+                                        Text(
+                                          "${loc.admin_description} : ",
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: Text(
+                                            service.description ?? '',
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+
+                                    const SizedBox(height: 12),
+
+                                    
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        IconButton(
+                                          icon: const Icon(
+                                            Icons.edit,
+                                            color: Colors.blue,
+                                          ),
+                                          onPressed: () => fillFields(service),
+                                        ),
+                                        IconButton(
+                                          icon: const Icon(
+                                            Icons.delete,
+                                            color: Colors.red,
+                                          ),
+                                          onPressed: () =>
+                                              deleteService(service.id),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
                               ),
                             );

@@ -7,6 +7,7 @@ class Incident {
   final double longitude;
   final String? status;
   final int? forestId;
+  final String? imageUrl;
 
   Incident({
     required this.description,
@@ -17,6 +18,7 @@ class Incident {
     required this.longitude,
     this.status,
     this.forestId,
+    this.imageUrl,
   });
 
   Map<String, String> toFields() {
@@ -42,6 +44,7 @@ class Incident {
       longitude: json['longitude'],
       status: json['status'],
       forestId: json['forest_id'],
+      imageUrl: json['image_url'],
     );
   }
 }

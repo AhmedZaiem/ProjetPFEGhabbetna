@@ -139,6 +139,15 @@ class _CreateUserState extends State<Create_User> {
     final loc = AppLocalizations.of(context)!;
 
     return Scaffold(
+      appBar: AppBar(
+        title: Row(
+          children: [
+            Image.asset('assets/images/logoApp.jpeg', height: 80),
+            const SizedBox(width: 12),
+            Text(loc.admin_create_account),
+          ],
+        ),
+      ),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
@@ -148,7 +157,7 @@ class _CreateUserState extends State<Create_User> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
-                  width: 350,
+                  constraints: const BoxConstraints(maxWidth: 700),
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     color: Colors.white,

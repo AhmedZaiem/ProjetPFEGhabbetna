@@ -59,6 +59,8 @@ class _ForestListState extends State<ForestList> {
   }
 
   void showParcels(Forest forest) {
+    final t = AppLocalizations.of(context)!;
+
     final relatedParcels = parcels
         .where((p) => p.forestId == forest.id)
         .toList();
@@ -66,31 +68,77 @@ class _ForestListState extends State<ForestList> {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: Text("Parcels of ${forest.name}"),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+
+        title: Row(
+          children: [
+            const Icon(Icons.map, color: Color.fromARGB(255, 0, 0, 0)),
+            const SizedBox(width: 8),
+            Expanded(child: Text("Parcels of ${forest.name}")),
+          ],
+        ),
+
         content: SizedBox(
-          width: 400,
+          width: 420,
           child: relatedParcels.isEmpty
-              ? const Text("No parcels found")
+              ? Row(
+                  children: const [
+                    Icon(Icons.info_outline, color: Colors.grey),
+                    SizedBox(width: 8),
+                    Text("No parcels found"),
+                  ],
+                )
               : ListView.builder(
                   shrinkWrap: true,
                   itemCount: relatedParcels.length,
                   itemBuilder: (_, index) {
                     final parcel = relatedParcels[index];
-                    return ListTile(
-                      title: Text(parcel.name),
-                      subtitle: Text("Area: ${parcel.areaHectares} ha"),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.delete, color: Colors.red),
-                        onPressed: () => deleteParcel(parcel.id),
+
+                    return Container(
+                      margin: const EdgeInsets.symmetric(vertical: 6),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[100],
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: ListTile(
+                        leading: const Icon(
+                          Icons.landscape,
+                          color: Color.fromARGB(255, 0, 0, 0),
+                        ),
+
+                        title: Text(
+                          parcel.name,
+                          style: const TextStyle(fontWeight: FontWeight.w600),
+                        ),
+
+                        subtitle: Row(
+                          children: [
+                            const Icon(
+                              Icons.straighten,
+                              size: 16,
+                              color: Colors.blueGrey,
+                            ),
+                            const SizedBox(width: 4),
+                            Text("${t.admin_area}: ${parcel.areaHectares} ha"),
+                          ],
+                        ),
+
+                        trailing: IconButton(
+                          icon: const Icon(Icons.delete, color: Colors.red),
+                          onPressed: () => deleteParcel(parcel.id),
+                        ),
                       ),
                     );
                   },
                 ),
         ),
+
+
         actions: [
-          TextButton(
+          TextButton.icon(
             onPressed: () => Navigator.pop(context),
-            child: const Text("Close"),
+            icon: const Icon(Icons.close),
+            label: const Text("Close"),
           ),
         ],
       ),
@@ -207,31 +255,96 @@ class _ForestListState extends State<ForestList> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              forest.name,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
-                color: Colors.black,
-              ),
+            Row(
+              children: [
+                const Icon(
+                  Icons.park,
+                  color: Color.fromARGB(255, 0, 0, 0),
+                  size: 20,
+                ),
+                const SizedBox(width: 6),
+                Expanded(
+                  child: Text(
+                    "${t.admin_name} : ${forest.name}",
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 6),
+
+            const SizedBox(height: 8),
+
             if (forest.description != null && forest.description!.isNotEmpty)
-              Text(
-                forest.description!,
-                style: const TextStyle(color: Colors.black54, fontSize: 14),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Icon(Icons.description, color: Colors.grey, size: 18),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: Text(
+                      "${t.admin_description} : ${forest.description!}",
+                      style: const TextStyle(
+                        color: Colors.black54,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                ],
               ),
+
+            const SizedBox(height: 8),
+
+            Row(
+              children: [
+                const Icon(
+                  Icons.location_on,
+                  color: Colors.redAccent,
+                  size: 18,
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  "${t.admin_region} : ${forest.region}",
+                  style: const TextStyle(fontSize: 14, color: Colors.black),
+                ),
+              ],
+            ),
+
             const SizedBox(height: 6),
-            Text(
-              "Area: ${forest.areaHectares} ha",
-              style: const TextStyle(fontSize: 14, color: Colors.black),
+
+            Row(
+              children: [
+                const Icon(Icons.straighten, color: Colors.blueGrey, size: 18),
+                const SizedBox(width: 6),
+                Text(
+                  "${t.admin_area} : ${forest.areaHectares} ha",
+                  style: const TextStyle(fontSize: 14, color: Colors.black),
+                ),
+              ],
             ),
-            const SizedBox(height: 4),
-            Text(
-              "Risk: ${forest.riskLevel}",
-              style: const TextStyle(fontSize: 14, color: Colors.black),
+
+            const SizedBox(height: 6),
+
+            Row(
+              children: [
+                const Icon(
+                  Icons.warning_amber_rounded,
+                  color: Color.fromARGB(255, 67, 51, 28),
+                  size: 18,
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  "${t.admin_risk} : ${forest.riskLevel}",
+                  style: const TextStyle(fontSize: 14, color: Colors.black),
+                ),
+              ],
             ),
-            const SizedBox(height: 12),
+
+            const SizedBox(height: 14),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -241,6 +354,7 @@ class _ForestListState extends State<ForestList> {
                   label: Text(t.admin_view_parcels),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black,
+                    foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(
                       horizontal: 16,
                       vertical: 12,
@@ -250,7 +364,9 @@ class _ForestListState extends State<ForestList> {
                     ),
                   ),
                 ),
+
                 const SizedBox(width: 8),
+
                 IconButton(
                   icon: const Icon(Icons.delete, color: Colors.red),
                   onPressed: () => deleteForest(forest.id),

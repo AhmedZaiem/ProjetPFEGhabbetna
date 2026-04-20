@@ -169,5 +169,17 @@
 
   "agent_home": "Accueil",
   "agent_history": "Historique",
-  "agent_upload": "Télécharger"
+  "agent_upload": "Télécharger",
+
+  "admin_total_active_users" : "Utilisateurs actifs",
+
+  "admin_unassigned" : "Non assignés",
+
+  "admin_risk" : "Risque",
+  "admin_area" : "Superficie",
+
+  "admin_Coordinates" => "Coordonnées",
+  "admin_Location" => "Localisation",
+
+  "admin_view_image" => "Voir l’image",
 }

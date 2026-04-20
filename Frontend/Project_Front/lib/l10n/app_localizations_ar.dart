@@ -419,4 +419,25 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get agent_upload => "رفع";
+
+  @override
+  String get admin_total_active_users => "المستخدمون النشطون";
+
+  @override
+  String get admin_unassigned => "غير مُعيَّنين";
+
+  @override
+  String get admin_risk => "الخطر";
+
+  @override
+  String get admin_area =>"المساحة";
+
+  @override
+  String get admin_Coordinates => "الإحداثيات";
+
+  @override
+  String get admin_Location => "الموقع" ;
+
+  @override
+  String get admin_view_image => "عرض الصورة";
 }

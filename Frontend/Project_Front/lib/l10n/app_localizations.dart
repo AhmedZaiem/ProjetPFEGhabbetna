@@ -200,6 +200,9 @@ abstract class AppLocalizations {
   String get admin_forest_region;
   String get admin_parcel_region;
 
+  String get admin_risk;
+  String get admin_area;
+
   String get admin_undo;
   String get admin_save;
 
@@ -231,6 +234,8 @@ abstract class AppLocalizations {
   String get admin_assigned_supervisors;
   String get admin_no_supervisors_assigned;
 
+  String get admin_unassigned;
+
   // menu admin dashboard
   String get admin_users_list;
   String get admin_create_users;
@@ -253,6 +258,7 @@ abstract class AppLocalizations {
   String get admin_total_users;
   String get admin_total_agents;
   String get admin_total_supervisors;
+  String get admin_total_active_users;
 
   // others
   String get admin_verified;
@@ -291,6 +297,10 @@ abstract class AppLocalizations {
   String get agent_home;
   String get agent_history;
   String get agent_upload;
+
+  String get admin_Coordinates;
+  String get admin_Location;
+  String get admin_view_image;
 }
 
 class _AppLocalizationsDelegate

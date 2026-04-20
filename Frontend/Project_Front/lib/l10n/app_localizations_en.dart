@@ -419,4 +419,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get agent_upload => "Upload";
+
+  @override
+  String get admin_total_active_users => "Active Users";
+
+  @override
+  String get admin_unassigned => "unassigned";
+
+  @override
+  String get admin_risk => "Risk";
+
+  @override
+  String get admin_area =>"Area";
+
+  @override
+  String get admin_Coordinates => "Coordinates";
+
+  @override
+  String get admin_Location => "Location" ;
+
+  @override
+  String get admin_view_image => "View Image";
 }

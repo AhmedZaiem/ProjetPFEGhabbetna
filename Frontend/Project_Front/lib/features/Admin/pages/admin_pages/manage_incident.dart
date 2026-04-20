@@ -62,6 +62,44 @@ class _ManageIncidentState extends State<ManageIncident> {
     );
   }
 
+  void _showImageDialog(String imageUrl) {
+    showDialog(
+      context: context,
+      builder: (_) => Dialog(
+        backgroundColor: Colors.white,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxHeight: 500, maxWidth: 400),
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Flexible(
+                  child: SingleChildScrollView(
+                    child: Image.network(
+                      imageUrl,
+                      fit: BoxFit.contain,
+                      errorBuilder: (context, error, stackTrace) =>
+                          const Text("Failed to load image"),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text("Close"),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
@@ -115,7 +153,7 @@ class _ManageIncidentState extends State<ManageIncident> {
                       t.admin_pending_incidents,
                       pendingIncidents.toString(),
                       Icons.verified,
-                      const Color.fromARGB(255, 0, 128, 0),
+                      const Color.fromARGB(255, 0, 0, 0),
                     ),
                     const SizedBox(width: 12),
                     _buildCard(
@@ -140,8 +178,9 @@ class _ManageIncidentState extends State<ManageIncident> {
                   itemCount: incidents.length,
                   itemBuilder: (context, index) {
                     final incident = incidents[index];
+
                     return Card(
-                      color: const Color(0xFF1B5E20),
+                      color: Colors.white,
                       margin: const EdgeInsets.symmetric(
                         horizontal: 12,
                         vertical: 6,
@@ -155,13 +194,10 @@ class _ManageIncidentState extends State<ManageIncident> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Type with icon
+                            // ================= TYPE =================
                             Row(
                               children: [
-                                const Icon(
-                                  Icons.warning,
-                                  color: Colors.yellowAccent,
-                                ),
+                                const Icon(Icons.warning, color: Colors.red),
                                 const SizedBox(width: 8),
                                 Expanded(
                                   child: Text(
@@ -169,68 +205,134 @@ class _ManageIncidentState extends State<ManageIncident> {
                                     style: const TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.white,
+                                      color: Colors.black,
                                     ),
                                   ),
                                 ),
                               ],
                             ),
+
+                            const SizedBox(height: 12),
+
+                            // ================= DESCRIPTION =================
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Icon(
+                                  Icons.description,
+                                  size: 18,
+                                  color: Colors.black,
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  "${t.admin_description} : ",
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    incident.description,
+                                    style: const TextStyle(color: Colors.black),
+                                  ),
+                                ),
+                              ],
+                            ),
+
                             const SizedBox(height: 8),
 
-                            // Description
-                            Text(
-                              incident.description,
-                              style: const TextStyle(color: Colors.white70),
-                            ),
-                            const SizedBox(height: 6),
-
-                            // Location with icon
+                            // ================= LOCATION =================
                             Row(
                               children: [
                                 const Icon(
-                                  Icons.location_on,
-                                  size: 16,
-                                  color: Colors.white70,
+                                  Icons.place,
+                                  size: 18,
+                                  color: Colors.black,
                                 ),
-                                const SizedBox(width: 4),
+                                const SizedBox(width: 8),
+                                Text(
+                                  "${t.admin_Location} : ",
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
                                 Expanded(
                                   child: Text(
-                                    '${incident.location}, ${incident.region}',
-                                    style: const TextStyle(
-                                      color: Colors.white70,
-                                    ),
+                                    incident.location,
+                                    style: const TextStyle(color: Colors.black),
                                   ),
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 4),
 
-                            // Coordinates
+                            const SizedBox(height: 8),
+
+                            // ================= REGION =================
                             Row(
                               children: [
                                 const Icon(
                                   Icons.map,
-                                  size: 16,
-                                  color: Colors.white70,
+                                  size: 18,
+                                  color: Colors.black,
                                 ),
-                                const SizedBox(width: 4),
+                                const SizedBox(width: 6),
                                 Text(
-                                  '${incident.latitude.toStringAsFixed(6)}, ${incident.longitude.toStringAsFixed(6)}',
-                                  style: const TextStyle(color: Colors.white70),
+                                  "${t.admin_region} : ",
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    incident.region,
+                                    style: const TextStyle(color: Colors.black),
+                                  ),
                                 ),
                               ],
                             ),
 
-                            // Status tag
-                            if (incident.status != null) ...[
-                              const SizedBox(height: 8),
+                            const SizedBox(height: 8),
+
+                            // ================= COORDINATES =================
+                            Row(
+                              children: [
+                                const Icon(
+                                  Icons.location_on,
+                                  size: 18,
+                                  color: Colors.black,
+                                ),
+                                const SizedBox(width: 6),
+                                Text(
+                                  "${t.admin_Coordinates} : ",
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    "${incident.latitude.toStringAsFixed(6)}, "
+                                    "${incident.longitude.toStringAsFixed(6)}",
+                                    style: const TextStyle(color: Colors.black),
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            const SizedBox(height: 12),
+
+                            // ================= STATUS =================
+                            if (incident.status != null)
                               Container(
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 10,
                                   vertical: 6,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: Colors.black87,
+                                  color: Colors.black,
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: Text(
@@ -241,7 +343,27 @@ class _ManageIncidentState extends State<ManageIncident> {
                                   ),
                                 ),
                               ),
-                            ],
+
+                            if (incident.imageUrl != null &&
+                                incident.imageUrl!.isNotEmpty)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 12),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    ElevatedButton.icon(
+                                      onPressed: () =>
+                                          _showImageDialog(incident.imageUrl!),
+                                      icon: const Icon(Icons.image),
+                                      label: Text(t.admin_view_image),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.black,
+                                        foregroundColor: Colors.white,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                           ],
                         ),
                       ),

@@ -168,5 +168,18 @@
 
   "agent_home": "Home",
   "agent_history": "History",
-  "agent_upload": "Upload"
+  "agent_upload": "Upload",
+
+  "admin_total_active_users" : "Active Users",
+
+  "admin_unassigned" : "unassigned",
+
+  "admin_risk" : "Risk",
+  "admin_area" : "Area",
+
+  "admin_Coordinates" => "Coordinates",
+  "admin_Location" => "Location",
+
+  "admin_view_image" => "View Image",
+
 }

@@ -169,5 +169,17 @@
 
   "agent_home": "الرئيسية",
   "agent_history": "السجل",
-  "agent_upload": "رفع"
+  "agent_upload": "رفع",
+
+  "admin_total_active_users" : "المستخدمون النشطون",
+
+  "admin_unassigned" : "غير مُعيَّنين",
+
+  "admin_risk" : "الخطر",
+  "admin_area" : "المساحة",
+
+  "admin_Coordinates" => "الإحداثيات",
+  "admin_Location" => "الموقع",
+
+  "admin_view_image" => "عرض الصورة",
 }
