@@ -178,8 +178,8 @@
   "admin_risk" : "الخطر",
   "admin_area" : "المساحة",
 
-  "admin_Coordinates" => "الإحداثيات",
-  "admin_Location" => "الموقع",
+  "admin_Coordinates" : "الإحداثيات",
+  "admin_Location" : "الموقع",
 
-  "admin_view_image" => "عرض الصورة",
+  "admin_view_image" : "عرض الصورة"
 }

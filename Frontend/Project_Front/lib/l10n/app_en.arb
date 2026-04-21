@@ -177,9 +177,9 @@
   "admin_risk" : "Risk",
   "admin_area" : "Area",
 
-  "admin_Coordinates" => "Coordinates",
-  "admin_Location" => "Location",
+  "admin_Coordinates" : "Coordinates",
+  "admin_Location" : "Location",
 
-  "admin_view_image" => "View Image",
+  "admin_view_image" : "View Image"
 
 }

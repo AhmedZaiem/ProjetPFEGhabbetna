@@ -1,13 +1,13 @@
 import 'package:authproject/features/Admin/models/incident.dart';
 import 'package:authproject/config.dart' as config;
+import 'package:authproject/features/Supervisor/models/incidentOut.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class IncidentService {
   final String baseUrl = config.baseUrl;
 
-
-  Future<List<Incident>> getAllIncidents() async {
+  Future<List<IncidentOut>> getAllIncidents() async {
     final response = await http.get(
       Uri.parse('$baseUrl/incidents/'),
       headers: {"Content-Type": "application/json"},
@@ -15,7 +15,7 @@ class IncidentService {
 
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
-      return data.map((json) => Incident.fromJson(json)).toList();
+      return data.map((json) => IncidentOut.fromJson(json)).toList();
     } else {
       throw Exception(
         jsonDecode(response.body)["detail"] ?? "Failed to fetch incidents",

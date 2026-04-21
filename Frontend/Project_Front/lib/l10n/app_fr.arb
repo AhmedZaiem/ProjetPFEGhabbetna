@@ -178,8 +178,8 @@
   "admin_risk" : "Risque",
   "admin_area" : "Superficie",
 
-  "admin_Coordinates" => "Coordonnées",
-  "admin_Location" => "Localisation",
+  "admin_Coordinates" : "Coordonnées",
+  "admin_Location" : "Localisation",
 
-  "admin_view_image" => "Voir l’image",
+  "admin_view_image" : "Voir l’image"
 }

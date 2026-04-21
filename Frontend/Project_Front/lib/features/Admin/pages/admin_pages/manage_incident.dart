@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:authproject/features/Admin/models/incident.dart';
 import 'package:authproject/features/Admin/services/incident_service.dart';
-
+import 'package:authproject/features/Supervisor/models/incidentOut.dart';
 import 'package:authproject/l10n/app_localizations.dart';
 
 class ManageIncident extends StatefulWidget {
@@ -13,7 +13,7 @@ class ManageIncident extends StatefulWidget {
 
 class _ManageIncidentState extends State<ManageIncident> {
   final IncidentService _incidentService = IncidentService();
-  late Future<List<Incident>> _incidentsFuture;
+  late Future<List<IncidentOut>> _incidentsFuture;
 
   @override
   void initState() {
@@ -113,7 +113,7 @@ class _ManageIncidentState extends State<ManageIncident> {
           ],
         ),
       ),
-      body: FutureBuilder<List<Incident>>(
+      body: FutureBuilder<List<IncidentOut>>(
         future: _incidentsFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
