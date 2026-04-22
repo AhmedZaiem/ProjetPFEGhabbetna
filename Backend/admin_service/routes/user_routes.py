@@ -3,9 +3,9 @@ from typing import List
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from db.database import get_db
-from schemas.userSchema import UserOut
+from schemas.userSchema import UserOut , UserUpdate
 from schemas.role_schema import RoleCreate , RoleDelete , RoleModify
-from services.user_service import get_user_by_email, create_user,get_current_user,get_all_users,block_user,unblock_user,create_role,get_roles,delete_role,modify_role,get_non_assigned_agents,get_all_supervisors
+from services.user_service import get_all_users,block_user,unblock_user,create_role,get_roles,delete_role,modify_role,get_non_assigned_agents,get_all_supervisors,update_user
 from core.security import hash_password, verify_password,create_access_token
 
 router = APIRouter(prefix="/users", tags=["User"])
@@ -15,6 +15,25 @@ def read_users(
     db: Session = Depends(get_db)
 ):
     return get_all_users(db)
+
+@router.put("/{user_id}", response_model=UserOut)
+def update_user_route(
+    user_id: int,
+    user: UserUpdate,
+    db: Session = Depends(get_db)
+):
+    return update_user(
+        db,
+        user_id,
+        user.firstname,
+        user.lastname,
+        user.cin,
+        user.username,
+        user.email,
+        user.role_name,
+        user.age,
+        user.region,
+    )
 
 
 

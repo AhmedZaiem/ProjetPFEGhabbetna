@@ -71,6 +71,51 @@ class UserService {
     }
   }
 
+  Future<Map<String, dynamic>> updateUser({
+    required int userId,
+    required String firstname,
+    required String lastname,
+    required String cin,
+    required String username,
+    required String email,
+    required int age,
+    required String roleName,
+    required String region,
+  }) async {
+    try {
+      var url = Uri.parse("$baseUrl/auth/$userId"); 
+
+      var response = await http.put(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          'firstname': firstname,
+          'lastname': lastname,
+          'cin': cin,
+          'username': username,
+          'email': email,
+          'age': age,
+          'role_name': roleName,
+          'region': region,
+        }),
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        return {
+          "success": true,
+          "message": "User updated successfully",
+          "data": data,
+        };
+      } else {
+        return {"success": false, "message": data["detail"] ?? "Update failed"};
+      }
+    } catch (e) {
+      return {"success": false, "message": "Error: $e"};
+    }
+  }
+
   Future<void> blockUser(int userId) async {
     try {
       var url = Uri.parse("$baseUrl/auth/users/$userId/block");

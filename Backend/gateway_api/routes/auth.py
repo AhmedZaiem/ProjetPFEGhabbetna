@@ -279,3 +279,25 @@ async def get_supervisors(request: Request):
         status_code=response.status_code,
         media_type="application/json"
     )
+
+@router.put("/{user_id}")
+async def update_user(request: Request, user_id: int):
+    headers = {}
+    auth = request.headers.get("Authorization")
+    if auth:
+        headers["Authorization"] = auth
+
+    body = await request.json()
+
+    async with httpx.AsyncClient() as client:
+        response = await client.put(
+            f"{Admin_SERVICE_URL}/users/{user_id}",
+            json=body,
+            headers=headers
+        )
+
+    return Response(
+        content=response.content,
+        status_code=response.status_code,
+        media_type="application/json"
+    )

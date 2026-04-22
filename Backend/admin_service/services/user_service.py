@@ -73,6 +73,54 @@ def get_all_users(db: Session):
         for u in users
     ]
 
+def update_user(
+    db: Session,
+    user_id: int,
+    firstname: str,
+    lastname: str,
+    cin: str,
+    username: str,
+    email: str,
+    role_name: str,
+    age: int,
+    region: str,
+):
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    role = db.query(Role).filter(Role.name == role_name).first()
+    if not role:
+        raise HTTPException(status_code=400, detail="Invalid role")
+
+    # Update fields
+    user.firstname = firstname
+    user.lastname = lastname
+    user.cin = cin
+    user.username = username
+    user.email = email
+    user.age = age
+    user.region = region
+    user.role_id = role.id
+
+    db.commit()
+    db.refresh(user)
+
+    return {
+        "id": user.id,
+        "firstname": user.firstname,
+        "lastname": user.lastname,
+        "cin": user.cin,
+        "username": user.username,
+        "email": user.email,
+        "age": user.age,
+        "region": user.region,
+        "role_name": role.name,
+        "is_verified": user.is_verified,
+        "is_blocked": user.is_blocked
+    }
+
+
 def block_user(db: Session, user_id: int):
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
