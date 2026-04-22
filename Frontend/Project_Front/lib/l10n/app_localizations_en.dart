@@ -440,4 +440,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get admin_view_image => "View Image";
+
+  @override
+  String get admin_cancel => "Cancel";
 }

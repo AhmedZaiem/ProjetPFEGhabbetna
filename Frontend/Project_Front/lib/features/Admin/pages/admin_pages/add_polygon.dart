@@ -125,6 +125,7 @@ class _AddPolygonPageState extends State<AddPolygonPage> {
           ),
         );
       }
+
       /// success message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

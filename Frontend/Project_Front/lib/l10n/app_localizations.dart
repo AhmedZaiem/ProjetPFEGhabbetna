@@ -301,6 +301,8 @@ abstract class AppLocalizations {
   String get admin_Coordinates;
   String get admin_Location;
   String get admin_view_image;
+
+  String get admin_cancel;
 }
 
 class _AppLocalizationsDelegate

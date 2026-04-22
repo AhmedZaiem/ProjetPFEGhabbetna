@@ -128,17 +128,18 @@ class _UserListState extends State<UserList> {
 
               title: Column(
                 children: [
-                  Image.asset('assets/images/logoApp.jpeg', height: 60),
+                  Image.asset('assets/images/logoApp.jpeg', height: 70),
                   const SizedBox(height: 10),
                   Text(loc.admin_update),
                 ],
               ),
-
+              
               content: SizedBox(
                 width: 400,
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
+                      const SizedBox(height: 8),
                       TextField(
                         controller: firstnameController,
                         decoration: InputDecoration(
@@ -230,7 +231,7 @@ class _UserListState extends State<UserList> {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: Text(loc.admin_clear),
+                  child: Text(loc.admin_cancel),
                 ),
                 ElevatedButton(
                   onPressed: () async {
@@ -249,7 +250,7 @@ class _UserListState extends State<UserList> {
                     Navigator.pop(context);
 
                     _showDialog(
-                      result["success"] ? "Success" : "Error",
+                      result["success"] ? loc.admin_success : loc.admin_error,
                       result["message"],
                     );
 
@@ -273,8 +274,8 @@ class _UserListState extends State<UserList> {
       appBar: AppBar(
         title: Row(
           children: [
-            Image.asset('assets/images/logoApp.jpeg', height: 60),
-            const SizedBox(width: 10),
+            Image.asset('assets/images/logoApp.jpeg', height: 80),
+            const SizedBox(width: 12),
             Text(t.admin_users_list),
           ],
         ),
