@@ -19,6 +19,7 @@ class Incident(Base):
     coords = Column(Geometry(geometry_type="POINT",srid=4326),nullable=False)
 
     created_at = Column(DateTime, nullable=False, server_default=func.now())
+    expires_at = Column(DateTime, nullable=False)
 
     user_id = Column(Integer)
     forest_id = Column(Integer, nullable=False)

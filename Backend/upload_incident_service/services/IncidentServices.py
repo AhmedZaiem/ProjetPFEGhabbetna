@@ -1,11 +1,14 @@
 from typing import List
 import re
+from datetime import datetime, timedelta
 from db.database import get_db
 from models.incident import Incident
 from models.status_enum import Status
 from sqlalchemy.orm import Session
 from shapely.geometry import Point
 from geoalchemy2.shape import from_shape
+
+
 
 def safe_filename(filename: str) -> str:
     filename = re.sub(r"[^a-zA-Z0-9_-]","_", filename)
@@ -26,7 +29,8 @@ def create_incident(db: Session, incident_data):
         image_url=incident_data.image_url,
         user_id=incident_data.user_id,
         forest_id=incident_data.forest_id,
-        coords=point
+        coords=point,
+        expires_at=datetime.now() + timedelta(hours=24)
     )
     db.add(new_incident)
     db.commit()
@@ -53,7 +57,8 @@ def get_incidents_by_user(db: Session, user_id:int) -> List[Incident]:
 
 def get_incidents_by_forest_ids(db: Session, forest_ids: list[int]):
     return db.query(Incident).filter(
-        Incident.forest_id.in_(forest_ids)
+        Incident.forest_id.in_(forest_ids),
+        Incident.expires_at > datetime.now()
     ).all()
 
 
