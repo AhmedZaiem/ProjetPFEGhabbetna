@@ -24,6 +24,33 @@ class AddPolygonPage extends StatefulWidget {
 class _AddPolygonPageState extends State<AddPolygonPage> {
   PolygonMode mode = PolygonMode.forest;
 
+  final List<String> tunisianStates = [
+    "Tunis",
+    "Ariana",
+    "BenArous",
+    "Manouba",
+    "Nabeul",
+    "Zaghouan",
+    "Bizerte",
+    "Béja",
+    "Jendouba",
+    "Kef",
+    "Siliana",
+    "Sousse",
+    "Monastir",
+    "Mahdia",
+    "Sfax",
+    "Kairouan",
+    "Kasserine",
+    "SidiBouzid",
+    "Gabès",
+    "Medenine",
+    "Tataouine",
+    "Gafsa",
+    "Tozeur",
+    "Kebili",
+  ];
+
   final TextEditingController nameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController regionController = TextEditingController();
@@ -226,19 +253,58 @@ class _AddPolygonPageState extends State<AddPolygonPage> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  TextField(
-                    controller: regionController,
+
+                  DropdownButtonFormField<String>(
+                    value: regionController.text.isEmpty
+                        ? null
+                        : regionController.text,
+
+                    isExpanded:
+                        true, // prevents overflow issues but keeps clean layout
+                    isDense: true,
+
+                    menuMaxHeight: 250, 
+
+                    itemHeight: 48, 
+
                     decoration: InputDecoration(
                       labelText: mode == PolygonMode.forest
                           ? t.admin_forest_region
                           : t.admin_parcel_region,
-                      prefixIcon: Icon(
-                        mode == PolygonMode.forest ? Icons.forest : Icons.map,
-                      ),
+
+                      prefixIcon: const Icon(Icons.location_city),
+
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
+
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 10,
+                      ),
                     ),
+
+                    icon: const Icon(Icons.arrow_drop_down_circle_outlined),
+
+                    dropdownColor: Colors.white,
+
+                    items: tunisianStates
+                        .map(
+                          (s) => DropdownMenuItem(
+                            value: s,
+                            child: Text(
+                              s,
+                              style: const TextStyle(fontSize: 14),
+                            ),
+                          ),
+                        )
+                        .toList(),
+
+                    onChanged: (value) {
+                      setState(() {
+                        regionController.text = value ?? "";
+                      });
+                    },
                   ),
                   const SizedBox(height: 10),
                   if (mode == PolygonMode.forest)

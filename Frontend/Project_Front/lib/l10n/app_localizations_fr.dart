@@ -446,4 +446,28 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get admin_cancel => "Annuler";
+
+  @override
+  String get agent_hello => "Bonjour";
+
+  @override
+  String get agent_score => "Score";
+
+  @override
+  String get agent_pending => "En attente";
+
+  @override
+  String get agent_accepted => "Accepté";
+
+  @override
+  String get agent_rejected => "Rejeté";
+
+  @override
+  String get agent_Latest_Incidents => "Derniers incidents";
+
+  @override
+  String get agent_Upload_Incident => "Signaler un incident";
+
+  @override
+  String get close => "fermer";
 }

@@ -17,6 +17,20 @@ class ForestService {
     throw Exception("Failed to load forests");
   }
 
+  Future<void> updateForest(int id, ForestCreate forest) async {
+    final response = await http.put(
+      Uri.parse("$baseUrl/forest/$id"),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(forest.toJson()),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception(
+        jsonDecode(response.body)["detail"] ?? "Failed to update forest",
+      );
+    }
+  }
+
   Future<Forest> getForestById(int id) async {
     final response = await http.get(Uri.parse("$baseUrl/forest/$id"));
 

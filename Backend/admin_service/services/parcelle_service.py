@@ -2,7 +2,7 @@ from models.forest import Forest
 from services.forest_service import calculate_area_hectares
 from sqlalchemy.orm import Session
 from models.parcelle import Parcelle
-from schemas.parcelle_schema import ParcelleCreate, Coordinates
+from schemas.parcelle_schema import ParcelleCreate, Coordinates , ParcelleUpdate
 from shapely.geometry import Polygon, MultiPoint
 from geoalchemy2.shape import from_shape, to_shape
 from typing import List
@@ -11,7 +11,6 @@ from sqlalchemy import func
 def create_parcelle(db: Session, parcelle_in: ParcelleCreate) -> Parcelle:
     coords = [(p.lng, p.lat) for p in parcelle_in.boundary]
 
-    
     polygon = MultiPoint(coords).convex_hull
 
     if not polygon.is_valid:
@@ -35,6 +34,52 @@ def create_parcelle(db: Session, parcelle_in: ParcelleCreate) -> Parcelle:
     )
 
     db.add(parcelle)
+    db.commit()
+    db.refresh(parcelle)
+    return parcelle
+
+def update_parcelle(db: Session, parcelle_id: int, parcelle_in: ParcelleUpdate) -> Parcelle | None:
+    parcelle = db.query(Parcelle).get(parcelle_id)
+
+    if not parcelle:
+        return None
+
+    if parcelle_in.name is not None:
+        parcelle.name = parcelle_in.name
+
+    if parcelle_in.region is not None:
+        parcelle.region = parcelle_in.region
+
+    if parcelle_in.boundary is not None:
+        coords = [(p.lng, p.lat) for p in parcelle_in.boundary]
+
+        polygon = MultiPoint(coords).convex_hull
+
+        if not polygon.is_valid:
+            polygon = polygon.buffer(0)
+
+        geom = from_shape(polygon, srid=4326)
+
+        forest_id = find_forest_for_parcelle(db, geom)
+        if not forest_id:
+            raise ValueError("Updated parcelle must be inside a forest")
+
+        existing = db.query(Parcelle).filter(
+            Parcelle.id != parcelle_id,
+            (
+                func.ST_Overlaps(Parcelle.boundary, geom) |
+                func.ST_Within(geom, Parcelle.boundary) |
+                func.ST_Equals(Parcelle.boundary, geom)
+            )
+        ).first()
+
+        if existing:
+            raise ValueError("Updated parcelle overlaps another parcelle")
+
+        parcelle.boundary = geom
+        parcelle.area_hectares = calculate_area_hectares(geom)
+        parcelle.forest_id = forest_id
+
     db.commit()
     db.refresh(parcelle)
     return parcelle

@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:authproject/l10n/app_localizations.dart';
 
-class Home extends StatefulWidget {
+class Home extends StatelessWidget {
   const Home({super.key});
 
   @override
-  State<Home> createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
-  @override
   Widget build(BuildContext context) {
-    final t = AppLocalizations.of(context)!;
-
-    return const Placeholder();
+    return const Scaffold(
+      body: Center(
+        child: Text(
+          "Home",
+          style: TextStyle(
+            fontSize: 28,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
   }
 }

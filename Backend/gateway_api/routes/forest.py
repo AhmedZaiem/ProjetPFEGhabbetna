@@ -18,6 +18,22 @@ async def create_forest(request: Request):
         media_type="application/json"
     )
 
+@router.put("/{forest_id}")
+async def update_forest(forest_id: int, request: Request):
+    body = await request.json()
+
+    async with httpx.AsyncClient() as client:
+        response = await client.put(
+            f"{Auth_SERVICE_URL}/forest/{forest_id}",
+            json=body
+        )
+
+    return Response(
+        content=response.content,
+        status_code=response.status_code,
+        media_type="application/json"
+    )
+
 @router.get("/")
 async def get_forests(request: Request):
     headers = {}

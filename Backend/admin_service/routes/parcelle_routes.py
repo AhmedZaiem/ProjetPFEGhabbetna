@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from db.database import get_db
-from schemas.parcelle_schema import ParcelleCreate, ParcelleOut
+from schemas.parcelle_schema import ParcelleCreate, ParcelleOut , ParcelleUpdate
 from services.parcelle_service import (
     create_parcelle, convert_parcelle_boundary, delete_parcelle,
-    get_all_parcelles, get_parcelle_by_id,assign_agent,get_parcelle_by_agent_id,get_non_occupied_parcelles
+    get_all_parcelles, get_parcelle_by_id,assign_agent,get_parcelle_by_agent_id,get_non_occupied_parcelles ,update_parcelle
 )
 from services.forest_service import calculate_area_hectares
 from services.user_service import get_user_by_id
@@ -24,6 +24,31 @@ def create_parcelle_route(parcelle_in: ParcelleCreate, db: Session = Depends(get
         forest_id=parcelle.forest_id,
         region=parcelle.region
     )
+
+@router.put("/{parcelle_id}", response_model=ParcelleOut)
+def update_parcelle_route(
+    parcelle_id: int,
+    parcelle_in: ParcelleUpdate,
+    db: Session = Depends(get_db)
+):
+    try:
+        parcelle = update_parcelle(db, parcelle_id, parcelle_in)
+
+        if not parcelle:
+            raise HTTPException(status_code=404, detail="Parcelle not found")
+
+        return ParcelleOut(
+            id=parcelle.id,
+            name=parcelle.name,
+            area_hectares=parcelle.area_hectares,
+            boundary=convert_parcelle_boundary(parcelle),
+            forest_id=parcelle.forest_id,
+            agent_id=parcelle.agent_id,
+            region=parcelle.region
+        )
+
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 @router.get("/", response_model=list[ParcelleOut])
 def get_parcelles_route(db: Session = Depends(get_db)):

@@ -18,6 +18,22 @@ async def create_parcelle(request: Request):
         media_type="application/json"
     )
 
+@router.put("/{parcelle_id}")
+async def update_parcelle(parcelle_id: int, request: Request):
+    body = await request.json()
+
+    async with httpx.AsyncClient() as client:
+        response = await client.put(
+            f"{Auth_SERVICE_URL}/parcelles/{parcelle_id}",
+            json=body
+        )
+
+    return Response(
+        content=response.content,
+        status_code=response.status_code,
+        media_type="application/json"
+    )
+
 @router.get("/")
 async def get_parcelles(request: Request):
     headers = {}

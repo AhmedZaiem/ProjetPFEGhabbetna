@@ -443,4 +443,28 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get admin_cancel => "إلغاء";
+
+  @override
+  String get agent_hello => "مرحبا";
+
+  @override
+  String get agent_score => "الرصيد";
+
+  @override
+  String get agent_pending => "قيد الانتظار";
+
+  @override
+  String get agent_accepted => "مقبول";
+
+  @override
+  String get agent_rejected => "مرفوض";
+
+  @override
+  String get agent_Latest_Incidents => "آخر البلاغات";
+
+  @override
+  String get agent_Upload_Incident => "الإبلاغ عن حادثة";
+
+  @override
+  String get close => "أغلق";
 }

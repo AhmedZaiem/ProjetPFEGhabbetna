@@ -303,6 +303,16 @@ abstract class AppLocalizations {
   String get admin_view_image;
 
   String get admin_cancel;
+
+  String get agent_hello;
+  String get agent_score;
+  String get agent_pending;
+  String get agent_accepted;
+  String get agent_rejected;
+  String get agent_Latest_Incidents;
+  String get agent_Upload_Incident;
+
+  String get close;
 }
 
 class _AppLocalizationsDelegate

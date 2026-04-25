@@ -11,6 +11,13 @@ class ForestCreate(BaseModel):
     region: str
     boundary: List[Coordinates]
 
+
+class ForestUpdate(BaseModel):
+    name: Optional[str] = Field(None, min_length=3, max_length=100)
+    description: Optional[str] = Field(None, max_length=500)
+    region: Optional[str]
+    boundary: Optional[List[Coordinates]]
+
 class ForestOut(BaseModel):
     id: int
     name: str

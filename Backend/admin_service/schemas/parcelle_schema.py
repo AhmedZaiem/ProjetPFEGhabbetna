@@ -10,6 +10,11 @@ class ParcelleCreate(BaseModel):
     boundary: List[Coordinates]
     region: str
 
+class ParcelleUpdate(BaseModel):
+    name: Optional[str] = Field(None, min_length=3, max_length=100)
+    boundary: Optional[List[Coordinates]]
+    region: Optional[str]
+
 class ParcelleOut(BaseModel):
     id: int
     name: str

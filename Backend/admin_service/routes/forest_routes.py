@@ -4,8 +4,8 @@ from sqlalchemy.orm import Session
 from db.database import get_db
 from shapely.geometry import Point
 from geoalchemy2.shape import to_shape
-from schemas.forest_schema import ForestCreate, ForestOut
-from services.forest_service import create_forest, delete_forest, get_all_forests, get_forest_by_id, convert_forest_boundary,assign_supervisor, get_forests_by_supervisor_id,get_non_occupied_forests
+from schemas.forest_schema import ForestCreate, ForestOut , ForestUpdate
+from services.forest_service import create_forest, delete_forest, get_all_forests, get_forest_by_id, convert_forest_boundary,assign_supervisor, get_forests_by_supervisor_id,get_non_occupied_forests,update_forest
 from services.user_service import get_user_by_id
 
 router = APIRouter(prefix="/forest", tags=["Forest"])
@@ -22,6 +22,32 @@ def create_forest_route(forest_in: ForestCreate, db: Session = Depends(get_db)):
         boundary=convert_forest_boundary(forest),
         region=forest.region
     )
+
+@router.put("/{forest_id}", response_model=ForestOut)
+def update_forest_route(
+    forest_id: int,
+    forest_in: ForestUpdate,
+    db: Session = Depends(get_db)
+):
+    try:
+        forest = update_forest(db, forest_id, forest_in)
+
+        if not forest:
+            raise HTTPException(status_code=404, detail="Forest not found")
+
+        return ForestOut(
+            id=forest.id,
+            name=forest.name,
+            description=forest.description,
+            area_hectares=forest.area_hectares,
+            risk_level=forest.risk_level,
+            boundary=convert_forest_boundary(forest),
+            supervisor_id=forest.supervisor_id,
+            region=forest.region
+        )
+
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 @router.get("/", response_model=list[ForestOut])
 def get_forests_route(db: Session = Depends(get_db)):

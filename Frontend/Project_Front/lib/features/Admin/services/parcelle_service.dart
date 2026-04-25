@@ -17,6 +17,20 @@ class ParcelService {
     throw Exception("Failed to load forests");
   }
 
+  Future<void> updateParcel(int id, ParcelCreate parcel) async {
+    final response = await http.put(
+      Uri.parse("$baseUrl/parcelles/$id"),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(parcel.toJson()),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception(
+        jsonDecode(response.body)["detail"] ?? "Failed to update parcel",
+      );
+    }
+  }
+
   Future<Parcel> getParcelById(int id) async {
     final response = await http.get(Uri.parse("$baseUrl/parcelles/$id"));
 

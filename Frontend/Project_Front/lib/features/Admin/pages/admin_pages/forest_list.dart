@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'dart:math';
 import 'package:authproject/features/Admin/models/forest_model.dart';
 import 'package:authproject/features/Admin/models/parcelle_model.dart';
 import 'package:authproject/features/Admin/services/forest_service.dart';
 import 'package:authproject/features/Admin/services/parcelle_service.dart';
+
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:authproject/features/Admin/models/coordinates.dart';
 
 import 'package:authproject/l10n/app_localizations.dart';
 
@@ -16,6 +21,33 @@ class ForestList extends StatefulWidget {
 class _ForestListState extends State<ForestList> {
   final ForestService forestService = ForestService();
   final ParcelService parcelService = ParcelService();
+
+  final List<String> tunisianStates = [
+  "Tunis",
+  "Ariana",
+  "BenArous",
+  "Manouba",
+  "Nabeul",
+  "Zaghouan",
+  "Bizerte",
+  "Béja",
+  "Jendouba",
+  "Kef",
+  "Siliana",
+  "Sousse",
+  "Monastir",
+  "Mahdia",
+  "Sfax",
+  "Kairouan",
+  "Kasserine",
+  "SidiBouzid",
+  "Gabès",
+  "Medenine",
+  "Tataouine",
+  "Gafsa",
+  "Tozeur",
+  "Kebili",
+];
 
   List<Forest> forests = [];
   List<Parcel> parcels = [];
@@ -41,6 +73,23 @@ class _ForestListState extends State<ForestList> {
       print("Error loading data: $e");
       setState(() => loading = false);
     }
+  }
+
+
+  void sortPolygonPoints(List<LatLng> points) {
+    if (points.length < 3) return;
+
+    final centerLat =
+        points.map((p) => p.latitude).reduce((a, b) => a + b) / points.length;
+
+    final centerLng =
+        points.map((p) => p.longitude).reduce((a, b) => a + b) / points.length;
+
+    points.sort((a, b) {
+      final angleA = atan2(a.latitude - centerLat, a.longitude - centerLng);
+      final angleB = atan2(b.latitude - centerLat, b.longitude - centerLng);
+      return angleA.compareTo(angleB);
+    });
   }
 
   Future<void> deleteParcel(int id) async {
@@ -123,9 +172,19 @@ class _ForestListState extends State<ForestList> {
                           ],
                         ),
 
-                        trailing: IconButton(
-                          icon: const Icon(Icons.delete, color: Colors.red),
-                          onPressed: () => deleteParcel(parcel.id),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.edit, color: Colors.blue),
+                              onPressed: () =>
+                                  showUpdateParcelleDialog(parcel.id),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.delete, color: Colors.red),
+                              onPressed: () => deleteParcel(parcel.id),
+                            ),
+                          ],
                         ),
                       ),
                     );
@@ -133,12 +192,11 @@ class _ForestListState extends State<ForestList> {
                 ),
         ),
 
-
         actions: [
           TextButton.icon(
             onPressed: () => Navigator.pop(context),
             icon: const Icon(Icons.close),
-            label: const Text("Close"),
+            label: Text(t.close),
           ),
         ],
       ),
@@ -157,6 +215,405 @@ class _ForestListState extends State<ForestList> {
         context,
       ).showSnackBar(SnackBar(content: Text("Error: $e")));
     }
+  }
+
+  Future<void> showUpdateForestDialog(int forestId) async {
+    final forest = await forestService.getForestById(forestId);
+
+    final t = AppLocalizations.of(context)!;
+
+    final nameController = TextEditingController(text: forest.name);
+    final descController = TextEditingController(
+      text: forest.description ?? "",
+    );
+    final regionController = TextEditingController(text: forest.region);
+
+    List<LatLng> points = forest.boundary
+        .map((c) => LatLng(c.lat, c.lng))
+        .toList();
+
+    showDialog(
+      context: context,
+      builder: (_) => StatefulBuilder(
+        builder: (context, setStateDialog) {
+          return AlertDialog(
+            title: Text(t.admin_update),
+            content: SizedBox(
+              width: 500,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: nameController,
+                      decoration: InputDecoration(
+                        labelText: t.admin_forest_name,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: descController,
+                      decoration: InputDecoration(
+                        labelText: t.admin_description,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: regionController,
+                      decoration: InputDecoration(labelText: t.admin_region),
+                    ),
+
+                    const SizedBox(height: 10),
+
+                    /// MAP
+                    SizedBox(
+                      height: 300,
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: FlutterMap(
+                              options: MapOptions(
+                                initialCenter: points.isNotEmpty
+                                    ? points.first
+                                    : const LatLng(36.8, 10.1),
+                                initialZoom: 13,
+                                onTap: (_, p) {
+                                  setStateDialog(() {
+                                    points.add(p);
+                                    sortPolygonPoints(points);
+                                  });
+                                },
+                              ),
+                              children: [
+                                TileLayer(
+                                  urlTemplate:
+                                      "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                                ),
+
+                                PolygonLayer(
+                                  polygons: [
+                                    Polygon(
+                                      points: points,
+                                      color: Colors.green.withOpacity(0.3),
+                                      borderColor: Colors.green,
+                                      borderStrokeWidth: 3,
+                                    ),
+                                  ],
+                                ),
+
+                                MarkerLayer(
+                                  markers: points.map((p) {
+                                    return Marker(
+                                      point: p,
+                                      width: 30,
+                                      height: 30,
+                                      child: const Icon(
+                                        Icons.location_on,
+                                        color: Colors.red,
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          const SizedBox(height: 8),
+
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              ElevatedButton.icon(
+                                onPressed: () {
+                                  setStateDialog(() {
+                                    if (points.isNotEmpty) {
+                                      points.removeLast();
+                                    }
+                                  });
+                                },
+                                icon: const Icon(Icons.undo),
+                                label: Text(t.admin_undo),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.grey.shade700,
+                                  foregroundColor: Colors.white,
+                                ),
+                              ),
+
+                              ElevatedButton.icon(
+                                onPressed: () {
+                                  setStateDialog(() {
+                                    points.clear();
+                                  });
+                                },
+                                icon: const Icon(Icons.clear),
+                                label: Text(t.admin_clear),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.redAccent,
+                                  foregroundColor: Colors.white,
+                                ),
+                              ),
+
+                              ElevatedButton.icon(
+                                onPressed: () {
+                                  setStateDialog(() {
+                                    sortPolygonPoints(points);
+                                  });
+                                },
+                                icon: const Icon(Icons.save),
+                                label: Text(t.admin_save),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.green,
+                                  foregroundColor: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(t.admin_cancel),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  try {
+                    await forestService.updateForest(
+                      forest.id,
+                      ForestCreate(
+                        name: nameController.text,
+                        description: descController.text,
+                        region: regionController.text,
+                        boundary: points
+                            .map(
+                              (p) => Coordinates(
+                                lng: p.longitude,
+                                lat: p.latitude,
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    );
+
+                    Navigator.pop(context);
+                    await loadData();
+
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text(t.admin_update)));
+                  } catch (e) {
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text("Error: $e")));
+                  }
+                },
+                child: Text(t.admin_update),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  Future<void> showUpdateParcelleDialog(int parcelleId) async {
+    final t = AppLocalizations.of(context)!;
+
+    final parcel = await parcelService.getParcelById(parcelleId);
+
+    final nameController = TextEditingController(text: parcel.name);
+    final regionController = TextEditingController(text: parcel.region);
+
+    List<LatLng> points = parcel.boundary
+        .map((c) => LatLng(c.lat, c.lng))
+        .toList();
+
+    showDialog(
+      context: context,
+      builder: (_) => StatefulBuilder(
+        builder: (context, setStateDialog) {
+          return AlertDialog(
+            title: Text(t.admin_update),
+            content: SizedBox(
+              width: 500,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: nameController,
+                      decoration: InputDecoration(
+                        labelText: t.admin_parcel_name,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: regionController,
+                      decoration: InputDecoration(
+                        labelText: t.admin_parcel_region,
+                      ),
+                    ),
+
+                    const SizedBox(height: 10),
+
+                    /// MAP
+                    SizedBox(
+                      height: 300,
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: FlutterMap(
+                              options: MapOptions(
+                                initialCenter: points.isNotEmpty
+                                    ? points.first
+                                    : const LatLng(36.8, 10.1),
+                                initialZoom: 13,
+                                onTap: (_, p) {
+                                  setStateDialog(() {
+                                    points.add(p);
+                                    sortPolygonPoints(points);
+                                  });
+                                },
+                              ),
+                              children: [
+                                TileLayer(
+                                  urlTemplate:
+                                      "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                                ),
+
+                                PolygonLayer(
+                                  polygons: [
+                                    Polygon(
+                                      points: points,
+                                      color: Colors.orange.withOpacity(0.3),
+                                      borderColor: Colors.orange,
+                                      borderStrokeWidth: 3,
+                                    ),
+                                  ],
+                                ),
+
+                                MarkerLayer(
+                                  markers: points.map((p) {
+                                    return Marker(
+                                      point: p,
+                                      width: 30,
+                                      height: 30,
+                                      child: const Icon(
+                                        Icons.location_on,
+                                        color: Colors.red,
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          const SizedBox(height: 8),
+
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              ElevatedButton.icon(
+                                onPressed: () {
+                                  setStateDialog(() {
+                                    if (points.isNotEmpty) {
+                                      points.removeLast();
+                                    }
+                                  });
+                                },
+                                icon: const Icon(Icons.undo),
+                                label: Text(t.admin_undo),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.grey.shade700,
+                                  foregroundColor: Colors.white,
+                                ),
+                              ),
+
+                              ElevatedButton.icon(
+                                onPressed: () {
+                                  setStateDialog(() {
+                                    points.clear();
+                                  });
+                                },
+                                icon: const Icon(Icons.clear),
+                                label: Text(t.admin_clear),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.redAccent,
+                                  foregroundColor: Colors.white,
+                                ),
+                              ),
+
+                              ElevatedButton.icon(
+                                onPressed: () {
+                                  setStateDialog(() {
+                                    sortPolygonPoints(points);
+                                  });
+                                },
+                                icon: const Icon(Icons.save),
+                                label: Text(t.admin_save),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.green,
+                                  foregroundColor: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(t.admin_cancel),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  try {
+                    await parcelService.updateParcel(
+                      parcel.id,
+                      ParcelCreate(
+                        name: nameController.text,
+                        region: regionController.text,
+                        boundary: points
+                            .map(
+                              (p) => Coordinates(
+                                lng: p.longitude,
+                                lat: p.latitude,
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    );
+
+                    Navigator.pop(context);
+                    await loadData();
+
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text(t.admin_update)));
+                  } catch (e) {
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text("Error: $e")));
+                  }
+                },
+                child: Text(t.admin_update),
+              ),
+            ],
+          );
+        },
+      ),
+    );
   }
 
   @override
@@ -366,6 +823,11 @@ class _ForestListState extends State<ForestList> {
                 ),
 
                 const SizedBox(width: 8),
+
+                IconButton(
+                  icon: const Icon(Icons.edit, color: Colors.blue),
+                  onPressed: () => showUpdateForestDialog(forest.id),
+                ),
 
                 IconButton(
                   icon: const Icon(Icons.delete, color: Colors.red),

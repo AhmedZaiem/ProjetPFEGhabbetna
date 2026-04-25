@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from models.forest import Forest
-from schemas.forest_schema import ForestCreate, Coordinates
+from schemas.forest_schema import ForestCreate, Coordinates , ForestUpdate
 from shapely.geometry import Polygon, MultiPoint
 from geoalchemy2.shape import from_shape,to_shape
 from typing import List
@@ -31,6 +31,50 @@ def create_forest(db: Session, forest_in: ForestCreate) -> Forest:
     )
 
     db.add(forest)
+    db.commit()
+    db.refresh(forest)
+    return forest
+
+def update_forest(db: Session, forest_id: int, forest_in: ForestUpdate) -> Forest | None:
+    forest = db.query(Forest).get(forest_id)
+
+    if not forest:
+        return None
+    
+    if forest_in.name is not None:
+        forest.name = forest_in.name
+
+    if forest_in.description is not None:
+        forest.description = forest_in.description
+
+    if forest_in.region is not None:
+        forest.region = forest_in.region
+
+    if forest_in.boundary is not None:
+        coords = [(p.lng, p.lat) for p in forest_in.boundary]
+
+        polygon = MultiPoint(coords).convex_hull
+
+        if not polygon.is_valid:
+            polygon = polygon.buffer(0)
+
+        geom = from_shape(polygon, srid=4326)
+
+        existing = db.query(Forest).filter(
+            Forest.id != forest_id,
+            (
+                func.ST_Overlaps(Forest.boundary, geom) |
+                func.ST_Within(geom, Forest.boundary) |
+                func.ST_Equals(Forest.boundary, geom)
+            )
+        ).first()
+
+        if existing:
+            raise ValueError("Updated boundary overlaps with another forest")
+
+        forest.boundary = geom
+        forest.area_hectares = calculate_area_hectares(geom)
+
     db.commit()
     db.refresh(forest)
     return forest
