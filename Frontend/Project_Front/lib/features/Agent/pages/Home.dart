@@ -146,6 +146,15 @@ class _HomeState extends State<Home> {
     final latestIncidents = incidents.take(3).toList();
 
     return Scaffold(
+      appBar: AppBar(
+        title: Row(
+          children: [
+            Image.asset('assets/images/logoApp.jpeg', height: 80),
+            const SizedBox(width: 12),
+            Text("Home"),
+          ],
+        ),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16),
