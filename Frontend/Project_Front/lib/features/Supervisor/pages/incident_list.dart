@@ -23,7 +23,6 @@ class _IncidentListState extends State<IncidentList> {
 
   Future<void> initData() async {
     final result = await authService.getCurrentUser();
-    print('getCurrentUser result: $result');
     if (!result['success']) {
       setState(() => error = result['message']);
       return;
@@ -36,7 +35,6 @@ class _IncidentListState extends State<IncidentList> {
       final fetchedForests = await supervisorServices.getforestsbySupervisorId(
         supervisorId,
       );
-      print('Fetched forests: $fetchedForests');
       if (fetchedForests.isEmpty) {
         setState(() => error = 'No forests assigned to this supervisor.');
         return;
@@ -46,15 +44,11 @@ class _IncidentListState extends State<IncidentList> {
       final incidents = await supervisorServices.fetchIncidentsByForestids(
         forestIds,
       );
-      print('Fetched incidents: $incidents');
       setState(() {
         userData = user;
         forests = fetchedForests;
         incidentData = incidents;
       });
-      print('User Data: $userData');
-      print('Forests: $forests');
-      print('Incident Data: $incidentData');
     } catch (e) {
       setState(() => error = 'Failed to fetch forests: $e');
     }
@@ -63,7 +57,6 @@ class _IncidentListState extends State<IncidentList> {
   @override
   void initState() {
     super.initState();
-    print('IncidentList initState called');
     initData();
   }
 
@@ -111,10 +104,9 @@ class _IncidentListState extends State<IncidentList> {
                   5: FlexColumnWidth(2), // Location
                 },
                 defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-                
+
                 children: [
                   // Header
-
                   TableRow(
                     decoration: BoxDecoration(
                       color: Color.fromARGB(255, 212, 198, 198),
@@ -208,7 +200,6 @@ class _IncidentListState extends State<IncidentList> {
                             "${incident.latitude.toStringAsFixed(4)}, ${incident.longitude.toStringAsFixed(4)}",
                           ),
                         ),
-                        
                       ],
                     );
                   }).toList(),

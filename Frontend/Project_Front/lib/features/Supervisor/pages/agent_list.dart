@@ -40,7 +40,6 @@ class _AgentListState extends State<AgentList> {
 
   Future<void> initData() async {
     final result = await authService.getCurrentUser();
-    print('getCurrentUser result: $result');
     if (!result['success']) {
       setState(() => error = result['message']);
       return;
@@ -53,7 +52,6 @@ class _AgentListState extends State<AgentList> {
       final fetchedForests = await supervisorServices.getforestsbySupervisorId(
         supervisorId,
       );
-      print('Fetched forests: $fetchedForests');
       if (fetchedForests.isEmpty) {
         setState(() => error = 'No forests assigned to this supervisor.');
         return;
@@ -63,7 +61,7 @@ class _AgentListState extends State<AgentList> {
       final fetchedParcelles = await supervisorServices.getParcellesByForestIds(
         forestIds,
       );
-      print('Fetched parcelles with agents: $fetchedParcelles');
+
       setState(() {
         userData = user;
         forests = fetchedForests;
@@ -73,9 +71,6 @@ class _AgentListState extends State<AgentList> {
             .map((p) => p.agent!)
             .toList();
       });
-
-      print('User Data: $userData');
-      print('Forests: $forests');
     } catch (e) {
       setState(() => error = 'Failed to fetch forests: $e');
     }
