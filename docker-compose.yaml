@@ -1,0 +1,82 @@
+version: "3.9"
+
+services:
+
+  # ---------------- FRONTEND ----------------
+  frontend:
+    build: ./Frontend/Project_Front
+    ports:
+      - "3000:80"
+    environment:
+      - FRONTEND_URL=http://localhost:3000
+    depends_on:
+      - api_gateway
+
+  # ---------------- API GATEWAY ----------------
+  api_gateway:
+    build: ./Backend/gateway_api
+    ports:
+      - "8000:8000"
+    depends_on:
+      - auth_service
+      - admin_service
+      - upload_incident_service
+
+  # ---------------- AUTH SERVICE (NO DB) ----------------
+  auth_service:
+    build: ./Backend/auth_service
+    ports:
+      - "8001:8000"
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - FRONTEND_URL=http://localhost:3000
+    depends_on:
+      - redis
+
+  # ---------------- ADMIN SERVICE ----------------
+  admin_service:
+    build: ./Backend/admin_service
+    ports:
+      - "8002:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:aaaa@localhost:5432/admin_db
+    depends_on:
+      - admin_db
+
+  admin_db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: aaaa
+      POSTGRES_DB: admin_db
+    volumes:
+      - admin_data:/var/lib/postgresql/data
+
+  # ---------------- INCIDENT SERVICE ----------------
+  upload_incident_service:
+    build: ./Backend/upload_incident_service
+    ports:
+      - "8003:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:aaaa@localhost:5432/incident_db
+    depends_on:
+      - incident_db
+
+  incident_db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: aaaa
+      POSTGRES_DB: incident_db
+    volumes:
+      - incident_data:/var/lib/postgresql/data
+
+  # ---------------- REDIS ----------------
+  redis:
+    image: redis:7
+    ports:
+      - "6380:6379"
+
+volumes:
+  admin_data:
+  incident_data:
