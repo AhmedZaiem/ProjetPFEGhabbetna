@@ -3,8 +3,13 @@ from fastapi.middleware.cors import CORSMiddleware
 from db.database import Base, engine
 from routes.incidentRoute import router
 from fastapi.staticfiles import StaticFiles
+from dotenv import load_dotenv
+
+
 
 app = FastAPI(title="Upload Image Service")
+
+load_dotenv()
 
 app.add_middleware(
     CORSMiddleware,

@@ -30,6 +30,9 @@ services:
     environment:
       - REDIS_URL=redis://redis:6379
       - FRONTEND_URL=http://localhost:3000
+    env_file:
+      - ./Backend/auth_service/.env
+
     depends_on:
       - redis
 
@@ -38,19 +41,28 @@ services:
     build: ./Backend/admin_service
     ports:
       - "8002:8000"
+    env_file:
+      - ./Backend/admin_service/.env
     environment:
-      - DATABASE_URL=postgresql://postgres:aaaa@localhost:5432/admin_db
+      - DATABASE_URL=postgresql://postgres:aaaa@admin_db:5432/admin_db
     depends_on:
-      - admin_db
+      admin_db:
+        condition: service_healthy
 
   admin_db:
-    image: postgres:16
+    image: postgis/postgis:16-3.4
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: aaaa
       POSTGRES_DB: admin_db
     volumes:
       - admin_data:/var/lib/postgresql/data
+      - ./init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
   # ---------------- INCIDENT SERVICE ----------------
   upload_incident_service:
@@ -58,18 +70,25 @@ services:
     ports:
       - "8003:8000"
     environment:
-      - DATABASE_URL=postgresql://postgres:aaaa@localhost:5432/incident_db
+      - DATABASE_URL=postgresql://postgres:aaaa@incident_db:5432/incident_db
     depends_on:
-      - incident_db
+      incident_db:
+        condition: service_healthy
 
   incident_db:
-    image: postgres:16
+    image: postgis/postgis:16-3.4
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: aaaa
       POSTGRES_DB: incident_db
     volumes:
       - incident_data:/var/lib/postgresql/data
+      - ./init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
   # ---------------- REDIS ----------------
   redis:
