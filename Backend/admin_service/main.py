@@ -7,6 +7,7 @@ from routes.service_routes import router as service_router
 from fastapi.middleware.cors import CORSMiddleware
 from db.database import Base, engine
 from dotenv import load_dotenv
+from services.init_admin import init_admin
 
 app = FastAPI(title="Professional FastAPI Auth")
 
@@ -19,6 +20,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.on_event("startup")
+def startup():
+    init_admin()
 
 Base.metadata.create_all(bind=engine)
 
