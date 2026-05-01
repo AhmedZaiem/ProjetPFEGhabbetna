@@ -313,6 +313,14 @@ abstract class AppLocalizations {
   String get agent_Upload_Incident;
 
   String get close;
+
+  String get BI;
+
+  String get Incident_statistics;
+  String get Over_time;
+  String get By_region;
+  String get By_status;
+
 }
 
 class _AppLocalizationsDelegate

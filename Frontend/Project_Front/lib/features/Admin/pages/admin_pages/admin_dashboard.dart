@@ -8,6 +8,7 @@ import 'package:authproject/features/Admin/pages/admin_pages/assign_agent.dart';
 import 'package:authproject/features/Admin/pages/admin_pages/add_service.dart';
 import 'package:authproject/features/Admin/pages/admin_pages/manage_incident.dart';
 import 'package:authproject/features/Auth/services/auth_service.dart';
+import 'package:authproject/features/Admin/pages/admin_pages/BI.dart';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -36,6 +37,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
     const ForestList(),
     const AddService(),
     const ManageIncident(),
+    const Bi(),
   ];
 
   void logout() async {
@@ -169,6 +171,10 @@ class _AdminDashboardState extends State<AdminDashboard> {
                           _buildItem(
                             t.admin_manage_incidents,
                             Icons.add_a_photo_outlined,
+                          ),
+                          _buildItem(
+                            t.BI,
+                            Icons.stacked_line_chart_outlined,
                           ),
                         ],
                       ),

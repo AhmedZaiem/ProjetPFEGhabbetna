@@ -352,20 +352,6 @@ class _ForestListState extends State<ForestList> {
                                   foregroundColor: Colors.white,
                                 ),
                               ),
-
-                              ElevatedButton.icon(
-                                onPressed: () {
-                                  setStateDialog(() {
-                                    sortPolygonPoints(points);
-                                  });
-                                },
-                                icon: const Icon(Icons.save),
-                                label: Text(t.admin_save),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.green,
-                                  foregroundColor: Colors.white,
-                                ),
-                              ),
                             ],
                           ),
                         ],
@@ -545,20 +531,6 @@ class _ForestListState extends State<ForestList> {
                                 label: Text(t.admin_clear),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.redAccent,
-                                  foregroundColor: Colors.white,
-                                ),
-                              ),
-
-                              ElevatedButton.icon(
-                                onPressed: () {
-                                  setStateDialog(() {
-                                    sortPolygonPoints(points);
-                                  });
-                                },
-                                icon: const Icon(Icons.save),
-                                label: Text(t.admin_save),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.green,
                                   foregroundColor: Colors.white,
                                 ),
                               ),

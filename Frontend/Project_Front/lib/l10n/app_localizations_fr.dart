@@ -470,4 +470,19 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get close => "fermer";
+
+  @override
+  String get BI=>"Intelligence d’affaires";
+
+  @override
+  String get Incident_statistics => "Statistiques des incidents";
+
+  @override
+  String get Over_time => "Au fil du temps";
+
+  @override
+  String get By_region => "Par région";
+  
+  @override
+  String get By_status => "Par statut";
 }

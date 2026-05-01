@@ -467,4 +467,19 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get close => "أغلق";
+
+  @override
+  String get BI=>"ذكاء الأعمال";
+
+  @override
+  String get Incident_statistics => "إحصائيات الحوادث";
+
+  @override
+  String get Over_time => "على مرّ الزمن";
+
+  @override
+  String get By_region => "حسب المنطقة";
+  
+  @override
+  String get By_status => "حسب الحالة";
 }

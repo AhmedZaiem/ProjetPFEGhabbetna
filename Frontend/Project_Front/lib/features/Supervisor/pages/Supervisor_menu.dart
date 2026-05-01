@@ -3,6 +3,7 @@ import 'package:authproject/features/Auth/services/auth_service.dart';
 import 'package:authproject/features/Supervisor/pages/agent_list.dart';
 import 'package:authproject/features/Supervisor/pages/incident_list.dart';
 import 'package:authproject/features/Supervisor/pages/incident_map.dart';
+import 'package:authproject/features/Supervisor/pages/BI.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:authproject/main.dart';
@@ -24,6 +25,7 @@ class _SupervisorMenuState extends State<SupervisorMenu> {
     IncidentMap(),
     AgentList(),
     Profile(),
+    Bi(),
   ];
 
   void logout() async {
@@ -141,6 +143,7 @@ class _SupervisorMenuState extends State<SupervisorMenu> {
                           _buildItem(t.supervisor_incident_map, Icons.map),
                           _buildItem(t.supervisor_agent_list, Icons.person),
                           _buildItem(t.supervisor_profile, Icons.person_4_sharp),
+                          _buildItem(t.BI, Icons.stacked_line_chart_outlined),
                         ],
                       ),
                     ),

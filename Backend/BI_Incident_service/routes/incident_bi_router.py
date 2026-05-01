@@ -1,0 +1,19 @@
+from fastapi import APIRouter
+from services.incident_bi_controller import IncidentBIController
+
+router = APIRouter(prefix="/bi_incidents", tags=["Incident BI"])
+
+
+@router.get("/over-time")
+def over_time():
+    return IncidentBIController.incidents_over_time()
+
+
+@router.get("/by-status")
+def by_status():
+    return IncidentBIController.incidents_by_status()
+
+
+@router.get("/by-region")
+def by_region():
+    return IncidentBIController.incidents_by_region()
