@@ -142,12 +142,22 @@ class _CreateUserState extends State<Create_User> {
     final loc = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: AppBar(
+appBar: AppBar(
         title: Row(
           children: [
-            Image.asset('assets/images/logoApp.jpeg', height: 80),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.asset('assets/images/logoApp.jpeg', height: 36),
+            ),
             const SizedBox(width: 12),
-            Text(loc.admin_create_account),
+            Text(
+              loc.admin_create_users,
+              style: const TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 18,
+                letterSpacing: -0.3,
+              ),
+            ),
           ],
         ),
       ),

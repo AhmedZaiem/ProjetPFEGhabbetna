@@ -133,9 +133,19 @@ class _AddServiceState extends State<AddService> {
       appBar: AppBar(
         title: Row(
           children: [
-            Image.asset('assets/images/logoApp.jpeg', height: 80),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.asset('assets/images/logoApp.jpeg', height: 36),
+            ),
             const SizedBox(width: 12),
-            Text(loc.admin_services),
+            Text(
+              loc.admin_services,
+              style: const TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 18,
+                letterSpacing: -0.3,
+              ),
+            ),
           ],
         ),
       ),
@@ -216,7 +226,6 @@ class _AddServiceState extends State<AddService> {
 
                       Expanded(
                         child: ListView.builder(
-                          
                           itemCount: services.length,
                           itemBuilder: (context, index) {
                             final service = services[index];
@@ -231,7 +240,6 @@ class _AddServiceState extends State<AddService> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                   
                                     Row(
                                       children: [
                                         const Icon(Icons.label, size: 18),
@@ -248,7 +256,6 @@ class _AddServiceState extends State<AddService> {
 
                                     const SizedBox(height: 8),
 
-                                    
                                     Row(
                                       children: [
                                         const Icon(Icons.category, size: 18),
@@ -265,7 +272,6 @@ class _AddServiceState extends State<AddService> {
 
                                     const SizedBox(height: 8),
 
-                                    
                                     Row(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
@@ -288,7 +294,6 @@ class _AddServiceState extends State<AddService> {
 
                                     const SizedBox(height: 12),
 
-                                    
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [

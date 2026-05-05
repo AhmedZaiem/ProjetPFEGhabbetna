@@ -23,31 +23,31 @@ class _ForestListState extends State<ForestList> {
   final ParcelService parcelService = ParcelService();
 
   final List<String> tunisianStates = [
-  "Tunis",
-  "Ariana",
-  "BenArous",
-  "Manouba",
-  "Nabeul",
-  "Zaghouan",
-  "Bizerte",
-  "Béja",
-  "Jendouba",
-  "Kef",
-  "Siliana",
-  "Sousse",
-  "Monastir",
-  "Mahdia",
-  "Sfax",
-  "Kairouan",
-  "Kasserine",
-  "SidiBouzid",
-  "Gabès",
-  "Medenine",
-  "Tataouine",
-  "Gafsa",
-  "Tozeur",
-  "Kebili",
-];
+    "Tunis",
+    "Ariana",
+    "BenArous",
+    "Manouba",
+    "Nabeul",
+    "Zaghouan",
+    "Bizerte",
+    "Béja",
+    "Jendouba",
+    "Kef",
+    "Siliana",
+    "Sousse",
+    "Monastir",
+    "Mahdia",
+    "Sfax",
+    "Kairouan",
+    "Kasserine",
+    "SidiBouzid",
+    "Gabès",
+    "Medenine",
+    "Tataouine",
+    "Gafsa",
+    "Tozeur",
+    "Kebili",
+  ];
 
   List<Forest> forests = [];
   List<Parcel> parcels = [];
@@ -74,7 +74,6 @@ class _ForestListState extends State<ForestList> {
       setState(() => loading = false);
     }
   }
-
 
   void sortPolygonPoints(List<LatLng> points) {
     if (points.length < 3) return;
@@ -567,7 +566,12 @@ class _ForestListState extends State<ForestList> {
                       ),
                     );
 
+                    // close UPDATE dialog
                     Navigator.pop(context);
+
+                    // close PARCELS dialog
+                    Navigator.pop(context);
+
                     await loadData();
 
                     ScaffoldMessenger.of(
@@ -599,13 +603,19 @@ class _ForestListState extends State<ForestList> {
       appBar: AppBar(
         title: Row(
           children: [
-            Image.asset(
-              'assets/images/logoApp.jpeg',
-              height: 80,
-              fit: BoxFit.contain,
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.asset('assets/images/logoApp.jpeg', height: 36),
             ),
             const SizedBox(width: 12),
-            Text(t.admin_forests_list),
+            Text(
+              t.admin_forests_list,
+              style: const TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 18,
+                letterSpacing: -0.3,
+              ),
+            ),
           ],
         ),
       ),
@@ -627,8 +637,6 @@ class _ForestListState extends State<ForestList> {
                   parcels.length.toString(),
                   Icons.map,
                 ),
-                const SizedBox(width: 12),
-                _buildTopCard("Another Stat", "-", Icons.dashboard),
               ],
             ),
           ),

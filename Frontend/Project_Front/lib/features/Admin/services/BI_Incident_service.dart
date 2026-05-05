@@ -46,4 +46,32 @@ class IncidentBIService {
 
     throw Exception("Failed to load incidents by region");
   }
+
+  Future<List<Map<String, dynamic>>> getTopForests() async {
+    final response = await http.get(
+      Uri.parse("$baseUrl/bi_incidents/top-forests"),
+      headers: {"Content-Type": "application/json"},
+    );
+
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body);
+      return List<Map<String, dynamic>>.from(data);
+    }
+
+    throw Exception("Failed to load top forests");
+  }
+
+  Future<List<Map<String, dynamic>>> getTopAgents() async {
+    final response = await http.get(
+      Uri.parse("$baseUrl/bi_incidents/top-agents"),
+      headers: {"Content-Type": "application/json"},
+    );
+
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body);
+      return List<Map<String, dynamic>>.from(data);
+    }
+
+    throw Exception("Failed to load top agents");
+  }
 }

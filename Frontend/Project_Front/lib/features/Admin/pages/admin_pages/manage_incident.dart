@@ -107,9 +107,19 @@ class _ManageIncidentState extends State<ManageIncident> {
       appBar: AppBar(
         title: Row(
           children: [
-            Image.asset('assets/images/logoApp.jpeg', height: 80),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.asset('assets/images/logoApp.jpeg', height: 36),
+            ),
             const SizedBox(width: 12),
-            Text(t.admin_manage_incidents),
+            Text(
+              t.admin_manage_incidents,
+              style: const TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 18,
+                letterSpacing: -0.3,
+              ),
+            ),
           ],
         ),
       ),

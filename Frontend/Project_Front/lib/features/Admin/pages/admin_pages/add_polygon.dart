@@ -191,12 +191,23 @@ class _AddPolygonPageState extends State<AddPolygonPage> {
       appBar: AppBar(
         title: Row(
           children: [
-            Image.asset('assets/images/logoApp.jpeg', height: 80),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.asset('assets/images/logoApp.jpeg', height: 36),
+            ),
             const SizedBox(width: 12),
-            Text(t.admin_forest_parcel),
+            Text(
+              t.admin_add_forests,
+              style: const TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 18,
+                letterSpacing: -0.3,
+              ),
+            ),
           ],
         ),
       ),
+
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: Column(
@@ -263,9 +274,9 @@ class _AddPolygonPageState extends State<AddPolygonPage> {
                         true, // prevents overflow issues but keeps clean layout
                     isDense: true,
 
-                    menuMaxHeight: 250, 
+                    menuMaxHeight: 250,
 
-                    itemHeight: 48, 
+                    itemHeight: 48,
 
                     decoration: InputDecoration(
                       labelText: mode == PolygonMode.forest

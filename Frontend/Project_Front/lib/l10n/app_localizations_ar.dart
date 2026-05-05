@@ -482,4 +482,19 @@ class AppLocalizationsAr extends AppLocalizations {
   
   @override
   String get By_status => "حسب الحالة";
+
+  @override
+  String get top_agents_stat => "أفضل الأعوان";
+  @override
+  String get top_forests => "أفضل الغابات";
+  @override
+  String get Most_incidents_by_forest => "الغابات الأكثر تسجيلًا للحوادث";
+  @override
+  String get Most_active_reporters => "الأعوان الأكثر نشاطًا";
+  @override
+  String get Incident_grouped_by_region => "الحوادث حسب المنطقة";
+  @override
+  String get Distribution_by_resolution_status =>"توزيع حسب حالة المعالجة";
+  @override
+  String get Incident_reported_by_day => "الحوادث المبلغ عنها يوميًا";
 }

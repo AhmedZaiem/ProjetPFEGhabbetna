@@ -83,7 +83,7 @@ class _BiState extends State<Bi> {
             // ── Line chart ─────────────────────────────────────────────────
             _ChartCard(
               title: t.Over_time,
-              subtitle: 'Incidents reported per day',
+              subtitle: t.Incident_reported_by_day,
               accentColor: _accent1,
               icon: Icons.show_chart_rounded,
               child: FutureBuilder(
@@ -211,7 +211,7 @@ class _BiState extends State<Bi> {
                       width: cardW,
                       child: _ChartCard(
                         title: t.By_status,
-                        subtitle: 'Distribution by resolution status',
+                        subtitle: t.Distribution_by_resolution_status,
                         accentColor: _accent2,
                         icon: Icons.donut_large_rounded,
                         chartHeight: 220,
@@ -267,7 +267,7 @@ class _BiState extends State<Bi> {
                       width: cardW,
                       child: _ChartCard(
                         title: t.By_region,
-                        subtitle: 'Incidents grouped by region',
+                        subtitle: t.Incident_grouped_by_region,
                         accentColor: _accent3,
                         icon: Icons.bar_chart_rounded,
                         chartHeight: 220,
@@ -373,6 +373,222 @@ class _BiState extends State<Bi> {
             ),
 
             const SizedBox(height: 24),
+
+
+            // ── TOP FORESTS & AGENTS ─────────────────────────────────────────────
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final twoCol = constraints.maxWidth > 560;
+                final gap = 16.0;
+                final cardW = twoCol
+                    ? (constraints.maxWidth - gap) / 2
+                    : constraints.maxWidth;
+
+                return Wrap(
+                  spacing: gap,
+                  runSpacing: gap,
+                  children: [
+                    // 🌲 TOP FORESTS
+                    SizedBox(
+                      width: cardW,
+                      child: _ChartCard(
+                        title: t.top_forests,
+                        subtitle: t.Most_incidents_by_forest,
+                        accentColor: Colors.green,
+                        icon: Icons.park_rounded,
+                        chartHeight: 220,
+                        child: FutureBuilder(
+                          future: service.getTopForests(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) return _ErrorState();
+                            if (!snapshot.hasData) return _Loading();
+
+                            final data = snapshot.data as List;
+                            if (data.isEmpty) return _EmptyState();
+
+                            final maxY = data
+                                .map((e) => (e['count'] as num).toDouble())
+                                .fold(0.0, (a, b) => a > b ? a : b);
+
+                            return BarChart(
+                              BarChartData(
+                                maxY: (maxY + 2).ceilToDouble(),
+                                barGroups: [
+                                  for (int i = 0; i < data.length; i++)
+                                    BarChartGroupData(
+                                      x: i,
+                                      barRods: [
+                                        BarChartRodData(
+                                          toY: (data[i]['count'] as num)
+                                              .toDouble(),
+                                          width: 14,
+                                          color: Colors.green,
+                                          borderRadius:
+                                              const BorderRadius.vertical(
+                                                top: Radius.circular(4),
+                                              ),
+                                        ),
+                                      ],
+                                    ),
+                                ],
+                                borderData: FlBorderData(show: false),
+                                gridData: FlGridData(show: true),
+                                titlesData: FlTitlesData(
+                                  topTitles: const AxisTitles(
+                                    sideTitles: SideTitles(showTitles: false),
+                                  ),
+                                  leftTitles: const AxisTitles(
+                                    sideTitles: SideTitles(showTitles: false),
+                                  ),
+                                  rightTitles: AxisTitles(
+                                    sideTitles: SideTitles(
+                                      showTitles: true,
+                                      reservedSize: 28,
+                                      interval: _niceInterval(maxY),
+                                      getTitlesWidget: (v, _) => Text(
+                                        v.toInt().toString(),
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          color: Colors.grey.shade500,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  bottomTitles: AxisTitles(
+                                    sideTitles: SideTitles(
+                                      showTitles: true,
+                                      reservedSize: 36,
+                                      getTitlesWidget: (v, _) {
+                                        final i = v.toInt();
+                                        if (i < 0 || i >= data.length) {
+                                          return const SizedBox();
+                                        }
+                                        return Padding(
+                                          padding: const EdgeInsets.only(
+                                            top: 6,
+                                          ),
+                                          child: Text(
+                                            data[i]['forest_name'],
+                                            style: TextStyle(
+                                              fontSize: 9,
+                                              color: Colors.grey.shade600,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+
+                    // 👤 TOP AGENTS
+                    SizedBox(
+                      width: cardW,
+                      child: _ChartCard(
+                        title: t.top_agents_stat,
+                        subtitle: t.Most_active_reporters,
+                        accentColor: Colors.orange,
+                        icon: Icons.person_rounded,
+                        chartHeight: 220,
+                        child: FutureBuilder(
+                          future: service.getTopAgents(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) return _ErrorState();
+                            if (!snapshot.hasData) return _Loading();
+
+                            final data = snapshot.data as List;
+                            if (data.isEmpty) return _EmptyState();
+
+                            final maxY = data
+                                .map((e) => (e['count'] as num).toDouble())
+                                .fold(0.0, (a, b) => a > b ? a : b);
+
+                            return BarChart(
+                              BarChartData(
+                                maxY: (maxY + 2).ceilToDouble(),
+                                barGroups: [
+                                  for (int i = 0; i < data.length; i++)
+                                    BarChartGroupData(
+                                      x: i,
+                                      barRods: [
+                                        BarChartRodData(
+                                          toY: (data[i]['count'] as num)
+                                              .toDouble(),
+                                          width: 14,
+                                          color: Colors.orange,
+                                          borderRadius:
+                                              const BorderRadius.vertical(
+                                                top: Radius.circular(4),
+                                              ),
+                                        ),
+                                      ],
+                                    ),
+                                ],
+                                borderData: FlBorderData(show: false),
+                                gridData: FlGridData(show: true),
+                                titlesData: FlTitlesData(
+                                  topTitles: const AxisTitles(
+                                    sideTitles: SideTitles(showTitles: false),
+                                  ),
+                                  leftTitles: const AxisTitles(
+                                    sideTitles: SideTitles(showTitles: false),
+                                  ),
+                                  rightTitles: AxisTitles(
+                                    sideTitles: SideTitles(
+                                      showTitles: true,
+                                      reservedSize: 28,
+                                      interval: _niceInterval(maxY),
+                                      getTitlesWidget: (v, _) => Text(
+                                        v.toInt().toString(),
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          color: Colors.grey.shade500,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  bottomTitles: AxisTitles(
+                                    sideTitles: SideTitles(
+                                      showTitles: true,
+                                      reservedSize: 36,
+                                      getTitlesWidget: (v, _) {
+                                        final i = v.toInt();
+                                        if (i < 0 || i >= data.length) {
+                                          return const SizedBox();
+                                        }
+                                        return Padding(
+                                          padding: const EdgeInsets.only(
+                                            top: 6,
+                                          ),
+                                          child: Text(
+                                            "User ${data[i]['user_id']}",
+                                            style: TextStyle(
+                                              fontSize: 9,
+                                              color: Colors.grey.shade600,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
           ],
         ),
       ),

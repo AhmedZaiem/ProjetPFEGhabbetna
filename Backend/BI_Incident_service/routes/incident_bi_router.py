@@ -17,3 +17,13 @@ def by_status():
 @router.get("/by-region")
 def by_region():
     return IncidentBIController.incidents_by_region()
+
+
+@router.get("/top-forests")
+def top_forests():
+    return IncidentBIController.top_forests_by_incidents()
+
+
+@router.get("/top-agents")
+def top_agents():
+    return IncidentBIController.top_agents_by_incidents()

@@ -321,6 +321,14 @@ abstract class AppLocalizations {
   String get By_region;
   String get By_status;
 
+  String get top_agents_stat;
+  String get top_forests;
+  String get Most_incidents_by_forest;
+  String get Most_active_reporters;
+  String get Incident_grouped_by_region;
+  String get Distribution_by_resolution_status;
+  String get Incident_reported_by_day;
+
 }
 
 class _AppLocalizationsDelegate

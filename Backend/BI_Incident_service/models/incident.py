@@ -5,6 +5,7 @@ from db.database import Base
 from models.status_enum import Status
 
 
+
 class Incident(Base):
     __tablename__ = "incidents"
 

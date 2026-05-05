@@ -485,4 +485,22 @@ class AppLocalizationsFr extends AppLocalizations {
   
   @override
   String get By_status => "Par statut";
+
+  @override
+  String get top_agents_stat => "Meilleurs agents";
+  @override
+  String get top_forests => "Meilleures forêts";
+  @override
+  String get Most_incidents_by_forest => "Forêts avec le plus d'incidents";
+  @override
+  String get Most_active_reporters => "Agents les plus actifs";
+  @override
+  String get Incident_grouped_by_region => "Incidents groupés par région";
+  @override
+  String get Distribution_by_resolution_status => "Répartition par statut de résolution";
+  @override
+  String get Incident_reported_by_day => "Incidents signalés par jour";
+
+
+  
 }

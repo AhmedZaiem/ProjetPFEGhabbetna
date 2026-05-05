@@ -482,4 +482,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get By_status => "By status";
+
+  @override
+  String get top_agents_stat => "Top agents";
+  @override
+  String get top_forests => "Top forests";
+  @override
+  String get Most_incidents_by_forest => "Most incidents by forest";
+  @override
+  String get Most_active_reporters => "Most active reporters";
+  @override
+  String get Incident_grouped_by_region => "Incidents grouped by region";
+  @override
+  String get Distribution_by_resolution_status => "Distribution by resolution status";
+  @override
+  String get Incident_reported_by_day => "Incidents reported by day";
 }

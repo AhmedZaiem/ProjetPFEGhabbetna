@@ -7,6 +7,7 @@ from schemas.userSchema import UserOut , UserUpdate
 from schemas.role_schema import RoleCreate , RoleDelete , RoleModify
 from services.user_service import get_all_users,block_user,unblock_user,create_role,get_roles,delete_role,modify_role,get_non_assigned_agents,get_all_supervisors,update_user
 from core.security import hash_password, verify_password,create_access_token
+from models import User
 
 router = APIRouter(prefix="/users", tags=["User"])
 
@@ -15,6 +16,20 @@ def read_users(
     db: Session = Depends(get_db)
 ):
     return get_all_users(db)
+
+@router.get("/{user_id}", response_model=UserOut)
+def get_user_by_id(
+    user_id: int,
+    db: Session = Depends(get_db)
+):
+    user = db.query(User).filter(User.id == user_id).first()
+
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    return user
+
+
 
 @router.put("/{user_id}", response_model=UserOut)
 def update_user_route(

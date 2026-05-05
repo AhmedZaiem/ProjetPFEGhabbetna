@@ -274,9 +274,19 @@ class _UserListState extends State<UserList> {
       appBar: AppBar(
         title: Row(
           children: [
-            Image.asset('assets/images/logoApp.jpeg', height: 80),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.asset('assets/images/logoApp.jpeg', height: 36),
+            ),
             const SizedBox(width: 12),
-            Text(t.admin_users_list),
+            Text(
+              t.admin_users_list,
+              style: const TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 18,
+                letterSpacing: -0.3,
+              ),
+            ),
           ],
         ),
       ),

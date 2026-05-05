@@ -37,3 +37,24 @@ async def incidents_by_region():
         status_code=response.status_code,
         content=response.json()
     )
+
+@router.get("/top-forests")
+async def top_forests():
+    async with httpx.AsyncClient() as client:
+        response = await client.get(f"{BI_SERVICE_URL}/bi_incidents/top-forests")
+
+    return JSONResponse(
+        status_code=response.status_code,
+        content=response.json()
+    )
+
+
+@router.get("/top-agents")
+async def top_agents():
+    async with httpx.AsyncClient() as client:
+        response = await client.get(f"{BI_SERVICE_URL}/bi_incidents/top-agents")
+
+    return JSONResponse(
+        status_code=response.status_code,
+        content=response.json()
+    )

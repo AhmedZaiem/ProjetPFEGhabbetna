@@ -301,3 +301,22 @@ async def update_user(request: Request, user_id: int):
         status_code=response.status_code,
         media_type="application/json"
     )
+
+@router.get("/users/{user_id}")
+async def get_user_by_id(user_id: int, request: Request):
+    headers = {}
+    auth = request.headers.get("Authorization")
+    if auth:
+        headers["Authorization"] = auth
+
+    async with httpx.AsyncClient() as client:
+        response = await client.get(
+            f"{Admin_SERVICE_URL}/users/{user_id}",
+            headers=headers
+        )
+
+    return Response(
+        content=response.content,
+        status_code=response.status_code,
+        media_type="application/json"
+    )

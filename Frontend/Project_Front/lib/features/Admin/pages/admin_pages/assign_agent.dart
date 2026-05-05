@@ -129,14 +129,24 @@ class _AssignAgentState extends State<AssignAgent> {
       textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
       child: Scaffold(
         appBar: AppBar(
-          title: Row(
-            children: [
-              Image.asset('assets/images/logoApp.jpeg', height: 80),
-              const SizedBox(width: 12),
-              Text(t.admin_assign_agent_title),
-            ],
-          ),
+        title: Row(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.asset('assets/images/logoApp.jpeg', height: 36),
+            ),
+            const SizedBox(width: 12),
+            Text(
+              t.admin_assign_agent_title,
+              style: const TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 18,
+                letterSpacing: -0.3,
+              ),
+            ),
+          ],
         ),
+      ),
 
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
