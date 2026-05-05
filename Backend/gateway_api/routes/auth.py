@@ -174,10 +174,9 @@ async def create_role(request: Request):
             headers=headers
         )
 
-    return Response(
-        content=response.content,
-        status_code=response.status_code,
-        media_type="application/json"
+    return JSONResponse(
+        content=response.json(),
+        status_code=response.status_code
     )
 
 
@@ -194,10 +193,9 @@ async def get_roles(request: Request):
             headers=headers
         )
 
-    return Response(
-        content=response.content,
+    return JSONResponse(
         status_code=response.status_code,
-        media_type="application/json"
+        content=response.json()
     )
 
 

@@ -113,7 +113,13 @@ class _LoginState extends State<Login> {
               key: _formKey,
               child: Column(
                 children: [
-                  Image.asset('assets/images/logoApp.jpeg', height: 150),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.asset(
+                      'assets/images/logoApp.jpeg',
+                      height: 150,
+                    ),
+                  ),
 
                   Text(
                     loc.auth_login,

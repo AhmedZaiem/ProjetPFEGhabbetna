@@ -16,10 +16,10 @@ def init_admin():
 
     try:
         # Ensure ADMIN role exists
-        admin_role = db.query(Role).filter(Role.name == "ADMIN").first()
+        admin_role = db.query(Role).filter(Role.name == "Admin").first()
 
         if not admin_role:
-            admin_role = Role(name="ADMIN")
+            admin_role = Role(name="Admin")
             db.add(admin_role)
             db.commit()
             db.refresh(admin_role)

@@ -79,29 +79,15 @@ class IncidentBIController:
 
         db.close()
 
-        result = []
-
-        for d in data:
-            forest_id = d[0]
-            count = d[1]
-
-            try:
-                response = httpx.get(f"{ADMIN_SERVICE_URL}/forest/{forest_id}")
-
-                if response.status_code == 200:
-                    forest = response.json()
-                    name = forest.get("name", "Unknown")
-                else:
-                    name = "Unknown"
-
-            except Exception:
-                name = "Unknown"
-
-            result.append({
+        result = [
+            {
                 "forest_id": forest_id,
-                "forest_name": name,
                 "count": count
-            })
+            }
+            for forest_id, count in data if forest_id is not None
+        ]
+
+        
 
         return result
 

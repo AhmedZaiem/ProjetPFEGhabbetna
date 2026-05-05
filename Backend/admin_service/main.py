@@ -22,7 +22,7 @@ app.add_middleware(
 )
 
 @app.on_event("startup")
-def startup():
+def startup_event():
     init_admin()
 
 Base.metadata.create_all(bind=engine)

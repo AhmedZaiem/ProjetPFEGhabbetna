@@ -112,9 +112,12 @@ class _SupervisorMenuState extends State<SupervisorMenu> {
                 children: [
                   SizedBox(
                     height: 70,
-                    child: Image.asset(
-                      'assets/images/logoApp.jpeg',
-                      fit: BoxFit.contain,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Image.asset(
+                        'assets/images/logoApp.jpeg',
+                        height: 150,
+                      ),
                     ),
                   ),
 
@@ -139,10 +142,16 @@ class _SupervisorMenuState extends State<SupervisorMenu> {
                         groupAlignment: -1.0,
                         minWidth: 220,
                         destinations: [
-                          _buildItem(t.supervisor_incident_list, Icons.fireplace),
+                          _buildItem(
+                            t.supervisor_incident_list,
+                            Icons.fireplace,
+                          ),
                           _buildItem(t.supervisor_incident_map, Icons.map),
                           _buildItem(t.supervisor_agent_list, Icons.person),
-                          _buildItem(t.supervisor_profile, Icons.person_4_sharp),
+                          _buildItem(
+                            t.supervisor_profile,
+                            Icons.person_4_sharp,
+                          ),
                           _buildItem(t.BI, Icons.stacked_line_chart_outlined),
                         ],
                       ),

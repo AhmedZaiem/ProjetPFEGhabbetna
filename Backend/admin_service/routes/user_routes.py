@@ -17,38 +17,6 @@ def read_users(
 ):
     return get_all_users(db)
 
-@router.get("/{user_id}", response_model=UserOut)
-def get_user_by_id(
-    user_id: int,
-    db: Session = Depends(get_db)
-):
-    user = db.query(User).filter(User.id == user_id).first()
-
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-
-    return user
-
-
-
-@router.put("/{user_id}", response_model=UserOut)
-def update_user_route(
-    user_id: int,
-    user: UserUpdate,
-    db: Session = Depends(get_db)
-):
-    return update_user(
-        db,
-        user_id,
-        user.firstname,
-        user.lastname,
-        user.cin,
-        user.username,
-        user.email,
-        user.role_name,
-        user.age,
-        user.region,
-    )
 
 
 
@@ -108,3 +76,36 @@ def unblock_user_route(user_id: int, db: Session = Depends(get_db)):
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user
+
+@router.get("/{user_id}", response_model=UserOut)
+def get_user_by_id(
+    user_id: int,
+    db: Session = Depends(get_db)
+):
+    user = db.query(User).filter(User.id == user_id).first()
+
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    return user
+
+
+
+@router.put("/{user_id}", response_model=UserOut)
+def update_user_route(
+    user_id: int,
+    user: UserUpdate,
+    db: Session = Depends(get_db)
+):
+    return update_user(
+        db,
+        user_id,
+        user.firstname,
+        user.lastname,
+        user.cin,
+        user.username,
+        user.email,
+        user.role_name,
+        user.age,
+        user.region,
+    )

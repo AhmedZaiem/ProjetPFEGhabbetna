@@ -124,9 +124,12 @@ class _AdminDashboardState extends State<AdminDashboard> {
                 children: [
                   SizedBox(
                     height: 70,
-                    child: Image.asset(
-                      'assets/images/logoApp.jpeg',
-                      fit: BoxFit.contain,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Image.asset(
+                        'assets/images/logoApp.jpeg',
+                        height: 150,
+                      ),
                     ),
                   ),
 
@@ -172,10 +175,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                             t.admin_manage_incidents,
                             Icons.add_a_photo_outlined,
                           ),
-                          _buildItem(
-                            t.BI,
-                            Icons.stacked_line_chart_outlined,
-                          ),
+                          _buildItem(t.BI, Icons.stacked_line_chart_outlined),
                         ],
                       ),
                     ),

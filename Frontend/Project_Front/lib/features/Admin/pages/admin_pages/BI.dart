@@ -374,7 +374,6 @@ class _BiState extends State<Bi> {
 
             const SizedBox(height: 24),
 
-
             // ── TOP FORESTS & AGENTS ─────────────────────────────────────────────
             LayoutBuilder(
               builder: (context, constraints) {
@@ -468,7 +467,7 @@ class _BiState extends State<Bi> {
                                             top: 6,
                                           ),
                                           child: Text(
-                                            data[i]['forest_name'],
+                                            'Forest ${data[i]['forest_id']}',
                                             style: TextStyle(
                                               fontSize: 9,
                                               color: Colors.grey.shade600,
