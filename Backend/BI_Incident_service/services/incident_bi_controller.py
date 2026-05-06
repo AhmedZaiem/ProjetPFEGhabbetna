@@ -70,9 +70,11 @@ class IncidentBIController:
 
         data = db.query(
             Incident.forest_id,
+            Incident.forest_name,
             func.count(Incident.id).label("count")
         ).group_by(
-            Incident.forest_id
+            Incident.forest_id,
+            Incident.forest_name
         ).order_by(
             func.count(Incident.id).desc()
         ).limit(3).all()
@@ -82,9 +84,10 @@ class IncidentBIController:
         result = [
             {
                 "forest_id": forest_id,
+                "forest_name": forest_name,
                 "count": count
             }
-            for forest_id, count in data if forest_id is not None
+            for forest_id, forest_name, count in data if forest_id is not None
         ]
 
         
@@ -99,9 +102,11 @@ class IncidentBIController:
 
         data = db.query(
             Incident.user_id,
+            Incident.user_email,
             func.count(Incident.id).label("count")
         ).group_by(
-            Incident.user_id
+            Incident.user_id,
+            Incident.user_email
         ).order_by(
             func.count(Incident.id).desc()
         ).limit(3).all()
@@ -111,7 +116,8 @@ class IncidentBIController:
         return [
             {
                 "user_id": d[0],
-                "count": d[1]
+                "count": d[2],
+                "user_email": d[1]
             }
             for d in data if d[0] is not None
         ]

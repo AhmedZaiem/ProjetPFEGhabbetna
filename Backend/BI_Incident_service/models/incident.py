@@ -25,7 +25,9 @@ class Incident(Base):
     expires_at = Column(DateTime, nullable=False)
 
     user_id = Column(Integer)
+    user_email = Column(String)
     forest_id = Column(Integer, nullable=False)
+    forest_name = Column(String, nullable=False)
 
     class Config:
         orm_mode = True

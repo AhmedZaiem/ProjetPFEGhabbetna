@@ -11,7 +11,9 @@ class IncidentCreate(BaseModel):
     latitude: float
     longitude: float
     forest_id: int
+    forest_name: str
     user_id: int = Field(default=None)
+    user_email: str = Field(default=None)
 
 class VerifyIncidentBody(BaseModel):
     status: Status

@@ -88,7 +88,7 @@ def get_forest_by_location(lat: float, lon: float, db: Session = Depends(get_db)
     for forest in forests:
         polygon = to_shape(forest.boundary)
         if polygon.contains(point):
-            return {"forest_id": forest.id}
+            return {"forest_id": forest.id,"forest_name": forest.name}
     raise HTTPException(status_code=404, detail="No forest found")
 
 

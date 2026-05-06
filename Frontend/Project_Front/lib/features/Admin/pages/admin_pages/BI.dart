@@ -467,7 +467,7 @@ class _BiState extends State<Bi> {
                                             top: 6,
                                           ),
                                           child: Text(
-                                            'Forest ${data[i]['forest_id']}',
+                                            'Forest ${data[i]['forest_name']}',
                                             style: TextStyle(
                                               fontSize: 9,
                                               color: Colors.grey.shade600,
@@ -566,7 +566,7 @@ class _BiState extends State<Bi> {
                                             top: 6,
                                           ),
                                           child: Text(
-                                            "User ${data[i]['user_id']}",
+                                            "User ${data[i]['user_email']}",
                                             style: TextStyle(
                                               fontSize: 9,
                                               color: Colors.grey.shade600,

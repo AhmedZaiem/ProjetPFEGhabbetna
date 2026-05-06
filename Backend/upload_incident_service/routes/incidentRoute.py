@@ -49,15 +49,33 @@ async def create_incident_route(
                     f"{Admin_SERVICE_URL}/forest/by_location/",
                     params={"lat": lat, "lon": lon}
                 )
-                if response.status_code == 200:
-                    return response.json().get("forest_id")
-            return None
+
+                if response.status_code != 200:
+                    return None
+
+                data = response.json()
+
+                forest_id = data.get("forest_id")
+                forest_name = data.get("forest_name") or data.get("name")
+
+                if not forest_id or not forest_name:
+                    return None
+
+                return {
+                    "forest_id": forest_id,
+                    "forest_name": forest_name
+                }
         except httpx.RequestError :
             return None
     
-    forest_id = await get_forest_id()
-    if not forest_id:
+    forest_data = await get_forest_id()
+    if not forest_data:
         raise HTTPException(status_code=404, detail="No forest found at the given location")
+    
+    forest_id = forest_data["forest_id"]
+    print(forest_id)
+    forest_name = forest_data["forest_name"]
+    print(forest_name)
 
     ext=image.filename.split(".")[-1]
     filename = f"{safe_filename(type)}_{safe_filename(location)}_{safe_filename(region)}_{uuid.uuid4().hex[:8]}.{ext}"
@@ -74,8 +92,10 @@ async def create_incident_route(
         image_url=file_path,
         latitude=lat,
         longitude=lon,
-        user_id=current_user_id,
-        forest_id=forest_id
+        user_id=current_user_id["user_id"],
+        user_email=current_user_id["email"],
+        forest_id=forest_id,
+        forest_name=forest_name
     )
 
     return create_incident(db, incident_data)
@@ -96,7 +116,9 @@ def read_all_incidents(db: Session = Depends(get_db)):
             "latitude": point.y,
             "longitude": point.x,
             "user_id": i.user_id,
+            "user_email": i.user_email,
             "forest_id": i.forest_id,
+            "forest_name": i.forest_name,
             "status": i.status.value if i.status else None,
             "comment": i.comment
 
@@ -119,7 +141,9 @@ def read_incidents_by_user(user_id: int, db: Session = Depends(get_db)):
             "latitude": point.y,
             "longitude": point.x,
             "user_id": i.user_id,
+            "user_email": i.user_email,
             "forest_id": i.forest_id,
+            "forest_name": i.forest_name,
             "status": i.status.value if i.status else None,
             "comment": i.comment
         })
@@ -141,7 +165,9 @@ def get_forest_incidents(forest_ids: list[int]=Query(...), db: Session = Depends
             "latitude": point.y,
             "longitude": point.x,
             "user_id": i.user_id,
+            "user_email": i.user_email,
             "forest_id": i.forest_id,
+            "forest_name": i.forest_name,
             "status": i.status.value if i.status else None,
             "comment": i.comment
         })

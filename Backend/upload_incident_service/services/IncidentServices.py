@@ -28,7 +28,9 @@ def create_incident(db: Session, incident_data):
         location=incident_data.location,
         image_url=incident_data.image_url,
         user_id=incident_data.user_id,
+        user_email=incident_data.user_email,
         forest_id=incident_data.forest_id,
+        forest_name=incident_data.forest_name,
         coords=point,
         expires_at=datetime.now() + timedelta(hours=24)
     )
@@ -43,10 +45,12 @@ def create_incident(db: Session, incident_data):
         "location": new_incident.location,
         "image_url": new_incident.image_url,
         "user_id": new_incident.user_id,
+        "user_email": new_incident.user_email,
         "status": new_incident.status,
         "comment": None,
         "created_at": new_incident.created_at.isoformat(),
-        "forest_id": new_incident.forest_id
+        "forest_id": new_incident.forest_id,
+        "forest_name": new_incident.forest_name
     }
 
 def get_all_incidents(db: Session) -> List[Incident]:
@@ -80,8 +84,10 @@ def verify_incident(db: Session, incident_id: int, new_status: Status, comment: 
         "location": incident.location,
         "image_url": incident.image_url,
         "user_id": incident.user_id,
+        "user_email": incident.user_email,
         "status": incident.status.value,
         "comment": incident.comment,
         "created_at": incident.created_at.isoformat(),
-        "forest_id": incident.forest_id
+        "forest_id": incident.forest_id,
+        "forest_name": incident.forest_name
     }
