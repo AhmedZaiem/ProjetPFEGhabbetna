@@ -25,12 +25,11 @@ class _HistotyState extends State<History> {
   }
 
   Future<List<IncidentOut>> loadData() async {
-    final result = await authService.getCurrentUser();
-    if (!result['success']) {
-      throw Exception("Failed to get user data: ${result['message']}");
+    final userid = await authService.getUserIdFromToken();
+    if (userid == null) {
+      setState(() => error = 'User not authenticated.');
+      return [];
     }
-
-    final userid = result['data']['id'];
     return await _incidentService.getIncidentsByUserId(userid);
   }
 

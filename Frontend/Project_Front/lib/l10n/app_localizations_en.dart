@@ -102,7 +102,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get admin_region => 'Region';
 
   @override
-  String get admin_role => 'Select Role';
+  String get admin_role => 'Role';
 
   @override
   String get admin_create_button => 'Create Account';
@@ -126,7 +126,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get error_cin_required => 'CIN is required';
 
   @override
-  String get error_cin_invalid => 'CIN must be 8 numbers';
+  String get error_cin_invalid => 'CIN must be 8 digits';
 
   @override
   String get error_username_required => 'Username is required';
@@ -149,7 +149,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get error_role_required => 'Role is required';
 
-  /// SERVICES
   @override
   String get admin_services => 'Services';
 
@@ -214,287 +213,296 @@ class AppLocalizationsEn extends AppLocalizations {
   String get error_role_empty => 'Role name is required';
 
   @override
-  String get error_role_both_required =>
-      'Please enter both old and new role names';
+  String get error_role_both_required => 'Please enter both old and new role names';
 
   @override
-  String get admin_forest_parcel => "Add Forest or Parcel";
+  String get admin_forest_parcel => 'Add Forest or Parcel';
 
   @override
-  String get admin_forest => "Forest";
+  String get admin_forest => 'Forest';
 
   @override
-  String get admin_parcel => "Parcel";
+  String get admin_parcel => 'Parcel';
 
   @override
-  String get admin_forest_name => "Forest name";
+  String get admin_forest_name => 'Forest name';
 
   @override
-  String get admin_parcel_name => "Parcel name";
+  String get admin_parcel_name => 'Parcel name';
 
   @override
-  String get admin_forest_region => "Forest region";
+  String get admin_forest_region => 'Forest region';
 
   @override
-  String get admin_parcel_region => "Parcel region";
+  String get admin_parcel_region => 'Parcel region';
 
   @override
-  String get admin_undo => "Undo";
+  String get admin_undo => 'Undo';
 
   @override
-  String get admin_save => "Save";
+  String get admin_save => 'Save';
 
   @override
-  String get success_forest_created => "Forest added successfully";
+  String get success_forest_created => 'Forest added successfully';
 
   @override
-  String get success_parcel_created => "Parcel added successfully";
+  String get success_parcel_created => 'Parcel added successfully';
 
   @override
-  String get error_polygon_min_points => "Need at least 3 points";
+  String get error_polygon_min_points => 'Need at least 3 points';
 
-  // shared assign
   @override
-  String get admin_assign => "Assign";
+  String get admin_assign => 'Assign';
+
   @override
-  String get admin_select => "Select";
+  String get admin_select => 'Select';
+
   @override
-  String get admin_no_data => "No data available";
+  String get admin_no_data => 'No data available';
+
   @override
-  String get admin_success => "Success";
+  String get admin_success => 'Success';
+
   @override
-  String get admin_error => "Error";
+  String get admin_error => 'Error';
+
   @override
-  String get admin_assign_button => "Assign";
+  String get admin_assign_button => 'Assign';
 
-  // agent assign
   @override
-  String get admin_assign_agent_title => "Assign Agent to Parcel";
+  String get admin_assign_agent_title => 'Assign Agent to Parcel';
+
   @override
-  String get admin_assign_agent_parcelle => "Select Parcel";
+  String get admin_assign_agent_parcelle => 'Select Parcel';
+
   @override
-  String get admin_assigned_agents => "Assigned Agents";
+  String get admin_assigned_agents => 'Assigned Agents';
+
   @override
-  String get admin_no_agents_assigned => "No agents assigned yet";
+  String get admin_no_agents_assigned => 'No agents assigned yet';
 
-  // supervisor assign
   @override
-  String get admin_assign_supervisor_title => "Assign Supervisor to Forest";
+  String get admin_assign_supervisor_title => 'Assign Supervisor to Forest';
+
   @override
-  String get admin_assign_supervisor_forest => "Select Forest";
+  String get admin_assign_supervisor_forest => 'Select Forest';
+
   @override
-  String get admin_assigned_supervisors => "Assigned Supervisors";
+  String get admin_assigned_supervisors => 'Assigned Supervisors';
+
   @override
-  String get admin_no_supervisors_assigned => "No supervisors assigned yet";
+  String get admin_no_supervisors_assigned => 'No supervisors assigned yet';
 
-  // menu admin dashboard
   @override
-  String get admin_users_list => "Users List";
+  String get admin_users_list => 'Users List';
 
   @override
-  String get admin_create_users => "Create Users";
+  String get admin_create_users => 'Create Users';
 
   @override
-  String get admin_manage_roles => "Manage Roles";
+  String get admin_manage_roles => 'Manage Roles';
 
   @override
-  String get admin_assign_supervisor => "Assign Supervisor";
+  String get admin_assign_supervisor => 'Assign Supervisor';
 
   @override
-  String get admin_assign_agent => "Assign Agent";
+  String get admin_assign_agent => 'Assign Agent';
 
   @override
-  String get admin_add_forests => "Add Forests";
+  String get admin_add_forests => 'Add Forests';
 
   @override
-  String get admin_forests_list => "Forests List";
+  String get admin_forests_list => 'Forests List';
 
   @override
-  String get admin_manage_services => "Manage Services";
+  String get admin_manage_services => 'Manage Services';
 
   @override
-  String get admin_manage_incidents => "Manage Incidents";
+  String get admin_manage_incidents => 'Manage Incidents';
 
   @override
-  String get logout => "Logout";
+  String get logout => 'Logout';
 
-  // stat admin
   @override
-  String get admin_total_forests => "Total Forests";
+  String get admin_total_forests => 'Total Forests';
 
   @override
-  String get admin_total_parcels => "Total Parcels";
+  String get admin_total_parcels => 'Total Parcels';
 
   @override
-  String get admin_total_incidents => "Total Incidents";
+  String get admin_total_incidents => 'Total Incidents';
 
   @override
-  String get admin_pending_incidents => "Pending Incidents";
+  String get admin_pending_incidents => 'Pending Incidents';
 
   @override
-  String get admin_accepted_incidents => "Accepted Incidents";
+  String get admin_accepted_incidents => 'Accepted Incidents';
 
   @override
-  String get admin_not_accepted_incidents => "Not Accepted Incidents";
+  String get admin_not_accepted_incidents => 'Not Accepted Incidents';
 
   @override
-  String get admin_total_users => "Total Users";
+  String get admin_total_users => 'Total Users';
 
   @override
-  String get admin_total_agents => "Total Agents";
+  String get admin_total_agents => 'Total Agents';
 
   @override
-  String get admin_total_supervisors => "Total Supervisors";
+  String get admin_total_supervisors => 'Total Supervisors';
 
   @override
-  String get admin_verified => "Verified";
+  String get admin_verified => 'Verified';
 
   @override
-  String get admin_actions => "Actions";
+  String get admin_actions => 'Actions';
 
   @override
-  String get admin_view_parcels => "View Parcels";
+  String get admin_view_parcels => 'View Parcels';
 
   @override
-  String get supervisor_incident_list => "Incident List";
+  String get supervisor_incident_list => 'Incident List';
 
   @override
-  String get supervisor_incident_map => "Incident Map";
+  String get supervisor_incident_map => 'Incident Map';
 
   @override
-  String get supervisor_agent_list => "Agent List";
+  String get supervisor_agent_list => 'Agent List';
 
   @override
-  String get supervisor_profile => "Profile";
+  String get supervisor_profile => 'Profile';
 
   @override
-  String get incidents_status => "Status";
+  String get incidents_status => 'Status';
 
   @override
-  String get incidents_location => "Location";
+  String get incidents_location => 'Location';
 
   @override
-  String get incident_upload => "Upload";
+  String get incident_upload => 'Submit';
 
   @override
-  String get incident_create_title => "Create an Incident";
+  String get incident_create_title => 'Send an Incident';
 
   @override
-  String get incident_take_photo => "Take a photo";
+  String get incident_take_photo => 'Take a photo';
 
   @override
-  String get incident_choose_gallery => "Choose from gallery";
+  String get incident_choose_gallery => 'Choose from gallery';
 
   @override
-  String get incident_fire => "Fire";
+  String get incident_fire => 'Fire';
 
   @override
-  String get incident_illegal_logging => "Illegal Logging";
+  String get incident_illegal_logging => 'Illegal Logging';
 
   @override
-  String get incident_disease => "Disease";
+  String get incident_disease => 'Disease';
 
   @override
-  String get incident_other => "Other";
+  String get incident_other => 'Other';
 
   @override
-  String get incident_pick_image => "Pick Image";
+  String get incident_pick_image => 'Pick Image';
 
   @override
-  String get incident_submit => "Submit Incident";
+  String get incident_submit => 'Submit Incident';
 
   @override
-  String get incident_not_assigned =>
-      "You are not assigned to a parcelle";
+  String get incident_not_assigned => 'You are not assigned to a parcelle';
 
   @override
-  String get incident_camera_location =>
-      "Make sure camera location is enabled";
+  String get incident_camera_location => 'Make sure camera location is enabled';
 
   @override
-  String get agent_home => "Home";
+  String get agent_home => 'Home';
 
   @override
-  String get agent_history => "History";
+  String get agent_history => 'History';
 
   @override
-  String get agent_upload => "Upload";
+  String get agent_upload => 'Upload';
 
   @override
-  String get admin_total_active_users => "Active Users";
+  String get admin_total_active_users => 'Active Users';
 
   @override
-  String get admin_unassigned => "unassigned";
+  String get admin_unassigned => 'unassigned';
 
   @override
-  String get admin_risk => "Risk";
+  String get admin_risk => 'Risk';
 
   @override
-  String get admin_area =>"Area";
+  String get admin_area => 'Area';
 
   @override
-  String get admin_Coordinates => "Coordinates";
+  String get admin_Coordinates => 'Coordinates';
 
   @override
-  String get admin_Location => "Location" ;
+  String get admin_Location => 'Location';
 
   @override
-  String get admin_view_image => "View Image";
+  String get admin_view_image => 'View Image';
 
   @override
-  String get admin_cancel => "Cancel";
+  String get admin_cancel => 'Cancel';
 
   @override
-  String get agent_hello => "Hello";
+  String get agent_hello => 'Hello';
 
   @override
-  String get agent_score => "Score";
+  String get agent_score => 'Score';
 
   @override
-  String get agent_pending => "Pending";
+  String get agent_pending => 'Pending';
 
   @override
-  String get agent_accepted => "Accpeted";
+  String get agent_accepted => 'Accepted';
 
   @override
-  String get agent_rejected => "Rejected";
+  String get agent_rejected => 'Rejected';
 
   @override
-  String get agent_Latest_Incidents => "Latest Incidents";
+  String get agent_Latest_Incidents => 'Latest Incidents';
 
   @override
-  String get agent_Upload_Incident => "Upload Incident";
+  String get agent_Upload_Incident => 'Report Incident';
 
   @override
-  String get close => "close";
+  String get close => 'Close';
 
   @override
-  String get BI=>"Business Intelligence";
+  String get bi => 'Business Intelligence';
 
   @override
-  String get Incident_statistics => "Incident statistics";
+  String get incident_statistics => 'Incident Statistics';
 
   @override
-  String get Over_time => "Over time";
+  String get over_time => 'Over Time';
 
   @override
-  String get By_region => "By region";
+  String get by_region => 'By Region';
 
   @override
-  String get By_status => "By status";
+  String get by_status => 'By Status';
 
   @override
-  String get top_agents_stat => "Top agents";
+  String get top_agents_stat => 'Top Agents';
+
   @override
-  String get top_forests => "Top forests";
+  String get top_forests => 'Top Forests';
+
   @override
-  String get Most_incidents_by_forest => "Most incidents by forest";
+  String get most_incidents_by_forest => 'Forests with the Most Incidents';
+
   @override
-  String get Most_active_reporters => "Most active reporters";
+  String get most_active_reporters => 'Most Active Reporters';
+
   @override
-  String get Incident_grouped_by_region => "Incidents grouped by region";
+  String get incident_grouped_by_region => 'Incidents Grouped by Region';
+
   @override
-  String get Distribution_by_resolution_status => "Distribution by resolution status";
+  String get distribution_by_resolution_status => 'Distribution by Resolution Status';
+
   @override
-  String get Incident_reported_by_day => "Incidents reported by day";
+  String get incident_reported_by_day => 'Incidents Reported by Day';
 }

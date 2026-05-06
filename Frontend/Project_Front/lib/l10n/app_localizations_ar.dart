@@ -408,8 +408,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get incident_not_assigned => "أنت غير معين لقطعة أرض";
 
   @override
-  String get incident_camera_location =>
-      "تأكد من تفعيل موقع الكاميرا";
+  String get incident_camera_location => "تأكد من تفعيل موقع الكاميرا";
 
   @override
   String get agent_home => "الرئيسية";
@@ -430,13 +429,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get admin_risk => "الخطر";
 
   @override
-  String get admin_area =>"المساحة";
+  String get admin_area => "المساحة";
 
   @override
   String get admin_Coordinates => "الإحداثيات";
 
   @override
-  String get admin_Location => "الموقع" ;
+  String get admin_Location => "الموقع";
 
   @override
   String get admin_view_image => "عرض الصورة";
@@ -469,32 +468,32 @@ class AppLocalizationsAr extends AppLocalizations {
   String get close => "أغلق";
 
   @override
-  String get BI=>"ذكاء الأعمال";
+  String get bi => "ذكاء الأعمال";
 
   @override
-  String get Incident_statistics => "إحصائيات الحوادث";
+  String get incident_statistics => "إحصائيات الحوادث";
 
   @override
-  String get Over_time => "على مرّ الزمن";
+  String get over_time => "على مرّ الزمن";
 
   @override
-  String get By_region => "حسب المنطقة";
-  
+  String get by_region => "حسب المنطقة";
+
   @override
-  String get By_status => "حسب الحالة";
+  String get by_status => "حسب الحالة";
 
   @override
   String get top_agents_stat => "أفضل الأعوان";
   @override
   String get top_forests => "أفضل الغابات";
   @override
-  String get Most_incidents_by_forest => "الغابات الأكثر تسجيلًا للحوادث";
+  String get most_incidents_by_forest => "الغابات الأكثر تسجيلًا للحوادث";
   @override
-  String get Most_active_reporters => "الأعوان الأكثر نشاطًا";
+  String get most_active_reporters => "الأعوان الأكثر نشاطًا";
   @override
-  String get Incident_grouped_by_region => "الحوادث حسب المنطقة";
+  String get incident_grouped_by_region => "الحوادث حسب المنطقة";
   @override
-  String get Distribution_by_resolution_status =>"توزيع حسب حالة المعالجة";
+  String get distribution_by_resolution_status => "توزيع حسب حالة المعالجة";
   @override
-  String get Incident_reported_by_day => "الحوادث المبلغ عنها يوميًا";
+  String get incident_reported_by_day => "الحوادث المبلغ عنها يوميًا";
 }

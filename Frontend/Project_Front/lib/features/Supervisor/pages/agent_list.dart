@@ -39,14 +39,11 @@ class _AgentListState extends State<AgentList> {
   }
 
   Future<void> initData() async {
-    final result = await authService.getCurrentUser();
-    if (!result['success']) {
-      setState(() => error = result['message']);
+    final supervisorId = await authService.getUserIdFromToken();
+    if (supervisorId == null) {
+      setState(() => error = 'User not authenticated.');
       return;
     }
-
-    final user = result['data'];
-    final supervisorId = user['id'];
 
     try {
       final fetchedForests = await supervisorServices.getforestsbySupervisorId(
@@ -63,7 +60,6 @@ class _AgentListState extends State<AgentList> {
       );
 
       setState(() {
-        userData = user;
         forests = fetchedForests;
         parcellesWithAgents = fetchedParcelles;
         agents = fetchedParcelles

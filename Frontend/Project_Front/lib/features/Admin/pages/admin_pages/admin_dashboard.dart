@@ -175,7 +175,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                             t.admin_manage_incidents,
                             Icons.add_a_photo_outlined,
                           ),
-                          _buildItem(t.BI, Icons.stacked_line_chart_outlined),
+                          _buildItem(t.bi, Icons.stacked_line_chart_outlined),
                         ],
                       ),
                     ),

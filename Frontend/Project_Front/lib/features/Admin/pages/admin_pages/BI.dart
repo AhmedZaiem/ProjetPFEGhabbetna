@@ -51,7 +51,7 @@ class _BiState extends State<Bi> {
             ),
             const SizedBox(width: 12),
             Text(
-              t.BI,
+              t.bi,
               style: const TextStyle(
                 fontWeight: FontWeight.w700,
                 fontSize: 18,
@@ -70,7 +70,7 @@ class _BiState extends State<Bi> {
           children: [
             // page header
             Text(
-              t.Incident_statistics,
+              t.incident_statistics,
               style: const TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.w800,
@@ -82,8 +82,8 @@ class _BiState extends State<Bi> {
 
             // ── Line chart ─────────────────────────────────────────────────
             _ChartCard(
-              title: t.Over_time,
-              subtitle: t.Incident_reported_by_day,
+              title: t.over_time,
+              subtitle: t.incident_reported_by_day,
               accentColor: _accent1,
               icon: Icons.show_chart_rounded,
               child: FutureBuilder(
@@ -210,8 +210,8 @@ class _BiState extends State<Bi> {
                     SizedBox(
                       width: cardW,
                       child: _ChartCard(
-                        title: t.By_status,
-                        subtitle: t.Distribution_by_resolution_status,
+                        title: t.by_status,
+                        subtitle: t.distribution_by_resolution_status,
                         accentColor: _accent2,
                         icon: Icons.donut_large_rounded,
                         chartHeight: 220,
@@ -266,8 +266,8 @@ class _BiState extends State<Bi> {
                     SizedBox(
                       width: cardW,
                       child: _ChartCard(
-                        title: t.By_region,
-                        subtitle: t.Incident_grouped_by_region,
+                        title: t.by_region,
+                        subtitle: t.incident_grouped_by_region,
                         accentColor: _accent3,
                         icon: Icons.bar_chart_rounded,
                         chartHeight: 220,
@@ -392,7 +392,7 @@ class _BiState extends State<Bi> {
                       width: cardW,
                       child: _ChartCard(
                         title: t.top_forests,
-                        subtitle: t.Most_incidents_by_forest,
+                        subtitle: t.most_incidents_by_forest,
                         accentColor: Colors.green,
                         icon: Icons.park_rounded,
                         chartHeight: 220,
@@ -491,7 +491,7 @@ class _BiState extends State<Bi> {
                       width: cardW,
                       child: _ChartCard(
                         title: t.top_agents_stat,
-                        subtitle: t.Most_active_reporters,
+                        subtitle: t.most_active_reporters,
                         accentColor: Colors.orange,
                         icon: Icons.person_rounded,
                         chartHeight: 220,

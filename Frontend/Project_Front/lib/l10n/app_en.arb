@@ -150,8 +150,8 @@
   "incidents_status": "Status",
   "incidents_location": "Location",
 
-  "incident_upload": "Upload",
-  "incident_create_title": "Create an Incident",
+  "incident_upload": "Submit",
+  "incident_create_title": "Send an Incident",
   "incident_take_photo": "Take a photo",
   "incident_choose_gallery": "Choose from gallery",
 
@@ -180,6 +180,28 @@
   "admin_Coordinates" : "Coordinates",
   "admin_Location" : "Location",
 
-  "admin_view_image" : "View Image"
+  "admin_view_image" : "View Image",
+
+  "admin_cancel": "Cancel",
+  "agent_hello": "Hello",
+  "agent_score": "Score",
+  "agent_pending": "Pending",
+  "agent_accepted": "Accepted",
+  "agent_rejected": "Rejected",
+  "agent_Latest_Incidents": "Latest Incidents",
+  "agent_Upload_Incident": "Report Incident",
+  "close": "Close",
+  "bi": "Business Intelligence",
+  "incident_statistics": "Incident Statistics",
+  "over_time": "Over Time",
+  "by_region": "By Region",
+  "by_status": "By Status",
+  "top_agents_stat": "Top Agents",
+  "top_forests": "Top Forests",
+  "most_incidents_by_forest": "Forests with the Most Incidents",
+  "most_active_reporters": "Most Active Reporters",
+  "incident_grouped_by_region": "Incidents Grouped by Region",
+  "distribution_by_resolution_status": "Distribution by Resolution Status",
+  "incident_reported_by_day": "Incidents Reported by Day"
 
 }

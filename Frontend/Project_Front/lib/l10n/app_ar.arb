@@ -152,7 +152,7 @@
   "incidents_status": "الحالة",
   "incidents_location": "الموقع",
 
-  "incident_upload": "رفع",
+  "incident_upload": "الإبلاغ",
   "incident_create_title": "إنشاء حادث",
   "incident_take_photo": "التقاط صورة",
   "incident_choose_gallery": "اختيار من المعرض",
@@ -181,5 +181,42 @@
   "admin_Coordinates" : "الإحداثيات",
   "admin_Location" : "الموقع",
 
-  "admin_view_image" : "عرض الصورة"
+  "admin_view_image" : "عرض الصورة",
+
+  "admin_cancel" : "إلغاء",
+
+  "agent_hello" : "مرحبا",
+
+  "agent_score" : "الرصيد",
+
+  "agent_pending" : "قيد الانتظار",
+
+  "agent_accepted" : "مقبول",
+
+  "agent_rejected" : "مرفوض",
+
+  "agent_Latest_Incidents" : "آخر البلاغات",
+
+  "agent_Upload_Incident" : "الإبلاغ عن حادثة",
+
+  "close" : "أغلق",
+
+  "bi" : "ذكاء الأعمال",
+
+  "incident_statistics" : "إحصائيات الحوادث",
+
+  "over_time" : "على مرّ الزمن",
+
+  "by_region" : "حسب المنطقة",
+
+  "by_status" : "حسب الحالة",
+
+  "top_agents_stat" : "أفضل الأعوان",
+  "top_forests" : "أفضل الغابات",
+  
+  "most_incidents_by_forest" : "الغابات الأكثر تسجيلًا للحوادث",
+  "most_active_reporters" : "الأعوان الأكثر نشاطًا",
+  "incident_grouped_by_region" : "الحوادث حسب المنطقة",
+  "distribution_by_resolution_status" : "توزيع حسب حالة المعالجة",
+  "incident_reported_by_day" : "الحوادث المبلغ عنها يوميًا"
 }

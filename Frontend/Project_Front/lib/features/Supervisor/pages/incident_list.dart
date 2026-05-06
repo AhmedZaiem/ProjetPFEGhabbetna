@@ -22,14 +22,11 @@ class _IncidentListState extends State<IncidentList> {
   List<IncidentOut>? incidentData;
 
   Future<void> initData() async {
-    final result = await authService.getCurrentUser();
-    if (!result['success']) {
-      setState(() => error = result['message']);
+    final supervisorId = await authService.getUserIdFromToken();
+    if (supervisorId == null) {
+      setState(() => error = 'User not authenticated.');
       return;
     }
-
-    final user = result['data'];
-    final supervisorId = user['id'];
 
     try {
       final fetchedForests = await supervisorServices.getforestsbySupervisorId(
@@ -45,7 +42,6 @@ class _IncidentListState extends State<IncidentList> {
         forestIds,
       );
       setState(() {
-        userData = user;
         forests = fetchedForests;
         incidentData = incidents;
       });

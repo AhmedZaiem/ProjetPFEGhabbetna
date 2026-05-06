@@ -82,6 +82,19 @@ class AuthService {
     return await storage.read(key: 'access_token');
   }
 
+  Future<int?> getUserIdFromToken() async {
+    final token = await getAccessToken();
+    if (token == null) return null;
+
+    try {
+      final decodedToken = JwtDecoder.decode(token);
+      return decodedToken['user_id'];
+    } catch (e) {
+      print('Error decoding token: $e');
+      return null;
+    }
+  }
+
   // ACTIVATE ACCOUNT
   Future<Map<String, dynamic>> activateAccount({
     required String token,

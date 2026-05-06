@@ -152,7 +152,7 @@ class _SupervisorMenuState extends State<SupervisorMenu> {
                             t.supervisor_profile,
                             Icons.person_4_sharp,
                           ),
-                          _buildItem(t.BI, Icons.stacked_line_chart_outlined),
+                          _buildItem(t.bi, Icons.stacked_line_chart_outlined),
                         ],
                       ),
                     ),
