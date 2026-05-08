@@ -2,12 +2,75 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func
 from db.database import SessionLocal
 from models.incident import Incident
+from core.redis import redis_client
 import httpx
-
-ADMIN_SERVICE_URL = "http://localhost:8002"
+from datetime import datetime
+import json
 
 
 class IncidentBIController:
+
+    @staticmethod
+    def consume_incidents():
+        while True:
+            events = redis_client.xreadgroup(
+                groupname="bi_group",
+                consumername="bi_consumer_1",
+                streams={"incidents_stream": ">"},
+                count=10,
+                block=5000
+            )
+
+            if not events:
+                continue
+
+            db = SessionLocal()
+
+            try:
+                message_ids = []
+                for stream_name, messages in events:
+                    for message_id, data in messages:
+                        event_type = data["event_type"]
+                        payload = json.loads(data["data"])
+
+                        if event_type == "incident_created":
+                            IncidentBIController.handle_created(db, payload)
+                        elif event_type == "incident_updated":
+                            IncidentBIController.handle_updated(db, payload)
+                        message_ids.append(message_id)
+                        
+                       
+                db.commit()
+                for msg_id in message_ids:
+                    redis_client.xack("incidents_stream", "bi_group", msg_id)
+            except Exception as e:
+                db.rollback()
+                print(f"Error processing events: {e}")
+            finally:
+                db.close()
+
+    @staticmethod
+    def handle_created(db, payload):
+        bi_incident = Incident(
+            incident_id=payload["id"],
+            user_id=payload["user_id"],
+            user_email=payload["user_email"],
+            forest_id=payload["forest_id"],
+            forest_name=payload["forest_name"],
+            status=payload["status"],
+            type=payload["type"],
+            region=payload["region"],
+            created_at=datetime.fromisoformat(payload["created_at"])
+        )
+
+        db.add(bi_incident)
+    
+    @staticmethod
+    def handle_updated(db, payload):
+        incident = db.query(Incident).filter(Incident.incident_id == payload["id"]).first()
+        if incident:
+            incident.status = payload["status"]
+            incident.comment = payload["comment"]
 
     # Incidents over time
     @staticmethod

@@ -29,6 +29,8 @@ class _IncidentMapState extends State<IncidentMap> {
     LatLng(37.4, 12.0),
   );
 
+  final rasjbal_center = LatLng(37.2, 10.11);
+
   @override
   void initState() {
     super.initState();
@@ -165,17 +167,13 @@ class _IncidentMapState extends State<IncidentMap> {
             child: FlutterMap(
               mapController: _mapController,
               options: MapOptions(
-                initialCameraFit: CameraFit.bounds(
-                  bounds: northTunisiaBounds,
-                  padding: const EdgeInsets.all(16),
-                ),
                 cameraConstraint: CameraConstraint.contain(
                   bounds: northTunisiaBounds,
                 ),
                 minZoom: 8.5,
                 maxZoom: 18,
-                initialCenter: mapCenter,
-                initialZoom: 10,
+                initialCenter: rasjbal_center,
+                initialZoom: 13.5,
               ),
               children: [
                 TileLayer(

@@ -7,27 +7,20 @@ from models.status_enum import Status
 
 
 class Incident(Base):
-    __tablename__ = "incidents"
+    __tablename__ = "bi_incidents"
 
-    id = Column(Integer, primary_key=True, index=True)
-    description = Column(String, nullable=False)
-    type = Column(String, nullable=False)
-    region = Column(String, nullable=False)
-    location = Column(String, nullable=False)
-    image_url = Column(String, nullable=False)
-
-    status = Column(Enum(Status), default=Status.pending)
-    comment = Column(Text, nullable=True)
-
-    coords = Column(Geometry(geometry_type="POINT", srid=4326), nullable=False)
-
-    created_at = Column(DateTime, server_default=func.now(), nullable=False)
-    expires_at = Column(DateTime, nullable=False)
+    id = Column(Integer, primary_key=True)
+    incident_id = Column(Integer, unique=True, index=True)
 
     user_id = Column(Integer)
     user_email = Column(String)
-    forest_id = Column(Integer, nullable=False)
-    forest_name = Column(String, nullable=False)
 
-    class Config:
-        orm_mode = True
+    forest_id = Column(Integer)
+    forest_name = Column(String)
+
+    status = Column(String)
+    type = Column(String)
+    region = Column(String)
+    comment = Column(Text)
+
+    created_at = Column(DateTime)
