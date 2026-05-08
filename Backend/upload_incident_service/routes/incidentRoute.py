@@ -1,10 +1,10 @@
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, Query
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, Query,BackgroundTasks
 from sqlalchemy.orm import Session
 from db.database import get_db
 from schemas.incidentSchema import IncidentCreate, VerifyIncidentBody
-from services.IncidentServices import create_incident,get_all_incidents, get_incidents_by_forest_ids,get_incidents_by_user,verify_incident,safe_filename
+from services.IncidentServices import create_incident,get_all_incidents, get_incidents_by_forest_ids,get_incidents_by_user,verify_incident,safe_filename,publish_incident
 from models.status_enum import Status
 from core.security import get_current_user
 import os
@@ -31,7 +31,9 @@ async def create_incident_route(
     latitude: str = Form(...),
     longitude: str = Form(...),
     db: Session = Depends(get_db),
-    current_user_id= Depends(get_current_user)
+    current_user_id= Depends(get_current_user),
+    background_tasks: BackgroundTasks = BackgroundTasks(),
+
 ):
     
     print("Received:", description, type, location, region, latitude, longitude)
@@ -98,7 +100,13 @@ async def create_incident_route(
         forest_name=forest_name
     )
 
-    return create_incident(db, incident_data)
+    incident = create_incident(db, incident_data)
+
+    background_tasks.add_task(
+        publish_incident,
+        "incident_created",
+        incident
+    )
 
 @router.get("/")
 def read_all_incidents(db: Session = Depends(get_db)):
@@ -174,12 +182,17 @@ def get_forest_incidents(forest_ids: list[int]=Query(...), db: Session = Depends
     return result
 
 @router.patch("/verify/{incident_id}")
-def verify_incident_route(incident_id: int, body:VerifyIncidentBody, db: Session = Depends(get_db)):
+def verify_incident_route(incident_id: int, body:VerifyIncidentBody, db: Session = Depends(get_db),background_tasks: BackgroundTasks = BackgroundTasks()):
     status = body.status
     comment = body.comment
     updated_incident = verify_incident(db, incident_id, status,comment)
     if not updated_incident:
         raise HTTPException(status_code=404, detail="Incident not found")
+    background_tasks.add_task(
+        publish_incident,
+        "incident_updated",
+        updated_incident
+    )
     return updated_incident
     
 

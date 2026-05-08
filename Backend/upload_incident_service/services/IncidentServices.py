@@ -7,6 +7,7 @@ from models.status_enum import Status
 from sqlalchemy.orm import Session
 from shapely.geometry import Point
 from geoalchemy2.shape import from_shape
+from services.event_publisher import publish_incident
 
 
 
@@ -37,6 +38,7 @@ def create_incident(db: Session, incident_data):
     db.add(new_incident)
     db.commit()
     db.refresh(new_incident)
+
     return {
         "id": new_incident.id,
         "description": new_incident.description,
