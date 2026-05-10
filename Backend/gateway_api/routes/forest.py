@@ -2,10 +2,11 @@ from fastapi import APIRouter,Request,Response
 import httpx
 from fastapi.responses import JSONResponse
 import json
+import os
 
 router = APIRouter()
 
-Auth_SERVICE_URL = "http://localhost:8002"
+Auth_SERVICE_URL = os.getenv("ADMIN_SERVICE_URL", "http://localhost:8002")
 
 @router.post("/")
 async def create_forest(request: Request):

@@ -40,7 +40,7 @@ class IncidentBIController:
                         message_ids.append(message_id)
                         
                        
-                db.commit()
+                db.commit() 
                 for msg_id in message_ids:
                     redis_client.xack("incidents_stream", "bi_group", msg_id)
             except Exception as e:

@@ -2,12 +2,13 @@ from fastapi import APIRouter,Request,Response
 import httpx
 from fastapi.responses import JSONResponse
 import json
+import os
 
 router = APIRouter()
 
-Auth_SERVICE_URL = "http://localhost:8001"
+Auth_SERVICE_URL = os.getenv("AUTH_SERVICE_URL", "http://localhost:8001")
 
-Admin_SERVICE_URL= "http://localhost:8002"
+Admin_SERVICE_URL= os.getenv("ADMIN_SERVICE_URL", "http://localhost:8002")
 
 @router.post("/login")
 async def login(request: Request):

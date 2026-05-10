@@ -1,9 +1,10 @@
 from fastapi import APIRouter, Request, Response
 import httpx
+import os
 
 router = APIRouter()
 
-Admin_SERVICE_URL = "http://localhost:8002"
+Admin_SERVICE_URL = os.getenv("ADMIN_SERVICE_URL", "http://localhost:8002")
 
 @router.get("/services")
 async def get_services(request: Request):

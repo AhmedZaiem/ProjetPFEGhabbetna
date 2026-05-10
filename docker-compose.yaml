@@ -17,6 +17,11 @@ services:
     build: ./Backend/gateway_api
     ports:
       - "8000:8000"
+    environment:
+      - AUTH_SERVICE_URL=http://auth_service:8000
+      - ADMIN_SERVICE_URL=http://admin_service:8000
+      - UPLOAD_INCIDENT_SERVICE_URL=http://upload_incident_service:8000
+      - BI_INCIDENT_SERVICE_URL=http://bi_incident_service:8000
     depends_on:
       - auth_service
       - admin_service

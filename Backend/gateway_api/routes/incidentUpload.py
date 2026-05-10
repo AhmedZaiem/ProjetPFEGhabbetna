@@ -1,10 +1,11 @@
 from fastapi import APIRouter,Request,Response,Query,Body
 import httpx
+import os
 
 
 router = APIRouter()
 
-upload_incident_URL="http://localhost:8003"
+upload_incident_URL=os.getenv("UPLOAD_INCIDENT_SERVICE_URL","http://localhost:8003")
 
 @router.post("/add")
 async def create_incident(request: Request):
