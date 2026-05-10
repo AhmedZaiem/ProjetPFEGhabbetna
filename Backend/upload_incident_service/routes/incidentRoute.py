@@ -12,6 +12,7 @@ import uuid
 from geoalchemy2.shape import to_shape
 from shapely.geometry import Point
 import httpx
+import os
 
 
 router = APIRouter(prefix="/incidents", tags=["Incidents"])
@@ -19,7 +20,7 @@ router = APIRouter(prefix="/incidents", tags=["Incidents"])
 UPLOAD_FOLDER = "uploads/incidents"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-Admin_SERVICE_URL = "http://localhost:8002"
+Admin_SERVICE_URL = os.getenv("ADMIN_SERVICE_URL", "http://localhost:8002")
 
 @router.post("/add")
 async def create_incident_route(

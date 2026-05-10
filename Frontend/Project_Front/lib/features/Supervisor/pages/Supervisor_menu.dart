@@ -25,7 +25,6 @@ class _SupervisorMenuState extends State<SupervisorMenu> {
     IncidentMap(),
     AgentList(),
     Profile(),
-    Bi(),
   ];
 
   void logout() async {
@@ -152,7 +151,6 @@ class _SupervisorMenuState extends State<SupervisorMenu> {
                             t.supervisor_profile,
                             Icons.person_4_sharp,
                           ),
-                          _buildItem(t.bi, Icons.stacked_line_chart_outlined),
                         ],
                       ),
                     ),

@@ -6,10 +6,10 @@ from core.security import hash_password
 
 from sqlalchemy.orm import Session
 from db.database import get_db
-
+import os
 import httpx
 
-AUTH_SERVICE_URL = "http://localhost:8001"
+AUTH_SERVICE_URL = os.getenv("AUTH_SERVICE_URL", "http://localhost:8001")
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 

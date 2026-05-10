@@ -167,7 +167,9 @@ class _ForestListState extends State<ForestList> {
                               color: Colors.blueGrey,
                             ),
                             const SizedBox(width: 4),
-                            Text("${t.admin_area}: ${parcel.areaHectares} ha"),
+                            Text(
+                              "${t.admin_area}: ${parcel.areaHectares.floorToDouble()} ha",
+                            ),
                           ],
                         ),
 
@@ -757,30 +759,13 @@ class _ForestListState extends State<ForestList> {
                 const Icon(Icons.straighten, color: Colors.blueGrey, size: 18),
                 const SizedBox(width: 6),
                 Text(
-                  "${t.admin_area} : ${forest.areaHectares} ha",
+                  "${t.admin_area} : ${forest.areaHectares.floorToDouble()} ha",
                   style: const TextStyle(fontSize: 14, color: Colors.black),
                 ),
               ],
             ),
 
             const SizedBox(height: 6),
-
-            Row(
-              children: [
-                const Icon(
-                  Icons.warning_amber_rounded,
-                  color: Color.fromARGB(255, 67, 51, 28),
-                  size: 18,
-                ),
-                const SizedBox(width: 6),
-                Text(
-                  "${t.admin_risk} : ${forest.riskLevel}",
-                  style: const TextStyle(fontSize: 14, color: Colors.black),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 14),
 
             Row(
               mainAxisAlignment: MainAxisAlignment.end,

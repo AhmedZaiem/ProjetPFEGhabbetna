@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 from schemas.auth_schemas import LoginRequest, ActivationRequest, PasswordResetRequest, PasswordReset, ActivateAccountRequest,LogoutRequest,RefreshRequest
 from core.security import verify_password, create_access_token, create_refresh_token,decode_token
 from services.email_service import send_activation_email, send_password_reset_email
-
+import os
 import httpx
 import uuid
 import jwt
@@ -10,7 +10,7 @@ from core.redis_client import redis_client
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
-ADMIN_SERVICE_URL = "http://localhost:8002"
+ADMIN_SERVICE_URL = os.getenv("ADMIN_SERVICE_URL", "http://localhost:8002")
 
 
 @router.post("/login")

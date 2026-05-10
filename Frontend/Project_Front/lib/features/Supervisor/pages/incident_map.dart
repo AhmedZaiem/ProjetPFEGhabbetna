@@ -182,6 +182,18 @@ class _IncidentMapState extends State<IncidentMap> {
                   subdomains: ['a', 'b', 'c'],
                 ),
                 MarkerLayer(markers: _buildIncidentMarkers()),
+                PolygonLayer(
+                  polygons: (forests ?? []).map((forest) {
+                    return Polygon(
+                      points: forest.boundary
+                          .map((c) => LatLng(c.lat, c.lng))
+                          .toList(),
+                      color: Colors.green.withOpacity(0.2),
+                      borderColor: Colors.green,
+                      borderStrokeWidth: 2,
+                    );
+                  }).toList(),
+                ),
               ],
             ),
           ),
