@@ -5,6 +5,7 @@ import 'package:authproject/features/Agent/models/incident.dart';
 import 'package:authproject/features/Agent/services/incident_service.dart';
 import 'package:authproject/features/Supervisor/models/incidentOut.dart';
 import 'upload.dart';
+import 'package:authproject/main.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -147,13 +148,44 @@ class _HomeState extends State<Home> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          children: [
-            Image.asset('assets/images/logoApp.jpeg', height: 80),
-            const SizedBox(width: 12),
-            Text("Home"),
-          ],
-        ),
+        centerTitle: true,
+        title: Text(t.agent_home),
+        
+        actions: [
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.language),
+
+            onSelected: (value) {
+              switch (value) {
+                case 'en':
+                  (mainAppKey.currentState)?.setLocale(
+                    const Locale('en', 'US'),
+                  );
+                  break;
+
+                case 'fr':
+                  (mainAppKey.currentState)?.setLocale(
+                    const Locale('fr', 'FR'),
+                  );
+                  break;
+
+                case 'ar':
+                  (mainAppKey.currentState)?.setLocale(
+                    const Locale('ar', 'AR'),
+                  );
+                  break;
+              }
+            },
+
+            itemBuilder: (context) => [
+              const PopupMenuItem(value: 'en', child: Text("English")),
+
+              const PopupMenuItem(value: 'fr', child: Text("Français")),
+
+              const PopupMenuItem(value: 'ar', child: Text("العربية")),
+            ],
+          ),
+        ],
       ),
       body: SafeArea(
         child: Padding(

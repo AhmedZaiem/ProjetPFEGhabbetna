@@ -13,6 +13,7 @@ import 'dart:io';
 import 'package:authproject/features/Auth/services/auth_service.dart';
 
 import 'package:authproject/l10n/app_localizations.dart';
+import 'package:authproject/main.dart';
 
 class Upload extends StatefulWidget {
   const Upload({super.key});
@@ -260,8 +261,6 @@ class _UploadState extends State<Upload> {
     );
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
@@ -276,7 +275,46 @@ class _UploadState extends State<Upload> {
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
-        appBar: AppBar(title: Text(t.incident_upload), centerTitle: true),
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(t.incident_upload),
+
+          actions: [
+            PopupMenuButton<String>(
+              icon: const Icon(Icons.language),
+
+              onSelected: (value) {
+                switch (value) {
+                  case 'en':
+                    (mainAppKey.currentState)?.setLocale(
+                      const Locale('en', 'US'),
+                    );
+                    break;
+
+                  case 'fr':
+                    (mainAppKey.currentState)?.setLocale(
+                      const Locale('fr', 'FR'),
+                    );
+                    break;
+
+                  case 'ar':
+                    (mainAppKey.currentState)?.setLocale(
+                      const Locale('ar', 'AR'),
+                    );
+                    break;
+                }
+              },
+
+              itemBuilder: (context) => [
+                const PopupMenuItem(value: 'en', child: Text("English")),
+
+                const PopupMenuItem(value: 'fr', child: Text("Français")),
+
+                const PopupMenuItem(value: 'ar', child: Text("العربية")),
+              ],
+            ),
+          ],
+        ),
         body: userData == null
             ? Center(
                 child: error != null

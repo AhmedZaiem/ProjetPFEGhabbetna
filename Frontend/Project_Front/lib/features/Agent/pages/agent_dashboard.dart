@@ -19,35 +19,7 @@ class _agentDashboardState extends State<agentDashboard> {
 
   final List<Widget> _pages = [Upload(), Profile(), Home(), History()];
 
-  void _setLanguage(Locale locale) {
-    (mainAppKey.currentState)?.setLocale(locale);
-  }
-
-  Widget _langButton(String label, Locale locale) {
-    return Expanded(
-      child: OutlinedButton(
-        onPressed: () => _setLanguage(locale),
-        child: Text(label, style: const TextStyle(fontSize: 12)),
-      ),
-    );
-  }
-
-  Widget _languageSwitcher() {
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: Row(
-        children: [
-          _langButton("EN", const Locale('en', 'US')),
-          const SizedBox(width: 6),
-          _langButton("FR", const Locale('fr', 'FR')),
-          const SizedBox(width: 6),
-          _langButton("AR", const Locale('ar', 'AR')),
-        ],
-      ),
-    );
-  }
-
-   @override
+  @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
 
@@ -68,27 +40,25 @@ class _agentDashboardState extends State<agentDashboard> {
               BottomNavigationBarItem(
                 icon: const Icon(Icons.upload),
                 label: t.agent_upload,
-                backgroundColor: const Color(0xFF4CAF50),
+                backgroundColor: const Color(0xFF1B5E20),
               ),
               BottomNavigationBarItem(
                 icon: const Icon(Icons.person),
                 label: t.supervisor_profile,
-                backgroundColor: const Color(0xFF4CAF50),
+                backgroundColor: const Color(0xFF1B5E20),
               ),
               BottomNavigationBarItem(
                 icon: const Icon(Icons.home_filled),
                 label: t.agent_home,
-                backgroundColor: const Color(0xFF4CAF50),
+                backgroundColor: const Color(0xFF1B5E20),
               ),
               BottomNavigationBarItem(
                 icon: const Icon(Icons.history),
                 label: t.agent_history,
-                backgroundColor: const Color(0xFF4CAF50),
+                backgroundColor: const Color(0xFF1B5E20),
               ),
             ],
           ),
-
-          _languageSwitcher(),
         ],
       ),
     );

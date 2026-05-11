@@ -4,6 +4,7 @@ import 'package:authproject/features/Agent/services/incident_service.dart';
 import 'package:authproject/features/Auth/services/auth_service.dart';
 import 'package:authproject/l10n/app_localizations.dart';
 import '../ui_components/history_components.dart';
+import 'package:authproject/main.dart';
 
 class History extends StatefulWidget {
   const History({super.key});
@@ -70,10 +71,48 @@ class _HistotyState extends State<History> {
 
   @override
   Widget build(BuildContext context) {
-    final t = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Incident History")),
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(t.agent_history),
+
+        actions: [
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.language),
+
+            onSelected: (value) {
+              switch (value) {
+                case 'en':
+                  (mainAppKey.currentState)?.setLocale(
+                    const Locale('en', 'US'),
+                  );
+                  break;
+
+                case 'fr':
+                  (mainAppKey.currentState)?.setLocale(
+                    const Locale('fr', 'FR'),
+                  );
+                  break;
+
+                case 'ar':
+                  (mainAppKey.currentState)?.setLocale(
+                    const Locale('ar', 'AR'),
+                  );
+                  break;
+              }
+            },
+
+            itemBuilder: (context) => [
+              const PopupMenuItem(value: 'en', child: Text("English")),
+
+              const PopupMenuItem(value: 'fr', child: Text("Français")),
+
+              const PopupMenuItem(value: 'ar', child: Text("العربية")),
+            ],
+          ),
+        ],
+      ),
       body: error != null
           ? Center(child: Text(error!))
           : FutureBuilder<List<IncidentOut>>(

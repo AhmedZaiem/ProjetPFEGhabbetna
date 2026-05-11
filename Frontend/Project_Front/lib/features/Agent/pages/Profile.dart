@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:authproject/features/Auth/services/auth_service.dart';
 import 'package:go_router/go_router.dart';
 import 'package:authproject/l10n/app_localizations.dart';
+import 'package:authproject/main.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -43,13 +44,44 @@ class _ProfileState extends State<Profile> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          children: [
-            Image.asset('assets/images/logoApp.jpeg', height: 80),
-            const SizedBox(width: 12),
-            Text(t.supervisor_profile),
-          ],
-        ),
+        centerTitle: true,
+        title: Text(t.supervisor_profile),
+
+        actions: [
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.language),
+
+            onSelected: (value) {
+              switch (value) {
+                case 'en':
+                  (mainAppKey.currentState)?.setLocale(
+                    const Locale('en', 'US'),
+                  );
+                  break;
+
+                case 'fr':
+                  (mainAppKey.currentState)?.setLocale(
+                    const Locale('fr', 'FR'),
+                  );
+                  break;
+
+                case 'ar':
+                  (mainAppKey.currentState)?.setLocale(
+                    const Locale('ar', 'AR'),
+                  );
+                  break;
+              }
+            },
+
+            itemBuilder: (context) => [
+              const PopupMenuItem(value: 'en', child: Text("English")),
+
+              const PopupMenuItem(value: 'fr', child: Text("Français")),
+
+              const PopupMenuItem(value: 'ar', child: Text("العربية")),
+            ],
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
@@ -77,13 +109,19 @@ class _ProfileState extends State<Profile> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("${t.admin_first_name}: ${userData!['firstname']}"),
+                              Text(
+                                "${t.admin_first_name}: ${userData!['firstname']}",
+                              ),
                               SizedBox(height: 16),
-                              Text("${t.admin_last_name}: ${userData!['lastname']}"),
+                              Text(
+                                "${t.admin_last_name}: ${userData!['lastname']}",
+                              ),
                               SizedBox(height: 16),
                               Text("${t.admin_cin}: ${userData!['cin']}"),
                               SizedBox(height: 16),
-                              Text("${t.admin_username}: ${userData!['username']}"),
+                              Text(
+                                "${t.admin_username}: ${userData!['username']}",
+                              ),
                               SizedBox(height: 16),
                               Text("${t.admin_email}: ${userData!['email']}"),
                               SizedBox(height: 16),
