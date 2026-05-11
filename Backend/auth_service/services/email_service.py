@@ -2,7 +2,7 @@ from fastapi_mail import MessageSchema
 from core.email import fastMail
 import os
 
-FRONTEND_URL = os.getenv("FRONTEND_URL")
+FRONTEND_URL = os.getenv("FRONTEND_URL","http://localhost:3000")
 
 
 async def send_activation_email(email: str, token: str):
