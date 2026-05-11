@@ -33,8 +33,10 @@ services:
     ports:
       - "8001:8000"
     environment:
-      - REDIS_URL=redis://redis:6379
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
       - FRONTEND_URL=http://localhost:3000
+      - ADMIN_SERVICE_URL=http://admin_service:8000
     env_file:
       - ./Backend/auth_service/.env
 
@@ -50,6 +52,8 @@ services:
       - ./Backend/admin_service/.env
     environment:
       - DATABASE_URL=postgresql://postgres:aaaa@admin_db:5432/admin_db
+      - AUTH_SERVICE_URL=http://auth_service:8000
+      - FRONTEND_URL=http://localhost:3000
     depends_on:
       admin_db:
         condition: service_healthy
@@ -76,6 +80,7 @@ services:
       - "8003:8000"
     environment:
       - DATABASE_URL=postgresql://postgres:aaaa@incident_db:5432/incident_db
+      - ADMIN_SERVICE_URL=http://admin_service:8000
     depends_on:
       incident_db:
         condition: service_healthy

@@ -6,13 +6,13 @@ import os
 
 router = APIRouter()
 
-Auth_SERVICE_URL = os.getenv("ADMIN_SERVICE_URL", "http://localhost:8002")
+AUTH_SERVICE_URL = os.getenv("ADMIN_SERVICE_URL", "http://localhost:8002")
 
 @router.post("/")
 async def create_parcelle(request: Request):
     body = await request.json()
     async with httpx.AsyncClient() as client:
-        response = await client.post(f"{Auth_SERVICE_URL}/parcelles/", json=body)
+        response = await client.post(f"{AUTH_SERVICE_URL}/parcelles/", json=body)
     return Response(
         content=response.content,
         status_code=response.status_code,
@@ -25,7 +25,7 @@ async def update_parcelle(parcelle_id: int, request: Request):
 
     async with httpx.AsyncClient() as client:
         response = await client.put(
-            f"{Auth_SERVICE_URL}/parcelles/{parcelle_id}",
+            f"{AUTH_SERVICE_URL}/parcelles/{parcelle_id}",
             json=body
         )
 
@@ -44,7 +44,7 @@ async def get_parcelles(request: Request):
         headers["Authorization"] = auth
 
     async with httpx.AsyncClient() as client:
-        response = await client.get(f"{Auth_SERVICE_URL}/parcelles/",headers=headers)
+        response = await client.get(f"{AUTH_SERVICE_URL}/parcelles/",headers=headers)
     return Response(
         content=response.content,
         status_code=response.status_code,
@@ -60,7 +60,7 @@ async def get_non_patrolled_parcelles(request: Request):
         headers["Authorization"] = auth
 
     async with httpx.AsyncClient() as client:
-        response = await client.get(f"{Auth_SERVICE_URL}/parcelles/non_occupied_parcelles", headers=headers)
+        response = await client.get(f"{AUTH_SERVICE_URL}/parcelles/non_occupied_parcelles", headers=headers)
     return Response(
         content=response.content,
         status_code=response.status_code,
@@ -76,7 +76,7 @@ async def get_parcelles_by_forest_ids(request: Request, forest_ids: list[int] = 
         headers["Authorization"] = auth
 
     async with httpx.AsyncClient() as client:
-        response = await client.get(f"{Auth_SERVICE_URL}/parcelles/byforest/", params={"forest_ids": forest_ids}, headers=headers)
+        response = await client.get(f"{AUTH_SERVICE_URL}/parcelles/byforest/", params={"forest_ids": forest_ids}, headers=headers)
     return Response(
         content=response.content,
         status_code=response.status_code,
@@ -92,7 +92,7 @@ async def get_parcelle(parcelle_id: int, request: Request):
         headers["Authorization"] = auth
 
     async with httpx.AsyncClient() as client:
-        response = await client.get(f"{Auth_SERVICE_URL}/parcelles/{parcelle_id}", headers=headers)
+        response = await client.get(f"{AUTH_SERVICE_URL}/parcelles/{parcelle_id}", headers=headers)
     return Response(
         content=response.content,
         status_code=response.status_code,
@@ -108,7 +108,7 @@ async def delete_parcelle(parcelle_id: int, request: Request):
         headers["Authorization"] = auth
 
     async with httpx.AsyncClient() as client:
-        response = await client.delete(f"{Auth_SERVICE_URL}/parcelles/{parcelle_id}", headers=headers)
+        response = await client.delete(f"{AUTH_SERVICE_URL}/parcelles/{parcelle_id}", headers=headers)
     return Response(
         content=response.content,
         status_code=response.status_code,
@@ -123,7 +123,7 @@ async def assign_agent(request: Request,parcelle_id:int,user_id:int):
     if auth:
         headers["Authorization"] = auth
     async with httpx.AsyncClient() as client:
-        response = await client.post(f"{Auth_SERVICE_URL}/parcelles/{parcelle_id}/assign-agent/{user_id}")
+        response = await client.post(f"{AUTH_SERVICE_URL}/parcelles/{parcelle_id}/assign-agent/{user_id}", headers=headers)
     return Response(
         content=response.content,
         status_code=response.status_code,
@@ -138,7 +138,7 @@ async def check_assigned_parcelle(request: Request,user_id:int):
     if auth:
         headers["Authorization"] = auth
     async with httpx.AsyncClient() as client:
-        response = await client.get(f"{Auth_SERVICE_URL}/parcelles/assigned/{user_id}")
+        response = await client.get(f"{AUTH_SERVICE_URL}/parcelles/assigned/{user_id}", headers=headers)
     return Response(
         content=response.content,
         status_code=response.status_code,

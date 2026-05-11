@@ -5,7 +5,7 @@ import os
 
 router = APIRouter()
 
-upload_incident_URL=os.getenv("UPLOAD_INCIDENT_SERVICE_URL","http://localhost:8003")
+UPLOAD_INCIDENT_URL=os.getenv("UPLOAD_INCIDENT_SERVICE_URL","http://localhost:8003")
 
 @router.post("/add")
 async def create_incident(request: Request):
@@ -19,7 +19,7 @@ async def create_incident(request: Request):
 
     async with httpx.AsyncClient() as client:
         response = await client.post(
-            f"{upload_incident_URL}/incidents/add",
+            f"{UPLOAD_INCIDENT_URL}/incidents/add",
             content=body,
             headers={
                 "Authorization": headers["Authorization"],
@@ -42,7 +42,7 @@ async def get_incidents(request: Request):
         headers["Authorization"] = auth
 
     async with httpx.AsyncClient() as client:
-        response = await client.get(f"{upload_incident_URL}/incidents/", headers=headers)
+        response = await client.get(f"{UPLOAD_INCIDENT_URL}/incidents/", headers=headers)
     return Response(
         content=response.content,
         status_code=response.status_code,
@@ -57,7 +57,7 @@ async def get_incidents_by_user_id(request: Request, user_id: int):
     if auth:
         headers["Authorization"] = auth
     async with httpx.AsyncClient() as client:
-        response = await client.get(f"{upload_incident_URL}/incidents/user/{user_id}", headers=headers)
+        response = await client.get(f"{UPLOAD_INCIDENT_URL}/incidents/user/{user_id}", headers=headers)
     return Response(
         content=response.content,
         status_code=response.status_code,
@@ -72,7 +72,7 @@ async def get_incidents_by_forest_ids(request: Request, forest_ids: list[int] = 
     if auth:
         headers["Authorization"] = auth
     async with httpx.AsyncClient() as client:
-        response = await client.get(f"{upload_incident_URL}/incidents/forests", params={"forest_ids": forest_ids}, headers=headers)
+        response = await client.get(f"{UPLOAD_INCIDENT_URL}/incidents/forests", params={"forest_ids": forest_ids}, headers=headers)
     return Response(
         content=response.content,
         status_code=response.status_code,
@@ -100,7 +100,7 @@ async def verify_incident(request: Request, incident_id: int):
         headers["Authorization"] = auth
     async with httpx.AsyncClient() as client:
         response = await client.patch(
-            f"{upload_incident_URL}/incidents/verify/{incident_id}",
+            f"{UPLOAD_INCIDENT_URL}/incidents/verify/{incident_id}",
             json={"incident_id": incident_id, "status": status, "comment": comment},
             headers=headers
 

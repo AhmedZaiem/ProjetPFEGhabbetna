@@ -4,7 +4,7 @@ import os
 
 router = APIRouter()
 
-Admin_SERVICE_URL = os.getenv("ADMIN_SERVICE_URL", "http://localhost:8002")
+ADMIN_SERVICE_URL = os.getenv("ADMIN_SERVICE_URL", "http://localhost:8002")
 
 @router.get("/services")
 async def get_services(request: Request):
@@ -13,7 +13,7 @@ async def get_services(request: Request):
     if auth:
         headers["Authorization"] = auth
     async with httpx.AsyncClient() as client:
-        response = await client.get(f"{Admin_SERVICE_URL}/service/services", headers=headers)
+        response = await client.get(f"{ADMIN_SERVICE_URL}/service/services", headers=headers)
     return Response(
         content=response.content,
         status_code=response.status_code,
@@ -24,7 +24,7 @@ async def get_services(request: Request):
 async def create_service(request: Request):
     body = await request.json()
     async with httpx.AsyncClient() as client:
-        response = await client.post(f"{Admin_SERVICE_URL}/service/create_service", json=body)
+        response = await client.post(f"{ADMIN_SERVICE_URL}/service/create_service", json=body)
     return Response(
         content=response.content,
         status_code=response.status_code,
@@ -35,7 +35,7 @@ async def create_service(request: Request):
 async def update_service(service_id: int, request: Request):
     body = await request.json()
     async with httpx.AsyncClient() as client:
-        response = await client.put(f"{Admin_SERVICE_URL}/service/service_update/{service_id}", json=body)
+        response = await client.put(f"{ADMIN_SERVICE_URL}/service/service_update/{service_id}", json=body)
     return Response(
         content=response.content,
         status_code=response.status_code,
@@ -49,7 +49,7 @@ async def delete_service(service_id: int, request: Request):
     if auth:
         headers["Authorization"] = auth
     async with httpx.AsyncClient() as client:
-        response = await client.delete(f"{Admin_SERVICE_URL}/service/{service_id}", headers=headers)
+        response = await client.delete(f"{ADMIN_SERVICE_URL}/service/{service_id}", headers=headers)
     return Response(
         content=response.content,
         status_code=response.status_code,

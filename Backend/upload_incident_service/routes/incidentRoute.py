@@ -20,7 +20,7 @@ router = APIRouter(prefix="/incidents", tags=["Incidents"])
 UPLOAD_FOLDER = "uploads/incidents"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-Admin_SERVICE_URL = os.getenv("ADMIN_SERVICE_URL", "http://localhost:8002")
+ADMIN_SERVICE_URL = os.getenv("ADMIN_SERVICE_URL", "http://localhost:8002")
 
 @router.post("/add")
 async def create_incident_route(
@@ -49,7 +49,7 @@ async def create_incident_route(
         try:
             async with httpx.AsyncClient() as client:
                 response = await client.get(
-                    f"{Admin_SERVICE_URL}/forest/by_location/",
+                    f"{ADMIN_SERVICE_URL}/forest/by_location/",
                     params={"lat": lat, "lon": lon}
                 )
 

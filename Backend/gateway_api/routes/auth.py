@@ -6,28 +6,37 @@ import os
 
 router = APIRouter()
 
-Auth_SERVICE_URL = os.getenv("AUTH_SERVICE_URL", "http://localhost:8001")
+AUTH_SERVICE_URL = os.getenv("AUTH_SERVICE_URL", "http://localhost:8001")
 
-Admin_SERVICE_URL= os.getenv("ADMIN_SERVICE_URL", "http://localhost:8002")
+ADMIN_SERVICE_URL= os.getenv("ADMIN_SERVICE_URL", "http://localhost:8002")
+
+def safe_json(response):
+    try:
+        return response.json()
+    except Exception:
+        return {
+            "status": response.status_code,
+            "raw": response.text
+        }
 
 @router.post("/login")
 async def login(request: Request):
     body = await request.json()
     async with httpx.AsyncClient() as client:
-        response = await client.post(f"{Auth_SERVICE_URL}/auth/login", json=body)
+        response = await client.post(f"{AUTH_SERVICE_URL}/auth/login", json=body)
     return JSONResponse(
-    status_code=response.status_code,
-    content=response.json()
-)
+        status_code=response.status_code,
+        content=safe_json(response)
+    )
 
 @router.post("/register")
 async def register(request: Request):
     body = await request.json()
     async with httpx.AsyncClient() as client:
-        response = await client.post(f"{Admin_SERVICE_URL}/auth/register", json=body)
+        response = await client.post(f"{ADMIN_SERVICE_URL}/auth/register", json=body)
     return JSONResponse(
     status_code=response.status_code,
-    content=response.json()
+    content=safe_json(response)
 )
 
 @router.post("/refresh")
@@ -36,12 +45,12 @@ async def refresh(request: Request):
 
     async with httpx.AsyncClient() as client:
         response = await client.post(
-            f"{Auth_SERVICE_URL}/auth/refresh",
+            f"{AUTH_SERVICE_URL}/auth/refresh",
             json=body
         )
     return JSONResponse(
         status_code=response.status_code,
-        content=response.json()
+        content=safe_json(response)
     )
 
 @router.post("/logout")
@@ -50,19 +59,19 @@ async def logout(request: Request):
 
     async with httpx.AsyncClient() as client:
         response = await client.post(
-            f"{Auth_SERVICE_URL}/auth/logout",
+            f"{AUTH_SERVICE_URL}/auth/logout",
             json=body
         )
     return JSONResponse(
         status_code=response.status_code,
-        content=response.json()
+        content=safe_json(response)
     )
 
 @router.post("/activate")
 async def activate(request: Request):
     body = await request.json()
     async with httpx.AsyncClient() as client:
-        response = await client.post(f"{Auth_SERVICE_URL}/auth/activate", json=body)
+        response = await client.post(f"{AUTH_SERVICE_URL}/auth/activate", json=body)
         
     return Response(
         content=response.content,
@@ -76,7 +85,7 @@ async def read_current_user(request: Request):
         "Authorization": request.headers.get("Authorization")
     }
     async with httpx.AsyncClient() as client:
-        response = await client.get(f"{Admin_SERVICE_URL}/auth/me", headers=headers)
+        response = await client.get(f"{ADMIN_SERVICE_URL}/auth/me", headers=headers)
     return Response(
         content=response.content,
         status_code=response.status_code,
@@ -90,7 +99,7 @@ async def forgot_password(request: Request):
     body = await request.json()
     async with httpx.AsyncClient() as client:
         response = await client.post(
-            f"{Auth_SERVICE_URL}/auth/forgot-password",
+            f"{AUTH_SERVICE_URL}/auth/forgot-password",
             json=body
         )
         return Response(
@@ -104,7 +113,7 @@ async def reset_password(request:Request):
     body = await request.json()
     async with httpx.AsyncClient() as client:
         response = await client.post(
-            f"{Auth_SERVICE_URL}/auth/reset-password",
+            f"{AUTH_SERVICE_URL}/auth/reset-password",
             json=body
         )
     return Response(
@@ -121,7 +130,7 @@ async def get_all_users(request: Request):
     if auth:
         headers["Authorization"] = auth
     async with httpx.AsyncClient() as client:
-        response = await client.get(f"{Admin_SERVICE_URL}/users/users", headers=headers)
+        response = await client.get(f"{ADMIN_SERVICE_URL}/users/users", headers=headers)
     return Response(
         content=response.content,
         status_code=response.status_code,
@@ -137,7 +146,7 @@ async def block_user(user_id: int, request: Request):
 
     async with httpx.AsyncClient() as client:
         response = await client.post(
-            f"{Admin_SERVICE_URL}/users/users/{user_id}/block",
+            f"{ADMIN_SERVICE_URL}/users/users/{user_id}/block",
             headers=headers
         )
 
@@ -151,7 +160,7 @@ async def unblock_user(user_id: int, request: Request):
 
     async with httpx.AsyncClient() as client:
         response = await client.post(
-            f"{Admin_SERVICE_URL}/users/users/{user_id}/unblock",
+            f"{ADMIN_SERVICE_URL}/users/users/{user_id}/unblock",
             headers=headers
         )
 
@@ -170,13 +179,13 @@ async def create_role(request: Request):
 
     async with httpx.AsyncClient() as client:
         response = await client.post(
-            f"{Admin_SERVICE_URL}/users/create-role",
+            f"{ADMIN_SERVICE_URL}/users/create-role",
             json=body,
             headers=headers
         )
 
     return JSONResponse(
-        content=response.json(),
+        content=safe_json(response),
         status_code=response.status_code
     )
 
@@ -190,13 +199,13 @@ async def get_roles(request: Request):
 
     async with httpx.AsyncClient() as client:
         response = await client.get(
-            f"{Admin_SERVICE_URL}/users/roles",
+            f"{ADMIN_SERVICE_URL}/users/roles",
             headers=headers
         )
 
     return JSONResponse(
         status_code=response.status_code,
-        content=response.json()
+        content=safe_json(response)
     )
 
 
@@ -209,7 +218,7 @@ async def delete_role(name: str, request: Request):
 
     async with httpx.AsyncClient() as client:
         response = await client.delete(
-            f"{Admin_SERVICE_URL}/users/delete-role?name={name}",
+            f"{ADMIN_SERVICE_URL}/users/delete-role?name={name}",
             headers=headers
         )
 
@@ -230,7 +239,7 @@ async def modify_role(request: Request):
 
     async with httpx.AsyncClient() as client:
         response = await client.put(
-            f"{Admin_SERVICE_URL}/users/modify-role",
+            f"{ADMIN_SERVICE_URL}/users/modify-role",
             headers=headers,
             json=body
         )
@@ -250,7 +259,7 @@ async def get_unassigned_agents(request: Request):
 
     async with httpx.AsyncClient() as client:
         response = await client.get(
-            f"{Admin_SERVICE_URL}/users/agents/unassigned",
+            f"{ADMIN_SERVICE_URL}/users/agents/unassigned",
             headers=headers
         )
 
@@ -269,7 +278,7 @@ async def get_supervisors(request: Request):
 
     async with httpx.AsyncClient() as client:
         response = await client.get(
-            f"{Admin_SERVICE_URL}/users/supervisors",
+            f"{ADMIN_SERVICE_URL}/users/supervisors",
             headers=headers
         )
 
@@ -290,7 +299,7 @@ async def update_user(request: Request, user_id: int):
 
     async with httpx.AsyncClient() as client:
         response = await client.put(
-            f"{Admin_SERVICE_URL}/users/{user_id}",
+            f"{ADMIN_SERVICE_URL}/users/{user_id}",
             json=body,
             headers=headers
         )
@@ -310,12 +319,12 @@ async def get_user_by_id(user_id: int, request: Request):
 
     async with httpx.AsyncClient() as client:
         response = await client.get(
-            f"{Admin_SERVICE_URL}/users/{user_id}",
+            f"{ADMIN_SERVICE_URL}/users/{user_id}",
             headers=headers
         )
 
-    return Response(
-        content=response.content,
+    return JSONResponse(
+        content=safe_json(response),
         status_code=response.status_code,
         media_type="application/json"
     )

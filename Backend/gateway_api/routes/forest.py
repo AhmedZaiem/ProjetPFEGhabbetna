@@ -6,13 +6,13 @@ import os
 
 router = APIRouter()
 
-Auth_SERVICE_URL = os.getenv("ADMIN_SERVICE_URL", "http://localhost:8002")
+AUTH_SERVICE_URL = os.getenv("ADMIN_SERVICE_URL", "http://localhost:8002")
 
 @router.post("/")
 async def create_forest(request: Request):
     body = await request.json()
     async with httpx.AsyncClient() as client:
-        response = await client.post(f"{Auth_SERVICE_URL}/forest/", json=body)
+        response = await client.post(f"{AUTH_SERVICE_URL}/forest/", json=body)
     return Response(
         content=response.content,
         status_code=response.status_code,
@@ -25,7 +25,7 @@ async def update_forest(forest_id: int, request: Request):
 
     async with httpx.AsyncClient() as client:
         response = await client.put(
-            f"{Auth_SERVICE_URL}/forest/{forest_id}",
+            f"{AUTH_SERVICE_URL}/forest/{forest_id}",
             json=body
         )
 
@@ -44,7 +44,7 @@ async def get_forests(request: Request):
         headers["Authorization"] = auth
 
     async with httpx.AsyncClient() as client:
-        response = await client.get(f"{Auth_SERVICE_URL}/forest/",headers=headers)
+        response = await client.get(f"{AUTH_SERVICE_URL}/forest/",headers=headers)
     return Response(
         content=response.content,
         status_code=response.status_code,
@@ -60,7 +60,7 @@ async def get_non_supervised_forests(request: Request):
         headers["Authorization"] = auth
 
     async with httpx.AsyncClient() as client:
-        response = await client.get(f"{Auth_SERVICE_URL}/forest/non_occupied_forests", headers=headers)
+        response = await client.get(f"{AUTH_SERVICE_URL}/forest/non_occupied_forests", headers=headers)
     return Response(
         content=response.content,
         status_code=response.status_code,
@@ -76,7 +76,7 @@ async def get_forest(forest_id: int, request: Request):
         headers["Authorization"] = auth
 
     async with httpx.AsyncClient() as client:
-        response = await client.get(f"{Auth_SERVICE_URL}/forest/{forest_id}", headers=headers)
+        response = await client.get(f"{AUTH_SERVICE_URL}/forest/{forest_id}", headers=headers)
     return Response(
         content=response.content,
         status_code=response.status_code,
@@ -92,7 +92,7 @@ async def get_forest_by_supervisor_id(supervisor_id: int, request: Request):
         headers["Authorization"] = auth
 
     async with httpx.AsyncClient() as client:
-        response = await client.get(f"{Auth_SERVICE_URL}/forest/supervisor/{supervisor_id}", headers=headers)
+        response = await client.get(f"{AUTH_SERVICE_URL}/forest/supervisor/{supervisor_id}", headers=headers)
     return Response(
         content=response.content,
         status_code=response.status_code,
@@ -108,7 +108,7 @@ async def delete_forest(forest_id: int, request: Request):
         headers["Authorization"] = auth
 
     async with httpx.AsyncClient() as client:
-        response = await client.delete(f"{Auth_SERVICE_URL}/forest/{forest_id}", headers=headers)
+        response = await client.delete(f"{AUTH_SERVICE_URL}/forest/{forest_id}", headers=headers)
     return Response(
         content=response.content,
         status_code=response.status_code,
@@ -123,7 +123,7 @@ async def assign_supervisor(request: Request,forest_id:int,user_id:int):
     if auth:
         headers["Authorization"] = auth
     async with httpx.AsyncClient() as client:
-        response = await client.post(f"{Auth_SERVICE_URL}/forest/{forest_id}/assign-supervisor/{user_id}")
+        response = await client.post(f"{AUTH_SERVICE_URL}/forest/{forest_id}/assign-supervisor/{user_id}", headers=headers)
     return Response(
         content=response.content,
         status_code=response.status_code,
@@ -138,7 +138,7 @@ async def check_assigned_forest(request: Request,user_id:int):
     if auth:
         headers["Authorization"] = auth
     async with httpx.AsyncClient() as client:
-        response = await client.get(f"{Auth_SERVICE_URL}/forest/assigned/{user_id}")
+        response = await client.get(f"{AUTH_SERVICE_URL}/forest/assigned/{user_id}", headers=headers)
     return Response(
         content=response.content,
         status_code=response.status_code,

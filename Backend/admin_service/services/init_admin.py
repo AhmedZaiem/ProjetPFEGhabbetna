@@ -25,7 +25,7 @@ def init_admin():
             db.refresh(admin_role)
 
         # Ensure admin user exists
-        admin_user = db.query(User).filter(User.email == "admin@ghabetna.com").first()
+        admin_user = db.query(User).filter(User.email == "admin@gmail.com").first()
 
         if not admin_user:
             admin_user = User(
