@@ -1,7 +1,8 @@
 import redis
+import os
 
 redis_client = redis.Redis(
     host="localhost",
-    port=6380,
+    port=os.getenv("REDIS_PORT", 6379),
     decode_responses=True
 )
