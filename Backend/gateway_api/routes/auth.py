@@ -324,7 +324,7 @@ async def get_user_by_id(user_id: int, request: Request):
         )
 
     return JSONResponse(
-        content=safe_json(response),
+        content=response.content,
         status_code=response.status_code,
         media_type="application/json"
     )
