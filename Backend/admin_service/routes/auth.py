@@ -63,7 +63,8 @@ def get_user_by_email_endpoint(email: str, db: Session = Depends(get_db)):
         "password_hash": user.password_hash,
         "is_verified": user.is_verified,
         "is_blocked": user.is_blocked,
-        "role_id": user.role_id
+        "role_id": user.role_id,
+        "role_name": user.role.name if user.role else None
     }
 
 @router.patch("/users/{user_id}/password")

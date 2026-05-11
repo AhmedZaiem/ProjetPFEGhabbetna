@@ -40,16 +40,16 @@ final adminRouter = GoRouter(
     }
 
     final payload = JwtDecoder.decode(accessToken);
-    final role = payload['role_id'];
+    final role = payload['role_name'];
 
-    if (role == 1 && path.startsWith('/admin_dashboard')) return null;
-    if (role == 2 && path.startsWith('/supervisor')) return null;
-    if (role == 3 && path.startsWith('/agent')) return null;
+    if (role == 'Admin' && path.startsWith('/admin_dashboard')) return null;
+    if (role == 'Superviseur' && path.startsWith('/supervisor')) return null;
+    if (role == 'Agent' && path.startsWith('/agent')) return null;
 
     // Redirect based on role
-    if (role == 1) return '/admin_dashboard';
-    if (role == 2) return '/supervisor';
-    if (role == 3) return '/agent';
+    if (role == 'Admin') return '/admin_dashboard';
+    if (role == 'Superviseur') return '/supervisor';
+    if (role == 'Agent') return '/agent';
 
     // Unauthorized → fallback
     return '/';

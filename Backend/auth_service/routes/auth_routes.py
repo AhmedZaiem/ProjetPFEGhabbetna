@@ -39,7 +39,8 @@ async def login(data: LoginRequest):
         data={
             "user_id": user["id"],
             "sub": user["email"],
-            "role_id": user["role_id"]
+            "role_id": user["role_id"],
+            "role_name": user["role_name"]
         }
     )
 
@@ -50,6 +51,7 @@ async def login(data: LoginRequest):
             "user_id":user["id"],
             "sub": user["email"],
             "role_id":user["role_id"],
+            "role_name": user["role_name"],
             "sid": session_id
         }
     )
@@ -88,7 +90,8 @@ async def refresh_token(data: RefreshRequest):
             data={
                 "user_id": user_id,
                 "sub": payload.get("sub"),
-                "role_id": payload.get("role_id")
+                "role_id": payload.get("role_id"),
+                "role_name": payload.get("role_name")
             }
         )
 
@@ -97,6 +100,7 @@ async def refresh_token(data: RefreshRequest):
                 "user_id": user_id,
                 "sub": payload.get("sub"),
                 "role_id": payload.get("role_id"),
+                "role_name": payload.get("role_name"),
                 "sid": session_id
             }
         )
