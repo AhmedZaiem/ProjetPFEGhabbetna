@@ -75,22 +75,6 @@ class _ForestListState extends State<ForestList> {
     }
   }
 
-  void sortPolygonPoints(List<LatLng> points) {
-    if (points.length < 3) return;
-
-    final centerLat =
-        points.map((p) => p.latitude).reduce((a, b) => a + b) / points.length;
-
-    final centerLng =
-        points.map((p) => p.longitude).reduce((a, b) => a + b) / points.length;
-
-    points.sort((a, b) {
-      final angleA = atan2(a.latitude - centerLat, a.longitude - centerLng);
-      final angleB = atan2(b.latitude - centerLat, b.longitude - centerLng);
-      return angleA.compareTo(angleB);
-    });
-  }
-
   Future<void> deleteParcel(int id) async {
     try {
       await parcelService.deleteParcel(id);
@@ -281,7 +265,6 @@ class _ForestListState extends State<ForestList> {
                                 onTap: (_, p) {
                                   setStateDialog(() {
                                     points.add(p);
-                                    sortPolygonPoints(points);
                                   });
                                 },
                               ),
@@ -463,7 +446,6 @@ class _ForestListState extends State<ForestList> {
                                 onTap: (_, p) {
                                   setStateDialog(() {
                                     points.add(p);
-                                    sortPolygonPoints(points);
                                   });
                                 },
                               ),

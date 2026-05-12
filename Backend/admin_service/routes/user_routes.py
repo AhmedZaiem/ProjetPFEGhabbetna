@@ -108,4 +108,5 @@ def update_user_route(
         user.role_name,
         user.age,
         user.region,
+        user.tel
     )

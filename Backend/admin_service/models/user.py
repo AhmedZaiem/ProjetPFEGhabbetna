@@ -15,6 +15,8 @@ class User(Base):
     password_hash = Column(String, nullable=True)
     age = Column(Integer,nullable=False)
     region = Column(String, nullable=False)
+    tel = Column(String, nullable=False)
+    score = Column(Integer, default=0, nullable=True)
     role_id = Column(Integer, ForeignKey("roles.id"), nullable=False)
     role = relationship("Role", back_populates="users")
 

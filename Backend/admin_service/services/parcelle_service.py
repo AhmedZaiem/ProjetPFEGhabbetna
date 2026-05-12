@@ -11,7 +11,7 @@ from sqlalchemy import func
 def create_parcelle(db: Session, parcelle_in: ParcelleCreate) -> Parcelle:
     coords = [(p.lng, p.lat) for p in parcelle_in.boundary]
 
-    polygon = MultiPoint(coords).convex_hull
+    polygon = Polygon(coords)
 
     if not polygon.is_valid:
         polygon = polygon.buffer(0)
@@ -53,7 +53,7 @@ def update_parcelle(db: Session, parcelle_id: int, parcelle_in: ParcelleUpdate) 
     if parcelle_in.boundary is not None:
         coords = [(p.lng, p.lat) for p in parcelle_in.boundary]
 
-        polygon = MultiPoint(coords).convex_hull
+        polygon = Polygon(coords)
 
         if not polygon.is_valid:
             polygon = polygon.buffer(0)

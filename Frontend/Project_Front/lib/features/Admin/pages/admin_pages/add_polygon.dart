@@ -74,21 +74,6 @@ class _AddPolygonPageState extends State<AddPolygonPage> {
   void addPoint(LatLng point) {
     setState(() {
       points.add(point);
-
-      if (points.length >= 3) {
-        final centerLat =
-            points.map((p) => p.latitude).reduce((a, b) => a + b) /
-            points.length;
-        final centerLng =
-            points.map((p) => p.longitude).reduce((a, b) => a + b) /
-            points.length;
-
-        points.sort((a, b) {
-          final angleA = atan2(a.latitude - centerLat, a.longitude - centerLng);
-          final angleB = atan2(b.latitude - centerLat, b.longitude - centerLng);
-          return angleA.compareTo(angleB);
-        });
-      }
     });
   }
 

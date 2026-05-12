@@ -32,7 +32,8 @@ async def register(user: UserCreate,background_tasks: BackgroundTasks, db: Sessi
         user.email,
         user.role_name,
         user.age,
-        user.region
+        user.region,
+        user.tel
     )
 
     async def send_activation_email(user_id: int, email: str):

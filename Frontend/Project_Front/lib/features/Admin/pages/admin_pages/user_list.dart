@@ -102,6 +102,7 @@ class _UserListState extends State<UserList> {
 
   void _showUpdateDialog(UserModel user) {
     final loc = AppLocalizations.of(context)!;
+    final formkey = GlobalKey<FormState>();
 
     final firstnameController = TextEditingController(text: user.firstname);
     final lastnameController = TextEditingController(text: user.lastname);
@@ -109,6 +110,7 @@ class _UserListState extends State<UserList> {
     final usernameController = TextEditingController(text: user.username);
     final emailController = TextEditingController(text: user.email);
     final ageController = TextEditingController(text: user.age.toString());
+    final telController = TextEditingController(text: user.tel);
 
     String selectedRegion = tunisianStates.contains(user.region)
         ? user.region
@@ -133,97 +135,162 @@ class _UserListState extends State<UserList> {
                   Text(loc.admin_update),
                 ],
               ),
-              
+
               content: SizedBox(
                 width: 400,
                 child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 8),
-                      TextField(
-                        controller: firstnameController,
-                        decoration: InputDecoration(
-                          labelText: loc.admin_first_name,
+                  child: Form(
+                    key: formkey,
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 8),
+                        TextFormField(
+                          controller: firstnameController,
+                          decoration: InputDecoration(
+                            labelText: loc.admin_first_name,
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "First name required.";
+                            }
+                            return null;
+                          },
                         ),
-                      ),
-                      const SizedBox(height: 8),
+                        const SizedBox(height: 8),
 
-                      TextField(
-                        controller: lastnameController,
-                        decoration: InputDecoration(
-                          labelText: loc.admin_last_name,
+                        TextFormField(
+                          controller: lastnameController,
+                          decoration: InputDecoration(
+                            labelText: loc.admin_last_name,
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Last name required.";
+                            }
+                            return null;
+                          },
                         ),
-                      ),
-                      const SizedBox(height: 8),
+                        const SizedBox(height: 8),
 
-                      TextField(
-                        controller: cinController,
-                        decoration: InputDecoration(labelText: loc.admin_cin),
-                      ),
-                      const SizedBox(height: 8),
-
-                      TextField(
-                        controller: usernameController,
-                        decoration: InputDecoration(
-                          labelText: loc.admin_username,
+                        TextFormField(
+                          controller: cinController,
+                          decoration: InputDecoration(labelText: loc.admin_cin),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Cin required.";
+                            }
+                            if (!RegExp(r'^[0-9]{8}$').hasMatch(value)) {
+                              return "CIN Required to be exactly 8 digits.";
+                            }
+                            return null;
+                          },
                         ),
-                      ),
-                      const SizedBox(height: 8),
+                        const SizedBox(height: 8),
 
-                      TextField(
-                        controller: emailController,
-                        decoration: InputDecoration(labelText: loc.admin_email),
-                      ),
-                      const SizedBox(height: 8),
-
-                      TextField(
-                        controller: ageController,
-                        decoration: InputDecoration(labelText: loc.admin_age),
-                      ),
-
-                      const SizedBox(height: 15),
-
-                      DropdownButtonFormField<String>(
-                        value: selectedRegion,
-                        items: tunisianStates
-                            .map(
-                              (e) => DropdownMenuItem(value: e, child: Text(e)),
-                            )
-                            .toList(),
-                        onChanged: (v) =>
-                            setStateDialog(() => selectedRegion = v!),
-                        decoration: InputDecoration(
-                          labelText: loc.admin_region,
+                        TextFormField(
+                          controller: usernameController,
+                          decoration: InputDecoration(
+                            labelText: loc.admin_username,
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Username required.";
+                            }
+                            return null;
+                          },
                         ),
-                      ),
+                        const SizedBox(height: 8),
 
-                      const SizedBox(height: 15),
+                        TextFormField(
+                          controller: emailController,
+                          decoration: InputDecoration(
+                            labelText: loc.admin_email,
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Email required.";
+                            }
+                            if (!RegExp(
+                              r'^[^@]+@[^@]+\.[^@]+$',
+                            ).hasMatch(value)) {
+                              return "Invalid email format.";
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 8),
 
-                      FutureBuilder<List<RoleModel>>(
-                        future: userService.getRoles(),
-                        builder: (context, snapshot) {
-                          final roles = snapshot.data ?? [];
-                          return DropdownButtonFormField<String>(
-                            value: roles.any((r) => r.name == selectedRole)
-                                ? selectedRole
-                                : null,
-                            items: roles
-                                .map(
-                                  (r) => DropdownMenuItem(
-                                    value: r.name,
-                                    child: Text(r.name),
-                                  ),
-                                )
-                                .toList(),
-                            onChanged: (v) =>
-                                setStateDialog(() => selectedRole = v!),
-                            decoration: InputDecoration(
-                              labelText: loc.admin_role,
-                            ),
-                          );
-                        },
-                      ),
-                    ],
+                        TextFormField(
+                          controller: ageController,
+                          decoration: InputDecoration(labelText: loc.admin_age),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Age required.";
+                            }
+                            return null;
+                          },
+                        ),
+
+                        const SizedBox(height: 15),
+
+                        DropdownButtonFormField<String>(
+                          value: selectedRegion,
+                          items: tunisianStates
+                              .map(
+                                (e) =>
+                                    DropdownMenuItem(value: e, child: Text(e)),
+                              )
+                              .toList(),
+                          onChanged: (v) =>
+                              setStateDialog(() => selectedRegion = v!),
+                          decoration: InputDecoration(
+                            labelText: loc.admin_region,
+                          ),
+                        ),
+
+                        const SizedBox(height: 15),
+
+                        TextFormField(
+                          controller: telController,
+                          decoration: InputDecoration(labelText: "Tel:"),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Tel required.";
+                            }
+                            if (!RegExp(r'^[0-9]{8}$').hasMatch(value)) {
+                              return "Tel Required to be exactly 8 digits.";
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 8),
+
+                        FutureBuilder<List<RoleModel>>(
+                          future: userService.getRoles(),
+                          builder: (context, snapshot) {
+                            final roles = snapshot.data ?? [];
+                            return DropdownButtonFormField<String>(
+                              value: roles.any((r) => r.name == selectedRole)
+                                  ? selectedRole
+                                  : null,
+                              items: roles
+                                  .map(
+                                    (r) => DropdownMenuItem(
+                                      value: r.name,
+                                      child: Text(r.name),
+                                    ),
+                                  )
+                                  .toList(),
+                              onChanged: (v) =>
+                                  setStateDialog(() => selectedRole = v!),
+                              decoration: InputDecoration(
+                                labelText: loc.admin_role,
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -235,6 +302,9 @@ class _UserListState extends State<UserList> {
                 ),
                 ElevatedButton(
                   onPressed: () async {
+                    if (!formkey.currentState!.validate()) {
+                      return;
+                    }
                     final result = await userService.updateUser(
                       userId: user.id,
                       firstname: firstnameController.text,
@@ -245,6 +315,7 @@ class _UserListState extends State<UserList> {
                       age: int.parse(ageController.text),
                       roleName: selectedRole,
                       region: selectedRegion,
+                      tel: telController.text,
                     );
 
                     Navigator.pop(context);
@@ -355,6 +426,7 @@ class _UserListState extends State<UserList> {
                             DataColumn(label: Text(t.admin_cin)),
                             DataColumn(label: Text(t.admin_age)),
                             DataColumn(label: Text(t.admin_region)),
+                            DataColumn(label: Text("Tel")),
                             DataColumn(label: Text(t.admin_role_name)),
                             DataColumn(label: Text(t.admin_verified)),
                             DataColumn(label: Text(t.admin_actions)),
@@ -369,6 +441,7 @@ class _UserListState extends State<UserList> {
                                 DataCell(Text(user.cin)),
                                 DataCell(Text(user.age.toString())),
                                 DataCell(Text(user.region)),
+                                DataCell(Text(user.tel)),
                                 DataCell(Text(user.role_name)),
                                 DataCell(
                                   Icon(
@@ -382,7 +455,6 @@ class _UserListState extends State<UserList> {
                                   Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      
                                       IconButton(
                                         padding: EdgeInsets.zero,
                                         constraints: const BoxConstraints(),
@@ -397,7 +469,6 @@ class _UserListState extends State<UserList> {
 
                                       const SizedBox(width: 6),
 
-                                      
                                       IconButton(
                                         padding: EdgeInsets.zero,
                                         constraints: const BoxConstraints(),

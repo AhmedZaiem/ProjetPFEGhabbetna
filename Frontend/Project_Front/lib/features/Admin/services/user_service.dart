@@ -33,6 +33,7 @@ class UserService {
     required int age,
     required String roleName,
     required String region,
+    required String tel,
   }) async {
     try {
       var url = Uri.parse("$baseUrl/auth/register");
@@ -48,6 +49,7 @@ class UserService {
           'age': age,
           'role_name': roleName,
           'region': region,
+          'tel': tel,
         }),
       );
 
@@ -81,9 +83,10 @@ class UserService {
     required int age,
     required String roleName,
     required String region,
+    required String tel,
   }) async {
     try {
-      var url = Uri.parse("$baseUrl/auth/$userId"); 
+      var url = Uri.parse("$baseUrl/auth/$userId");
 
       var response = await http.put(
         url,
@@ -97,6 +100,7 @@ class UserService {
           'age': age,
           'role_name': roleName,
           'region': region,
+          'tel': tel,
         }),
       );
 

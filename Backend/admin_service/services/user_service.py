@@ -34,7 +34,7 @@ def get_user_by_email(db: Session, email: str):
 def get_user_by_id(db: Session,user_id: int):
     return db.query(User).filter(User.id == user_id).first()
 
-def create_user(db:Session,firstname:str,lastname:str,cin:str,username:str, email: str,role_name: str, age: int,region:str):
+def create_user(db:Session,firstname:str,lastname:str,cin:str,username:str, email: str,role_name: str, age: int,region:str,tel:str):
     role = db.query(Role).filter(Role.name == role_name).first()
     if not role:
         raise HTTPException(status_code=400, detail="Invalid role")
@@ -47,7 +47,7 @@ def create_user(db:Session,firstname:str,lastname:str,cin:str,username:str, emai
         role_id=role.id,
         age=age,
         region=region,
-
+        tel=tel,
     )
     db.add(new_user)
     db.commit()
@@ -66,6 +66,8 @@ def get_all_users(db: Session):
             "email": u.email,
             "age": u.age,
             "region": u.region,
+            "tel": u.tel,
+            "score": u.score,
             "role_name": u.role.name,
             "is_verified": u.is_verified,
             "is_blocked": u.is_blocked
@@ -84,6 +86,7 @@ def update_user(
     role_name: str,
     age: int,
     region: str,
+    tel: str
 ):
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
@@ -101,6 +104,7 @@ def update_user(
     user.email = email
     user.age = age
     user.region = region
+    user.tel = tel
     user.role_id = role.id
 
     db.commit()
@@ -115,6 +119,8 @@ def update_user(
         "email": user.email,
         "age": user.age,
         "region": user.region,
+        "tel": user.tel,
+        "score": user.score,
         "role_name": role.name,
         "is_verified": user.is_verified,
         "is_blocked": user.is_blocked

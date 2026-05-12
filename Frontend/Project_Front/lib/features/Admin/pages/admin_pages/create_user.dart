@@ -20,6 +20,7 @@ class _CreateUserState extends State<Create_User> {
   var usernameController = TextEditingController();
   var emailController = TextEditingController();
   var ageController = TextEditingController();
+  var telController = TextEditingController();
 
   List<String> tunisianStates = [
     "Tunis",
@@ -74,6 +75,7 @@ class _CreateUserState extends State<Create_User> {
     String email = emailController.text.trim();
     int? age = int.tryParse(ageController.text.trim());
     String region = selectedRegion ?? '';
+    String tel = telController.text.trim();
 
     if (firstname.isEmpty ||
         lastname.isEmpty ||
@@ -96,6 +98,7 @@ class _CreateUserState extends State<Create_User> {
       age: age,
       roleName: selectedRole!,
       region: region,
+      tel: tel,
     );
 
     _showDialog(
@@ -135,14 +138,12 @@ class _CreateUserState extends State<Create_User> {
     );
   }
 
- 
-
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
 
     return Scaffold(
-appBar: AppBar(
+      appBar: AppBar(
         title: Row(
           children: [
             ClipRRect(
@@ -332,6 +333,26 @@ appBar: AppBar(
                         onChanged: (v) => setState(() => selectedRegion = v),
                         validator: (v) => v == null || v.isEmpty
                             ? loc.error_region_required
+                            : null,
+                      ),
+
+                      const SizedBox(height: 20),
+
+                      TextFormField(
+                        controller: telController,
+                        decoration: InputDecoration(
+                          labelText: "Tel",
+                          prefixIcon: const Icon(Icons.phone),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        validator: (v) => v == null || v.isEmpty
+                            ? loc.error_cin_required
+                            : v.length != 8
+                            ? loc.error_cin_invalid
+                            : !RegExp(r'^[0-9]+$').hasMatch(v)
+                            ? loc.error_only_numbers
                             : null,
                       ),
 

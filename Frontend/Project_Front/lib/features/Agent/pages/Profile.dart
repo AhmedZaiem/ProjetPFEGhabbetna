@@ -128,6 +128,8 @@ class _ProfileState extends State<Profile> {
                               Text("${t.admin_age}: ${userData!['age']}"),
                               SizedBox(height: 16),
                               Text("${t.admin_region}: ${userData!['region']}"),
+                              SizedBox(height: 16),
+                              Text("Tel: ${userData!['tel']}"),
                             ],
                           ),
                         ),

@@ -36,6 +36,7 @@ def init_admin():
                 cin="00000000",
                 age=30,
                 region="system",
+                tel="11111111",
                 password_hash=get_password_hash("password"),
                 role_id=admin_role.id,
                 is_verified=True,

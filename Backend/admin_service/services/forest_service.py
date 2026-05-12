@@ -12,7 +12,7 @@ from sqlalchemy import func
 def create_forest(db: Session, forest_in: ForestCreate) -> Forest:
     coords = [(p.lng, p.lat) for p in forest_in.boundary]
 
-    polygon = MultiPoint(coords).convex_hull
+    polygon = Polygon(coords)
 
     if not polygon.is_valid:
         polygon = polygon.buffer(0)
@@ -53,7 +53,7 @@ def update_forest(db: Session, forest_id: int, forest_in: ForestUpdate) -> Fores
     if forest_in.boundary is not None:
         coords = [(p.lng, p.lat) for p in forest_in.boundary]
 
-        polygon = MultiPoint(coords).convex_hull
+        polygon = Polygon(coords)
 
         if not polygon.is_valid:
             polygon = polygon.buffer(0)

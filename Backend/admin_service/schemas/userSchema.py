@@ -9,6 +9,7 @@ class UserCreate(BaseModel):
     age: int
     role_name: str
     region: str
+    tel: str
 
 
 class UserUpdate(BaseModel):
@@ -20,6 +21,7 @@ class UserUpdate(BaseModel):
     age: int
     role_name: str
     region: str
+    tel: str
 
 
 class UserOut(BaseModel):
@@ -34,6 +36,8 @@ class UserOut(BaseModel):
     is_verified: bool
     is_blocked: bool
     region: str
+    tel: str
+    score: int 
 
     class Config:
         orm_mode = True

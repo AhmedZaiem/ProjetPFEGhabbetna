@@ -146,7 +146,9 @@ def get_parcelles_by_forest_ids(forest_ids: list[int]=Query(...), db: Session = 
             "agent": {
                 "id": p.agent.id,
                 "name": p.agent.username,
-                "email": p.agent.email
+                "email": p.agent.email,
+                "tel": p.agent.tel,
+                "region": p.agent.region
             } if p.agent else None,
             "region": p.region
         })

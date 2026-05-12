@@ -10,6 +10,7 @@ class UserModel {
   final bool isVerified;
   final bool isBlocked;
   final String region;
+  final String tel;
 
   UserModel({
     required this.id,
@@ -23,6 +24,7 @@ class UserModel {
     required this.isVerified,
     required this.isBlocked,
     required this.region,
+    required this.tel,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -38,6 +40,7 @@ class UserModel {
       isVerified: json['is_verified'] ?? false,
       isBlocked: json['is_blocked'] ?? false,
       region: json['region'] ?? '',
+      tel: json['tel'] ?? '',
     );
   }
 }
