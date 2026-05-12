@@ -4,6 +4,7 @@ class Agent {
   final String email;
   final String tel;
   final String region;
+  final int score;
 
   Agent({
     required this.id,
@@ -11,6 +12,7 @@ class Agent {
     required this.email,
     required this.tel,
     required this.region,
+    required this.score,
   });
 
   factory Agent.fromJson(Map<String, dynamic> json) {
@@ -20,6 +22,7 @@ class Agent {
       email: json['email'],
       tel: json['tel'],
       region: json['region'],
+      score: json['score'],
     );
   }
 }

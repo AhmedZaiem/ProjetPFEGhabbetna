@@ -12,6 +12,7 @@ class IncidentOut {
   final String? comment;
   final int? forestId;
   final String? imageUrl;
+  final String? user_email;
 
   IncidentOut({
     this.id,
@@ -25,6 +26,7 @@ class IncidentOut {
     this.comment,
     this.forestId,
     required this.imageUrl,
+    required this.user_email,
   });
 
   Map<String, String> toFields() {
@@ -36,6 +38,7 @@ class IncidentOut {
       'region': region,
       'latitude': latitude.toStringAsFixed(6),
       'longitude': longitude.toStringAsFixed(6),
+      'user_email': user_email ?? '',
     };
     if (forestId != null) fields['forest_id'] = forestId.toString();
     if (imageUrl != null) fields['image_url'] = imageUrl!;
@@ -59,6 +62,7 @@ class IncidentOut {
       comment: json['comment'],
       forestId: json['forest_id'],
       imageUrl: fullImageUrl,
+      user_email: json['user_email'],
     );
   }
 }

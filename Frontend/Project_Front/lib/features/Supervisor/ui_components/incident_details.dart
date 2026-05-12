@@ -61,6 +61,7 @@ Widget buildIncidentDetails(
 
       Text("📄 ${incident.description}"),
       Text("📍 ${incident.type}"),
+      Text("📌 ${incident.user_email}"),
 
       SizedBox(height: 12),
 

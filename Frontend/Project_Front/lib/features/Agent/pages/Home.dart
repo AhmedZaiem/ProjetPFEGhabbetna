@@ -139,7 +139,7 @@ class _HomeState extends State<Home> {
     final firstname = userData?['firstname'] ?? '';
     final lastname = userData?['lastname'] ?? '';
     final role = userData?['role_name'] ?? '';
-
+    final score = userData?['score'] ?? 0;
     final pending = countStatus("pending");
     final accepted = countStatus("accepted");
     final rejected = countStatus("not_accepted");
@@ -150,7 +150,7 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(t.agent_home),
-        
+
         actions: [
           PopupMenuButton<String>(
             icon: const Icon(Icons.language),
@@ -224,7 +224,7 @@ class _HomeState extends State<Home> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
-                  "${t.agent_score} : - %",
+                  "${t.agent_score} : ${score.toString()} %",
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,

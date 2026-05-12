@@ -108,6 +108,7 @@ class _AgentListState extends State<AgentList> {
                   2: FlexColumnWidth(4), // Email
                   3: FlexColumnWidth(3), // Tel
                   4: FlexColumnWidth(3), // Region
+                  5: FlexColumnWidth(2), // Score
                 },
                 defaultVerticalAlignment: TableCellVerticalAlignment.middle,
                 children: [
@@ -145,6 +146,13 @@ class _AgentListState extends State<AgentList> {
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
+                      Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Text(
+                          "Score",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
                     ],
                   ),
 
@@ -167,6 +175,10 @@ class _AgentListState extends State<AgentList> {
                         Padding(
                           padding: const EdgeInsets.all(8),
                           child: Text(agent.region),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Text("${agent.score.toString()}%"),
                         ),
                       ],
                     );
