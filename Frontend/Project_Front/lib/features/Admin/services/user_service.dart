@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:authproject/config.dart' as config;
 import 'package:authproject/features/Admin/models/user_model.dart';
 import 'package:authproject/features/Admin/models/role_model.dart';
@@ -280,6 +282,27 @@ class UserService {
     } catch (e) {
       print("Error fetching supervisors: $e");
       throw Exception("Error fetching supervisors");
+    }
+  }
+
+  Future<void> updateUserScore(int userId, int score) async {
+    try {
+      var url = Uri.parse("$baseUrl/auth/$userId/score");
+
+      var response = await http.put(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({"score": score}),
+      );
+
+      if (response.statusCode != 200) {
+        throw Exception("Failed to update score");
+      }
+
+      print("Score updated successfully");
+    } catch (e) {
+      print("Error updating score: $e");
+      throw Exception("Error updating score");
     }
   }
 }

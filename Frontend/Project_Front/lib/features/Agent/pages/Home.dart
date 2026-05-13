@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:authproject/l10n/app_localizations.dart';
 import 'package:authproject/features/Auth/services/auth_service.dart';
-import 'package:authproject/features/Agent/models/incident.dart';
 import 'package:authproject/features/Agent/services/incident_service.dart';
 import 'package:authproject/features/Supervisor/models/incidentOut.dart';
-import 'upload.dart';
+import 'package:authproject/features/Admin/services/user_service.dart';
 import 'package:authproject/main.dart';
+
+import 'upload.dart';
+import 'package:authproject/features/Agent/models/incident.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -17,6 +19,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final AuthService authService = AuthService();
   final IncidentService incidentService = IncidentService();
+  final UserService userService = UserService();
 
   Map<String, dynamic>? userData;
   List<IncidentOut> incidents = [];
@@ -52,11 +55,41 @@ class _HomeState extends State<Home> {
         incidents = incidentList;
         loading = false;
       });
+
+      syncScore(userId);
     } catch (e) {
       setState(() {
         error = e.toString();
         loading = false;
       });
+    }
+  }
+
+  int calculateScore() {
+    if (incidents.isEmpty) return 0;
+
+    final total = incidents.length;
+    final accepted = incidents.where((i) => i.status == "accepted").length;
+
+    if (total == 0) return 0;
+
+    return ((accepted / total) * 100).round();
+  }
+
+  Future<void> syncScore(int userId) async {
+    final score = calculateScore();
+
+    try {
+      await userService.updateUserScore(userId, score);
+
+      setState(() {
+        userData = {
+          ...?userData,
+          'score': score, // ensures UI always reflects latest score
+        };
+      });
+    } catch (e) {
+      print("Error syncing score: $e");
     }
   }
 
@@ -139,7 +172,9 @@ class _HomeState extends State<Home> {
     final firstname = userData?['firstname'] ?? '';
     final lastname = userData?['lastname'] ?? '';
     final role = userData?['role_name'] ?? '';
+
     final score = userData?['score'] ?? 0;
+
     final pending = countStatus("pending");
     final accepted = countStatus("accepted");
     final rejected = countStatus("not_accepted");
@@ -224,7 +259,7 @@ class _HomeState extends State<Home> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
-                  "${t.agent_score} : ${score.toString()} %",
+                  "${t.agent_score} : $score %",
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,

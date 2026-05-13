@@ -229,3 +229,21 @@ def get_all_supervisors(db: Session):
         }
         for u in users
     ]
+
+
+def update_user_score(db: Session, user_id: int, score: int):
+    user = db.query(User).filter(User.id == user_id).first()
+
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    user.score = score
+
+    db.commit()
+    db.refresh(user)
+
+    return {
+        "message": "Score updated successfully",
+        "user_id": user.id,
+        "score": user.score
+    }

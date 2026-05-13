@@ -310,6 +310,30 @@ async def update_user(request: Request, user_id: int):
         media_type="application/json"
     )
 
+
+@router.put("/{user_id}/score")
+async def set_user_score(user_id: int, request: Request):
+    body = await request.json()
+
+    headers = {}
+    auth = request.headers.get("Authorization")
+    if auth:
+        headers["Authorization"] = auth
+
+    async with httpx.AsyncClient() as client:
+        response = await client.put(
+            f"{ADMIN_SERVICE_URL}/users/{user_id}/score",
+            json=body,
+            headers=headers
+        )
+
+    return Response(
+        content=response.content,
+        status_code=response.status_code,
+        media_type="application/json"
+    )
+
+
 @router.get("/users/{user_id}")
 async def get_user_by_id(user_id: int, request: Request):
     headers = {}
@@ -328,3 +352,4 @@ async def get_user_by_id(user_id: int, request: Request):
         status_code=response.status_code,
         media_type="application/json"
     )
+

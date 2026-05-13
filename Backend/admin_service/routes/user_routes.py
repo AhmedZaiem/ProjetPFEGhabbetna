@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from db.database import get_db
 from schemas.userSchema import UserOut , UserUpdate
 from schemas.role_schema import RoleCreate , RoleDelete , RoleModify
-from services.user_service import get_all_users,block_user,unblock_user,create_role,get_roles,delete_role,modify_role,get_non_assigned_agents,get_all_supervisors,update_user
+from services.user_service import get_all_users,block_user,unblock_user,create_role,get_roles,delete_role,modify_role,get_non_assigned_agents,get_all_supervisors,update_user,update_user_score
 from core.security import hash_password, verify_password,create_access_token
 from models import User
 
@@ -110,3 +110,11 @@ def update_user_route(
         user.region,
         user.tel
     )
+
+@router.put("/{user_id}/score")
+def set_user_score(
+    user_id: int,
+    score: int,
+    db: Session = Depends(get_db)
+):
+    return update_user_score(db, user_id, score)
