@@ -5,7 +5,7 @@ import os
 
 router = APIRouter()
 
-BI_SERVICE_URL = os.getenv("BI_SERVICE_URL", "http://localhost:8004")
+BI_SERVICE_URL = os.getenv("BI_INCIDENT_SERVICE_URL", "http://localhost:8004")
 
 @router.get("/over-time")
 async def incidents_over_time():

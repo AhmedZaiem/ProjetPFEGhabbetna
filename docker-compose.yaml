@@ -26,6 +26,7 @@ services:
       - auth_service
       - admin_service
       - upload_incident_service
+      - bi_incident_service
 
   # ---------------- AUTH SERVICE (NO DB) ----------------
   auth_service:
@@ -81,6 +82,8 @@ services:
     environment:
       - DATABASE_URL=postgresql://postgres:aaaa@incident_db:5432/incident_db
       - ADMIN_SERVICE_URL=http://admin_service:8000
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
     depends_on:
       incident_db:
         condition: service_healthy
@@ -100,6 +103,34 @@ services:
       timeout: 5s
       retries: 10
 
+  # ----------------BI INCIDENT SERVICE ----------------
+  bi_incident_service:
+    build: ./Backend/bi_incident_service
+    ports:
+      - "8004:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:aaaa@bi_database:5432/bi_database
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      bi_database:
+        condition: service_healthy
+  
+  bi_database:
+    image: postgis/postgis:16-3.4
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: aaaa
+      POSTGRES_DB: bi_database
+    volumes:
+      - bi_data:/var/lib/postgresql/data
+      - ./init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
   # ---------------- REDIS ----------------
   redis:
     image: redis:7
@@ -109,3 +140,4 @@ services:
 volumes:
   admin_data:
   incident_data:
+  bi_data:
