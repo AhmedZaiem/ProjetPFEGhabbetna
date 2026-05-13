@@ -41,4 +41,7 @@ class UserOut(BaseModel):
 
     class Config:
         orm_mode = True
+
+class scoreUpdate(BaseModel):
+    score: int
     
