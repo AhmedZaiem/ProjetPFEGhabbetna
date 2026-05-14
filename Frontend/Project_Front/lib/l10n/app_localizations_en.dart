@@ -471,7 +471,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get close => 'Close';
 
   @override
-  String get bi => 'Business Intelligence';
+  String get bi => 'Statistics';
 
   @override
   String get incident_statistics => 'Incident Statistics';

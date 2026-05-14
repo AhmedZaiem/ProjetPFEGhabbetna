@@ -9,6 +9,8 @@ import json
 
 
 class IncidentBIController:
+ 
+    # admin Bi functions
 
     @staticmethod
     def consume_incidents():
@@ -184,3 +186,59 @@ class IncidentBIController:
             }
             for d in data if d[0] is not None
         ]
+    
+
+
+    #  agent Bi functions
+
+    @staticmethod
+    def agent_incidents_over_time(agent_id: int):
+        db: Session = SessionLocal()
+
+        data = db.query(
+            func.date(Incident.created_at),
+            func.count(Incident.id)
+        ).filter(
+            Incident.user_id == agent_id
+        ).group_by(
+            func.date(Incident.created_at)
+        ).all()
+
+        db.close()
+
+        return [
+            {
+                "date": str(d[0]),
+                "count": d[1]
+            }
+            for d in data
+        ]
+    
+    @staticmethod
+    def agent_incidents_by_status(agent_id: int):
+        db: Session = SessionLocal()
+
+        data = db.query(
+            Incident.status,
+            func.count(Incident.id)
+        ).filter(
+            Incident.user_id == agent_id
+        ).group_by(
+            Incident.status
+        ).all()
+
+        db.close()
+
+        return [
+            {
+                "status": str(d[0]),
+                "count": d[1]
+            }
+            for d in data
+        ]
+    
+
+    
+
+    # supervisors Bi functions
+    

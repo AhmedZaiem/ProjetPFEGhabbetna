@@ -59,3 +59,30 @@ async def top_agents():
         status_code=response.status_code,
         content=response.json()
     )
+
+# AGENT OVER TIME
+@router.get("/agent/{agent_id}/over-time")
+async def agent_over_time(agent_id: int):
+    async with httpx.AsyncClient() as client:
+        response = await client.get(
+            f"{BI_SERVICE_URL}/bi_incidents/agent/{agent_id}/over-time"
+        )
+
+    return JSONResponse(
+        status_code=response.status_code,
+        content=response.json()
+    )
+
+
+# AGENT BY STATUS
+@router.get("/agent/{agent_id}/by-status")
+async def agent_by_status(agent_id: int):
+    async with httpx.AsyncClient() as client:
+        response = await client.get(
+            f"{BI_SERVICE_URL}/bi_incidents/agent/{agent_id}/by-status"
+        )
+
+    return JSONResponse(
+        status_code=response.status_code,
+        content=response.json()
+    )

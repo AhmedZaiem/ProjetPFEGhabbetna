@@ -3,6 +3,7 @@ import 'Profile.dart';
 import 'upload.dart';
 import 'Home.dart';
 import 'History.dart';
+import 'Stat.dart';
 
 import 'package:authproject/l10n/app_localizations.dart';
 import 'package:authproject/main.dart';
@@ -17,7 +18,7 @@ class agentDashboard extends StatefulWidget {
 class _agentDashboardState extends State<agentDashboard> {
   int _currentIndex = 0;
 
-  final List<Widget> _pages = [Upload(), Profile(), Home(), History()];
+  final List<Widget> _pages = [Upload(), Profile(), Home(), History(), Stat()];
 
   @override
   Widget build(BuildContext context) {
@@ -53,8 +54,8 @@ class _agentDashboardState extends State<agentDashboard> {
                 backgroundColor: const Color(0xFF1B5E20),
               ),
               BottomNavigationBarItem(
-                icon: const Icon(Icons.history),
-                label: t.agent_history,
+                icon: const Icon(Icons.stacked_bar_chart),
+                label: t.bi,
                 backgroundColor: const Color(0xFF1B5E20),
               ),
             ],

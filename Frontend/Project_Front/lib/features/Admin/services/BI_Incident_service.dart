@@ -74,4 +74,36 @@ class IncidentBIService {
 
     throw Exception("Failed to load top agents");
   }
+
+  Future<List<Map<String, dynamic>>> getAgentIncidentsOverTime(
+    int agentId,
+  ) async {
+    final response = await http.get(
+      Uri.parse("$baseUrl/bi_incidents/agent/$agentId/over-time"),
+      headers: {"Content-Type": "application/json"},
+    );
+
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body);
+      return List<Map<String, dynamic>>.from(data);
+    }
+
+    throw Exception("Failed to load agent incidents over time");
+  }
+
+  Future<List<Map<String, dynamic>>> getAgentIncidentsByStatus(
+    int agentId,
+  ) async {
+    final response = await http.get(
+      Uri.parse("$baseUrl/bi_incidents/agent/$agentId/by-status"),
+      headers: {"Content-Type": "application/json"},
+    );
+
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body);
+      return List<Map<String, dynamic>>.from(data);
+    }
+
+    throw Exception("Failed to load agent incidents by status");
+  }
 }
