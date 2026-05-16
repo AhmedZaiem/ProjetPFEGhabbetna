@@ -1,5 +1,5 @@
 import datetime
-
+from sqlalchemy.sql import func
 from sqlalchemy import Column, Integer, String, Float, Enum, DateTime,ForeignKey
 from db.db import Base
 
@@ -13,7 +13,7 @@ class SecurityEvent(Base):
     summary = Column(String)
     recommendation = Column(String)
     Risk_level = Column(String)
-    timestamp = Column(DateTime, default=datetime.datetime.utcnow)
+    timestamp = Column(DateTime, server_default=func.now())
     attempts= Column(Integer, default=1)
     ip_address = Column(String, nullable=True)
 

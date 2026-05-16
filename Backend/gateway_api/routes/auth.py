@@ -21,8 +21,9 @@ def safe_json(response):
 
 @router.post("/login")
 async def login(request: Request):
+    custom_timeout = httpx.Timeout(30.0, connect=None)
     body = await request.json()
-    async with httpx.AsyncClient() as client:
+    async with httpx.AsyncClient(timeout=custom_timeout) as client:
         response = await client.post(f"{AUTH_SERVICE_URL}/auth/login", json=body)
     return JSONResponse(
         status_code=response.status_code,

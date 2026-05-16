@@ -1,7 +1,8 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Request
 from schemas.auth_schemas import LoginRequest, ActivationRequest, PasswordResetRequest, PasswordReset, ActivateAccountRequest,LogoutRequest,RefreshRequest
 from core.security import verify_password, create_access_token, create_refresh_token,decode_token
 from services.email_service import send_activation_email, send_password_reset_email
+from services.security_helper import send_security_event
 import os
 import httpx
 import uuid
@@ -14,7 +15,7 @@ ADMIN_SERVICE_URL = os.getenv("ADMIN_SERVICE_URL", "http://localhost:8002")
 
 
 @router.post("/login")
-async def login(data: LoginRequest):
+async def login(data: LoginRequest, request: Request):
 
     async with httpx.AsyncClient() as client:
         response = await client.get(
@@ -27,6 +28,26 @@ async def login(data: LoginRequest):
     user = response.json()
 
     if not verify_password(data.password, user["password_hash"]):
+        key = f"failed_login:{data.email}"
+
+        attempts = redis_client.incr(key)
+
+        alert_key = f"failed_login_alerted:{data.email}"
+
+        if attempts == 1:
+            redis_client.expire(key, 3600)
+        
+        if attempts >=5:
+            
+            if not redis_client.exists(alert_key):
+                payload = {
+                    "event_name": "FAILED_LOGIN",
+                    "email": data.email,
+                    "ip":request.client.host,
+                    "attempts": attempts
+                }
+                await send_security_event(payload)
+            redis_client.setex(alert_key, 1800, "1")
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
     if not user["is_verified"]:
@@ -34,6 +55,8 @@ async def login(data: LoginRequest):
 
     if user["is_blocked"]:
         raise HTTPException(status_code=403, detail="Account blocked")
+
+    redis_client.delete(f"failed_login:{data.email}")
 
     access_token = create_access_token(
         data={
