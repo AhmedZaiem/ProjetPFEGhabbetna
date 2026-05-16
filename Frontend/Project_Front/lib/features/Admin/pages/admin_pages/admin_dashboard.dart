@@ -7,6 +7,7 @@ import 'package:authproject/features/Admin/pages/admin_pages/assign.dart';
 import 'package:authproject/features/Admin/pages/admin_pages/assign_agent.dart';
 import 'package:authproject/features/Admin/pages/admin_pages/add_service.dart';
 import 'package:authproject/features/Admin/pages/admin_pages/manage_incident.dart';
+import 'package:authproject/features/Admin/pages/admin_pages/security_page.dart';
 import 'package:authproject/features/Auth/services/auth_service.dart';
 import 'package:authproject/features/Admin/pages/admin_pages/BI.dart';
 
@@ -38,6 +39,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
     const AddService(),
     const ManageIncident(),
     const Bi(),
+    const SecurityPage(),
   ];
 
   void logout() async {
@@ -120,105 +122,124 @@ class _AdminDashboardState extends State<AdminDashboard> {
             Container(
               width: 240,
               color: Colors.transparent,
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 70,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: Image.asset(
-                        'assets/images/logoApp.jpeg',
-                        height: 150,
-                      ),
-                    ),
+              child: SingleChildScrollView(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: MediaQuery.of(context).size.height,
                   ),
-
-                  Expanded(
-                    child: Theme(
-                      data: Theme.of(context).copyWith(
-                        splashFactory: NoSplash.splashFactory,
-                        highlightColor: Colors.transparent,
-                        hoverColor: Colors.transparent,
-                        focusColor: Colors.transparent,
-                      ),
-                      child: NavigationRail(
-                        selectedIndex: _selectedIndex,
-                        onDestinationSelected: (index) {
-                          setState(() {
-                            _selectedIndex = index;
-                          });
-                        },
-                        labelType: NavigationRailLabelType.none,
-                        backgroundColor: Colors.transparent,
-                        indicatorColor: Colors.transparent,
-                        groupAlignment: -1.0,
-                        minWidth: 220,
-                        destinations: [
-                          _buildItem(t.admin_users_list, Icons.people),
-                          _buildItem(t.admin_create_users, Icons.add),
-                          _buildItem(
-                            t.admin_manage_roles,
-                            Icons.account_box_sharp,
-                          ),
-                          _buildItem(t.admin_assign_supervisor, Icons.add),
-                          _buildItem(t.admin_assign_agent, Icons.add),
-                          _buildItem(t.admin_add_forests, Icons.forest),
-                          _buildItem(
-                            t.admin_forests_list,
-                            Icons.forest_outlined,
-                          ),
-                          _buildItem(
-                            t.admin_manage_services,
-                            Icons.medical_services,
-                          ),
-                          _buildItem(
-                            t.admin_manage_incidents,
-                            Icons.add_a_photo_outlined,
-                          ),
-                          _buildItem(t.bi, Icons.stacked_line_chart_outlined),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  _languageSelector(),
-
-                  // Logout button
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton.icon(
-                        onPressed: logout,
-                        icon: const Icon(Icons.logout, size: 16),
-                        label: Text(
-                          t.logout,
-                          style: TextStyle(fontSize: 14, color: Colors.white),
-                        ),
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                            Colors.red,
-                          ),
-                          overlayColor: MaterialStateProperty.all(
-                            Colors.transparent,
-                          ),
-                          shadowColor: MaterialStateProperty.all(
-                            Colors.transparent,
-                          ),
-                          elevation: MaterialStateProperty.all(0),
-                          padding: MaterialStateProperty.all(
-                            const EdgeInsets.symmetric(vertical: 14),
-                          ),
-                          shape: MaterialStateProperty.all(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
+                  child: IntrinsicHeight(
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 70,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: Image.asset(
+                              'assets/images/logoApp.jpeg',
+                              height: 150,
                             ),
                           ),
                         ),
-                      ),
+
+                        Expanded(
+                          child: Theme(
+                            data: Theme.of(context).copyWith(
+                              splashFactory: NoSplash.splashFactory,
+                              highlightColor: Colors.transparent,
+                              hoverColor: Colors.transparent,
+                              focusColor: Colors.transparent,
+                            ),
+                            child: NavigationRail(
+                              selectedIndex: _selectedIndex,
+                              onDestinationSelected: (index) {
+                                setState(() {
+                                  _selectedIndex = index;
+                                });
+                              },
+                              labelType: NavigationRailLabelType.none,
+                              backgroundColor: Colors.transparent,
+                              indicatorColor: Colors.transparent,
+                              groupAlignment: -1.0,
+                              minWidth: 220,
+                              destinations: [
+                                _buildItem(t.admin_users_list, Icons.people),
+                                _buildItem(t.admin_create_users, Icons.add),
+                                _buildItem(
+                                  t.admin_manage_roles,
+                                  Icons.account_box_sharp,
+                                ),
+                                _buildItem(
+                                  t.admin_assign_supervisor,
+                                  Icons.add,
+                                ),
+                                _buildItem(t.admin_assign_agent, Icons.add),
+                                _buildItem(t.admin_add_forests, Icons.forest),
+                                _buildItem(
+                                  t.admin_forests_list,
+                                  Icons.forest_outlined,
+                                ),
+                                _buildItem(
+                                  t.admin_manage_services,
+                                  Icons.medical_services,
+                                ),
+                                _buildItem(
+                                  t.admin_manage_incidents,
+                                  Icons.add_a_photo_outlined,
+                                ),
+                                _buildItem(
+                                  t.bi,
+                                  Icons.stacked_line_chart_outlined,
+                                ),
+                                _buildItem("Security", Icons.security),
+                              ],
+                            ),
+                          ),
+                        ),
+
+                        _languageSelector(),
+
+                        // Logout button
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton.icon(
+                              onPressed: logout,
+                              icon: const Icon(Icons.logout, size: 16),
+                              label: Text(
+                                t.logout,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                  Colors.red,
+                                ),
+                                overlayColor: MaterialStateProperty.all(
+                                  Colors.transparent,
+                                ),
+                                shadowColor: MaterialStateProperty.all(
+                                  Colors.transparent,
+                                ),
+                                elevation: MaterialStateProperty.all(0),
+                                padding: MaterialStateProperty.all(
+                                  const EdgeInsets.symmetric(vertical: 14),
+                                ),
+                                shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
+                ),
               ),
             ),
 
