@@ -33,7 +33,7 @@ def create_incident(db: Session, incident_data):
         forest_id=incident_data.forest_id,
         forest_name=incident_data.forest_name,
         coords=point,
-        expires_at=datetime.now() + timedelta(hours=24)
+        expires_at=datetime.now() + timedelta(hours=48)
     )
     db.add(new_incident)
     db.commit()
