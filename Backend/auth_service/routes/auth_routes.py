@@ -1,8 +1,8 @@
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, HTTPException, Request, BackgroundTasks
 from schemas.auth_schemas import LoginRequest, ActivationRequest, PasswordResetRequest, PasswordReset, ActivateAccountRequest,LogoutRequest,RefreshRequest
 from core.security import verify_password, create_access_token, create_refresh_token,decode_token
 from services.email_service import send_activation_email, send_password_reset_email
-from services.security_helper import send_security_event
+from services.security_helper import send_security_event,process_security_event
 import os
 import httpx
 import uuid
@@ -15,7 +15,7 @@ ADMIN_SERVICE_URL = os.getenv("ADMIN_SERVICE_URL", "http://localhost:8002")
 
 
 @router.post("/login")
-async def login(data: LoginRequest, request: Request):
+async def login(data: LoginRequest, request: Request,background_tasks: BackgroundTasks):
 
     async with httpx.AsyncClient() as client:
         response = await client.get(
@@ -57,6 +57,14 @@ async def login(data: LoginRequest, request: Request):
         raise HTTPException(status_code=403, detail="Account blocked")
 
     redis_client.delete(f"failed_login:{data.email}")
+
+    ip_payload={
+        "event_name": "IP_CHECK",
+        "email":data.email,
+        "ip": request.client.host
+    }
+
+    background_tasks.add_task(send_security_event, ip_payload)
 
     access_token = create_access_token(
         data={
