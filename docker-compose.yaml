@@ -38,6 +38,7 @@ services:
       - REDIS_PORT=6379
       - FRONTEND_URL=http://localhost:3000
       - ADMIN_SERVICE_URL=http://admin_service:8000
+      - N8N_WEBHOOK_URL=http://n8n:5678/webhook/security-event
     env_file:
       - ./Backend/auth_service/.env
 
@@ -130,6 +131,33 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
+  
+  # ---------------- AI SECURITY SERVICE -------
+
+  ai_security_service:
+    build: ./Backend/ai_security_service
+    ports:
+      - "8006:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:aaaa@ai_security_db:5432/ai_security_db
+    depends_on:
+      ai_security_db:
+        condition: service_healthy
+
+  ai_security_db:
+    image: postgis/postgis:16-3.4
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: aaaa
+      POSTGRES_DB: ai_security_db
+    volumes:
+      - ai_security_data:/var/lib/postgresql/data
+      - ./init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
   # ---------------- REDIS ----------------
   redis:
@@ -137,7 +165,26 @@ services:
     ports:
       - "6380:6379"
 
+  # ---------------- N8N ----------------
+  n8n:
+    image: n8nio/n8n
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=admin
+      - N8N_BASIC_AUTH_PASSWORD=admin
+      - N8N_HOST=n8n
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+    volumes:
+      - n8n_data:/home/node/.n8n
+    depends_on:
+      - ai_security_db
+
 volumes:
   admin_data:
   incident_data:
   bi_data:
+  ai_security_data:
+  n8n_data:
