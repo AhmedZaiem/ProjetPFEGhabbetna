@@ -178,8 +178,8 @@ class _IncidentMapState extends State<IncidentMap> {
               children: [
                 TileLayer(
                   urlTemplate:
-                      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                  subdomains: ['a', 'b', 'c'],
+                      'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+                  userAgentPackageName: 'com.example.app',
                 ),
                 MarkerLayer(markers: _buildIncidentMarkers()),
                 PolygonLayer(
@@ -188,8 +188,13 @@ class _IncidentMapState extends State<IncidentMap> {
                       points: forest.boundary
                           .map((c) => LatLng(c.lat, c.lng))
                           .toList(),
-                      color: Colors.green.withOpacity(0.2),
-                      borderColor: Colors.green,
+                      color: const Color.fromARGB(
+                        255,
+                        251,
+                        2,
+                        2,
+                      ).withOpacity(0.2),
+                      borderColor: const Color.fromARGB(255, 255, 3, 3),
                       borderStrokeWidth: 2,
                     );
                   }).toList(),

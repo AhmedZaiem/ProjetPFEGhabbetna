@@ -445,7 +445,8 @@ class _AddPolygonPageState extends State<AddPolygonPage> {
                         children: [
                           TileLayer(
                             urlTemplate:
-                                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                                'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+                            userAgentPackageName: 'com.example.app',
                           ),
 
                           /// Currently drawn polygon (light blue)
@@ -483,8 +484,18 @@ class _AddPolygonPageState extends State<AddPolygonPage> {
                                 points: forest.boundary
                                     .map((c) => LatLng(c.lat, c.lng))
                                     .toList(),
-                                color: Colors.green.withOpacity(0.2),
-                                borderColor: Colors.green,
+                                color: const Color.fromARGB(
+                                  255,
+                                  251,
+                                  3,
+                                  3,
+                                ).withOpacity(0.2),
+                                borderColor: const Color.fromARGB(
+                                  255,
+                                  243,
+                                  26,
+                                  26,
+                                ),
                                 borderStrokeWidth: 2,
                               );
                             }).toList(),
@@ -497,8 +508,18 @@ class _AddPolygonPageState extends State<AddPolygonPage> {
                                 points: parcel.boundary
                                     .map((c) => LatLng(c.lat, c.lng))
                                     .toList(),
-                                color: Colors.orange.withOpacity(0.3),
-                                borderColor: Colors.orange,
+                                color: const Color.fromARGB(
+                                  255,
+                                  255,
+                                  234,
+                                  7,
+                                ).withOpacity(0.3),
+                                borderColor: const Color.fromARGB(
+                                  255,
+                                  238,
+                                  255,
+                                  6,
+                                ),
                                 borderStrokeWidth: 2,
                               );
                             }).toList(),
