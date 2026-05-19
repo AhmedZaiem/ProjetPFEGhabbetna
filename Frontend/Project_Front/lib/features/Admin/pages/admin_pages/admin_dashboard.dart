@@ -190,7 +190,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                                   t.bi,
                                   Icons.stacked_line_chart_outlined,
                                 ),
-                                _buildItem("Security", Icons.security),
+                                _buildItem(t.Security, Icons.security),
                               ],
                             ),
                           ),

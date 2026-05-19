@@ -1,6 +1,7 @@
 import 'package:authproject/features/Admin/models/security_event.dart';
 import 'package:authproject/features/Admin/services/security_services.dart';
 import 'package:flutter/material.dart';
+import 'package:authproject/l10n/app_localizations.dart';
 
 class SecurityPage extends StatefulWidget {
   const SecurityPage({super.key});
@@ -113,14 +114,27 @@ class _SecurityPageState extends State<SecurityPage> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
-        title: const Text(
-          'Security Events',
-          style: TextStyle(fontWeight: FontWeight.bold),
+        title: Row(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.asset('assets/images/logoApp.jpeg', height: 36),
+            ),
+            const SizedBox(width: 12),
+            Text(
+              t.Security,
+              style: const TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 18,
+                letterSpacing: -0.3,
+              ),
+            ),
+          ],
         ),
-        leading: const Icon(Icons.shield_outlined, color: Colors.black87),
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())

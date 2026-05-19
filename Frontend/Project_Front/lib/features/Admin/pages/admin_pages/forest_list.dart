@@ -576,85 +576,143 @@ class _ForestListState extends State<ForestList> {
     );
   }
 
+  void showForestDialog(Forest forest) {
+    final points = forest.boundary.map((c) => LatLng(c.lat, c.lng)).toList();
+
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text(forest.name),
+
+        content: SizedBox(
+          width: 500,
+          height: 300,
+          child: FlutterMap(
+            options: MapOptions(
+              initialCenter: points.isNotEmpty
+                  ? points.first
+                  : const LatLng(36.8, 10.1),
+              initialZoom: 13,
+            ),
+            children: [
+              TileLayer(
+                urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+              ),
+
+              PolygonLayer(
+                polygons: [
+                  Polygon(
+                    points: points,
+                    color: Colors.green.withOpacity(0.3),
+                    borderColor: Colors.green,
+                    borderStrokeWidth: 3,
+                  ),
+                ],
+              ),
+
+              MarkerLayer(
+                markers: points
+                    .map(
+                      (p) => Marker(
+                        point: p,
+                        width: 25,
+                        height: 25,
+                        child: const Icon(Icons.location_on, color: Colors.red),
+                      ),
+                    )
+                    .toList(),
+              ),
+            ],
+          ),
+        ),
+
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Close"),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
+
     if (loading) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     return Scaffold(
+      backgroundColor: const Color(0xFFF5F7FA),
+
       appBar: AppBar(
+        elevation: 0,
+        surfaceTintColor: const Color(0xFF1B4332),
+
         title: Row(
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Image.asset('assets/images/logoApp.jpeg', height: 36),
+              borderRadius: BorderRadius.circular(10),
+              child: Image.asset('assets/images/logoApp.jpeg', height: 38),
             ),
             const SizedBox(width: 12),
             Text(
               t.admin_forests_list,
               style: const TextStyle(
                 fontWeight: FontWeight.w700,
-                fontSize: 18,
-                letterSpacing: -0.3,
+                fontSize: 20,
+                color: Colors.white,
               ),
             ),
           ],
         ),
       ),
-      body: ListView(
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
-              children: [
-                _buildTopCard(
-                  t.admin_total_forests,
-                  forests.length.toString(),
-                  Icons.forest,
-                ),
-                const SizedBox(width: 12),
-                _buildTopCard(
-                  t.admin_total_parcels,
-                  parcels.length.toString(),
-                  Icons.map,
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 16),
-          ...forests.map((forest) => _buildForestCard(forest)).toList(),
-        ],
-      ),
-    );
-  }
 
-  Widget _buildTopCard(String title, String count, IconData icon) {
-    return Expanded(
-      child: Card(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        elevation: 2,
-        color: Colors.white,
+      body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+          padding: const EdgeInsets.all(16),
           child: Column(
             children: [
-              Icon(icon, size: 36, color: Colors.black),
-              const SizedBox(height: 8),
-              Text(
-                count,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildTopCard(
+                      t.admin_total_forests,
+                      forests.length.toString(),
+                      Icons.forest,
+                      const Color(0xFF1B4332),
+                    ),
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: _buildTopCard(
+                      t.admin_total_parcels,
+                      parcels.length.toString(),
+                      Icons.map,
+                      const Color(0xFF1B4332),
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(height: 4),
-              Text(
-                title,
-                style: const TextStyle(fontSize: 14, color: Colors.black),
+
+              const SizedBox(height: 20),
+
+              GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: forests.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 18,
+                  mainAxisSpacing: 18,
+                  childAspectRatio: 1.55,
+                ),
+                itemBuilder: (context, index) {
+                  return _buildForestCard(forests[index]);
+                },
               ),
             ],
           ),
@@ -663,126 +721,323 @@ class _ForestListState extends State<ForestList> {
     );
   }
 
+  Widget _buildTopCard(String title, String count, IconData icon, Color color) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 22),
+
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(22),
+
+        gradient: LinearGradient(
+          colors: [color, color.withOpacity(0.82)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+
+        boxShadow: [
+          BoxShadow(
+            color: color.withOpacity(0.25),
+            blurRadius: 12,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+
+      child: Column(
+        children: [
+          Icon(icon, size: 38, color: Colors.white),
+
+          const SizedBox(height: 12),
+
+          Text(
+            count,
+            style: const TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+
+          const SizedBox(height: 6),
+
+          Text(
+            title,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: Colors.white70,
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildForestCard(Forest forest) {
     final t = AppLocalizations.of(context)!;
 
-    return Card(
-      color: Colors.white,
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                const Icon(
-                  Icons.park,
-                  color: Color.fromARGB(255, 0, 0, 0),
-                  size: 20,
-                ),
-                const SizedBox(width: 6),
-                Expanded(
-                  child: Text(
-                    "${t.admin_name} : ${forest.name}",
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black,
+    final points = forest.boundary.map((c) => LatLng(c.lat, c.lng)).toList();
+
+    return SizedBox(
+      height: 360,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(22),
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Color(0xFF1B4332), Color(0xFF2D6A4F)],
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.12),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(13),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              /// HEADER
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.12),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Icon(
+                      Icons.forest,
+                      color: Colors.white,
+                      size: 18,
                     ),
                   ),
-                ),
-              ],
-            ),
 
-            const SizedBox(height: 8),
+                  const SizedBox(width: 10),
 
-            if (forest.description != null && forest.description!.isNotEmpty)
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Icon(Icons.description, color: Colors.grey, size: 18),
-                  const SizedBox(width: 6),
                   Expanded(
                     child: Text(
-                      "${t.admin_description} : ${forest.description!}",
+                      forest.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
-                        color: Colors.black54,
-                        fontSize: 14,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 16,
                       ),
                     ),
                   ),
                 ],
               ),
 
-            const SizedBox(height: 8),
+              const SizedBox(height: 12),
 
-            Row(
-              children: [
-                const Icon(
-                  Icons.location_on,
-                  color: Colors.redAccent,
-                  size: 18,
-                ),
-                const SizedBox(width: 6),
-                Text(
-                  "${t.admin_region} : ${forest.region}",
-                  style: const TextStyle(fontSize: 14, color: Colors.black),
-                ),
-              ],
-            ),
+              /// MAP
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(18),
+                    border: Border.all(color: Colors.white.withOpacity(0.15)),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(18),
+                    child: FlutterMap(
+                      options: MapOptions(
+                        initialCenter: points.isNotEmpty
+                            ? points.first
+                            : const LatLng(36.8, 10.1),
+                        initialZoom: 12.5,
+                        interactionOptions: const InteractionOptions(
+                          flags: InteractiveFlag.none,
+                        ),
+                      ),
+                      children: [
+                        TileLayer(
+                          urlTemplate:
+                              "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                          userAgentPackageName: 'com.example.app',
+                        ),
 
-            const SizedBox(height: 6),
+                        PolygonLayer(
+                          polygons: [
+                            Polygon(
+                              points: points,
+                              color: Colors.lightGreen.withOpacity(0.35),
+                              borderColor: Colors.lightGreenAccent,
+                              borderStrokeWidth: 4,
+                            ),
+                          ],
+                        ),
 
-            Row(
-              children: [
-                const Icon(Icons.straighten, color: Colors.blueGrey, size: 18),
-                const SizedBox(width: 6),
-                Text(
-                  "${t.admin_area} : ${forest.areaHectares.floorToDouble()} ha",
-                  style: const TextStyle(fontSize: 14, color: Colors.black),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 6),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                ElevatedButton.icon(
-                  onPressed: () => showParcels(forest),
-                  icon: const Icon(Icons.view_list),
-                  label: Text(t.admin_view_parcels),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                        MarkerLayer(
+                          markers: points
+                              .map(
+                                (p) => Marker(
+                                  point: p,
+                                  width: 26,
+                                  height: 26,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.red,
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                        color: Colors.white,
+                                        width: 2,
+                                      ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.3),
+                                          blurRadius: 5,
+                                        ),
+                                      ],
+                                    ),
+                                    child: const Icon(
+                                      Icons.location_on,
+                                      color: Colors.white,
+                                      size: 15,
+                                    ),
+                                  ),
+                                ),
+                              )
+                              .toList(),
+                        ),
+                      ],
                     ),
                   ),
                 ),
+              ),
 
-                const SizedBox(width: 8),
+              const SizedBox(height: 12),
 
-                IconButton(
-                  icon: const Icon(Icons.edit, color: Colors.blue),
-                  onPressed: () => showUpdateForestDialog(forest.id),
+              /// INFO
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 10,
                 ),
-
-                IconButton(
-                  icon: const Icon(Icons.delete, color: Colors.red),
-                  onPressed: () => deleteForest(forest.id),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.08),
+                  borderRadius: BorderRadius.circular(14),
                 ),
-              ],
-            ),
-          ],
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.location_city,
+                            color: Colors.white70,
+                            size: 16,
+                          ),
+
+                          const SizedBox(width: 6),
+
+                          Expanded(
+                            child: Text(
+                              forest.region,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.9),
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.greenAccent.withOpacity(0.15),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        "${forest.areaHectares.floor()} ha",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 12),
+
+              /// BUTTONS
+              Row(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.red.withOpacity(0.15),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.delete_outline,
+                        color: Colors.redAccent,
+                        size: 20,
+                      ),
+                      onPressed: () => deleteForest(forest.id),
+                    ),
+                  ),
+
+                  const SizedBox(width: 8),
+
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.12),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.edit_outlined,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                      onPressed: () => showUpdateForestDialog(forest.id),
+                    ),
+                  ),
+
+                  const SizedBox(width: 12),
+
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () => showParcels(forest),
+                      style: ElevatedButton.styleFrom(
+                        elevation: 0,
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.green.shade900,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                      ),
+                      child: Text(
+                        t.admin_view_parcels,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

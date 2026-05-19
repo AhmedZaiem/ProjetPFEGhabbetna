@@ -505,4 +505,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get incident_reported_by_day => 'Incidents Reported by Day';
+
+  @override
+  String get Security => "Sécurité";
 }

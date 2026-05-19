@@ -1092,6 +1092,8 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Incidents Reported by Day'**
   String get incident_reported_by_day;
+
+  String get Security;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

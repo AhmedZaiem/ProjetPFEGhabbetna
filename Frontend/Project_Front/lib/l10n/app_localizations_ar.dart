@@ -496,4 +496,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get distribution_by_resolution_status => "توزيع حسب حالة المعالجة";
   @override
   String get incident_reported_by_day => "الحوادث المبلغ عنها يوميًا";
+  @override
+  String get Security => "حماية";
 }
