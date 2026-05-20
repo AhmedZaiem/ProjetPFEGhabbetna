@@ -508,4 +508,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get Security => "Sécurité";
+
+  @override
+  String get Error_loading_data => "Error loading data";
+
+  @override
+  String get No_security_events_found => "No security events found";
+
+  @override
+  String get incident_water_contamination => "Water Contamination";
+
+  @override
+  String get incident_grazing => "Illegal Grazing";
+
+  @override
+  String get incident_trash_dumping =>"Trash Dumping";
+
+  @override
+  String get incident_pollution => "Pollution";
+
+  @override
+  String get incident_artifact_theft => "Artifact Theft";
 }

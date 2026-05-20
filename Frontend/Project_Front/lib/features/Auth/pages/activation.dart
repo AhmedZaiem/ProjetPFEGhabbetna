@@ -59,6 +59,8 @@ class _ActivationState extends State<Activation> {
     );
   }
 
+  
+
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;

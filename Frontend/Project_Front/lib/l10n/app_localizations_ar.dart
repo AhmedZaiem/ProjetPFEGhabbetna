@@ -498,4 +498,25 @@ class AppLocalizationsAr extends AppLocalizations {
   String get incident_reported_by_day => "الحوادث المبلغ عنها يوميًا";
   @override
   String get Security => "حماية";
+
+  @override
+  String get Error_loading_data => "خطأ أثناء تحميل البيانات";
+  
+  @override
+  String get No_security_events_found => "لم يتم العثور على أحداث أمان";
+
+  @override
+  String get incident_water_contamination => "تلوث المياه";
+
+  @override
+  String get incident_grazing => "رعي غير قانوني";
+
+  @override
+  String get incident_trash_dumping =>"رمي النفايات";
+
+  @override
+  String get incident_pollution => "تلوث";
+  
+  @override
+  String get incident_artifact_theft => "سرقة آثار";
 }

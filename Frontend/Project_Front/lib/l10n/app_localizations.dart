@@ -1093,7 +1093,19 @@ abstract class AppLocalizations {
   /// **'Incidents Reported by Day'**
   String get incident_reported_by_day;
 
+
+  /// Security page
   String get Security;
+  String get Error_loading_data;
+  String get No_security_events_found;
+
+  /// types incidents
+  String get incident_water_contamination;
+  String get incident_grazing;
+  String get incident_trash_dumping;
+  String get incident_pollution;
+  String get incident_artifact_theft;
+
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

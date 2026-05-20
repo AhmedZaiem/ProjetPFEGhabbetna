@@ -22,6 +22,8 @@ class _SecurityPageState extends State<SecurityPage> {
   }
 
   Future<void> loadData() async {
+    final t = AppLocalizations.of(context)!;
+
     try {
       final events = await securityServices.getFailedLoginEvents();
       setState(() {
@@ -32,7 +34,7 @@ class _SecurityPageState extends State<SecurityPage> {
       setState(() => isLoading = false);
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text("Error loading data: $e")));
+      ).showSnackBar(SnackBar(content: Text("$t.Error_loading_data: $e")));
     }
   }
 
@@ -150,7 +152,7 @@ class _SecurityPageState extends State<SecurityPage> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'No security events found',
+                    t.No_security_events_found,
                     style: TextStyle(fontSize: 16, color: Colors.grey.shade600),
                   ),
                 ],

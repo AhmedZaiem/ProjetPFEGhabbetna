@@ -269,6 +269,11 @@ class _UploadState extends State<Upload> {
       t.incident_fire,
       t.incident_illegal_logging,
       t.incident_disease,
+      t.incident_artifact_theft,
+      t.incident_grazing,
+      t.incident_pollution,
+      t.incident_trash_dumping,
+      t.incident_water_contamination,
       t.incident_other,
     ];
 
