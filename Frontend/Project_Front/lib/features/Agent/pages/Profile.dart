@@ -41,16 +41,16 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: Text(t.supervisor_profile),
-
         actions: [
           PopupMenuButton<String>(
             icon: const Icon(Icons.language),
-
             onSelected: (value) {
               switch (value) {
                 case 'en':
@@ -58,13 +58,11 @@ class _ProfileState extends State<Profile> {
                     const Locale('en', 'US'),
                   );
                   break;
-
                 case 'fr':
                   (mainAppKey.currentState)?.setLocale(
                     const Locale('fr', 'FR'),
                   );
                   break;
-
                 case 'ar':
                   (mainAppKey.currentState)?.setLocale(
                     const Locale('ar', 'AR'),
@@ -72,88 +70,236 @@ class _ProfileState extends State<Profile> {
                   break;
               }
             },
-
             itemBuilder: (context) => [
               const PopupMenuItem(value: 'en', child: Text("English")),
-
               const PopupMenuItem(value: 'fr', child: Text("Français")),
-
               const PopupMenuItem(value: 'ar', child: Text("العربية")),
             ],
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: userData != null
-            ? Center(
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      CircleAvatar(
-                        radius: 40,
-                        backgroundColor: Colors.blue.shade100,
-                        child: Icon(Icons.person, size: 40, color: Colors.blue),
+      backgroundColor: Colors.grey.shade50,
+      body: userData != null
+          ? SingleChildScrollView(
+              child: Column(
+                children: [
+                  // ── Hero header ──────────────────────────────────────
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Colors.blue.shade700,
+                          Colors.blue.shade400,
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
                       ),
-                      SizedBox(height: 24),
+                    ),
+                    padding: const EdgeInsets.fromLTRB(24, 32, 24, 48),
+                    child: Column(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.2),
+                                blurRadius: 16,
+                                offset: const Offset(0, 6),
+                              ),
+                            ],
+                          ),
+                          child: CircleAvatar(
+                            radius: 48,
+                            backgroundColor: Colors.white,
+                            child: Icon(
+                              Icons.person_rounded,
+                              size: 52,
+                              color: Colors.blue.shade600,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          "${userData!['firstname']} ${userData!['lastname']}",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 22,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 0.3,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          userData!['email'] ?? '',
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.85),
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
 
-                      Card(
-                        elevation: 4,
+                  // ── Info card ────────────────────────────────────────
+                  Transform.translate(
+                    offset: const Offset(0, -24),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Card(
+                        elevation: 6,
+                        shadowColor: Colors.black12,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
+                          borderRadius: BorderRadius.circular(20),
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.all(20),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 20,
+                          ),
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                "${t.admin_first_name}: ${userData!['firstname']}",
+                              _InfoRow(
+                                icon: Icons.badge_outlined,
+                                label: t.admin_cin,
+                                value: userData!['cin']?.toString() ?? '—',
                               ),
-                              SizedBox(height: 16),
-                              Text(
-                                "${t.admin_last_name}: ${userData!['lastname']}",
+                              _Divider(),
+                              _InfoRow(
+                                icon: Icons.alternate_email_rounded,
+                                label: t.admin_username,
+                                value: userData!['username']?.toString() ?? '—',
                               ),
-                              SizedBox(height: 16),
-                              Text("${t.admin_cin}: ${userData!['cin']}"),
-                              SizedBox(height: 16),
-                              Text(
-                                "${t.admin_username}: ${userData!['username']}",
+                              _Divider(),
+                              _InfoRow(
+                                icon: Icons.cake_outlined,
+                                label: t.admin_age,
+                                value: userData!['age']?.toString() ?? '—',
                               ),
-                              SizedBox(height: 16),
-                              Text("${t.admin_email}: ${userData!['email']}"),
-                              SizedBox(height: 16),
-                              Text("${t.admin_age}: ${userData!['age']}"),
-                              SizedBox(height: 16),
-                              Text("${t.admin_region}: ${userData!['region']}"),
-                              SizedBox(height: 16),
-                              Text("Tel: ${userData!['tel']}"),
+                              _Divider(),
+                              _InfoRow(
+                                icon: Icons.location_on_outlined,
+                                label: t.admin_region,
+                                value: userData!['region']?.toString() ?? '—',
+                              ),
+                              _Divider(),
+                              _InfoRow(
+                                icon: Icons.phone_outlined,
+                                label: 'Tel',
+                                value: userData!['tel']?.toString() ?? '—',
+                              ),
                             ],
                           ),
                         ),
                       ),
+                    ),
+                  ),
 
-                      SizedBox(height: 30),
-
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: logout,
-                          style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(vertical: 10),
-                            textStyle: TextStyle(fontSize: 14),
+                  // ── Logout button ────────────────────────────────────
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 32),
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: 52,
+                      child: ElevatedButton.icon(
+                        onPressed: logout,
+                        icon: const Icon(Icons.logout_rounded, size: 20),
+                        label: Text(
+                          t.logout,
+                          style: const TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 0.4,
                           ),
-                          child: Text(t.logout),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red.shade500,
+                          foregroundColor: Colors.white,
+                          elevation: 2,
+                          shadowColor: Colors.red.shade200,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
                         ),
                       ),
-                    ],
+                    ),
+                  ),
+                ],
+              ),
+            )
+          : const Center(child: CircularProgressIndicator()),
+    );
+  }
+}
+
+// ── Helpers ──────────────────────────────────────────────────────────────────
+
+class _InfoRow extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String value;
+
+  const _InfoRow({
+    required this.icon,
+    required this.label,
+    required this.value,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      child: Row(
+        children: [
+          Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              color: Colors.blue.shade50,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(icon, size: 18, color: Colors.blue.shade600),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey.shade500,
+                    letterSpacing: 0.6,
                   ),
                 ),
-              )
-            : Center(child: CircularProgressIndicator()),
+                const SizedBox(height: 2),
+                Text(
+                  value,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xFF1A1A2E),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
+    );
+  }
+}
+
+class _Divider extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Divider(
+      height: 1,
+      thickness: 1,
+      color: Colors.grey.shade100,
     );
   }
 }
