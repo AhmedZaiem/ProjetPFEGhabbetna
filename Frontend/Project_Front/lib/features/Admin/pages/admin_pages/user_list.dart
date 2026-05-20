@@ -426,7 +426,7 @@ class _UserListState extends State<UserList> {
                             DataColumn(label: Text(t.admin_cin)),
                             DataColumn(label: Text(t.admin_age)),
                             DataColumn(label: Text(t.admin_region)),
-                            DataColumn(label: Text("Tel")),
+                            DataColumn(label: Text(t.tel)),
                             DataColumn(label: Text(t.admin_role_name)),
                             DataColumn(label: Text(t.admin_verified)),
                             DataColumn(label: Text(t.admin_actions)),

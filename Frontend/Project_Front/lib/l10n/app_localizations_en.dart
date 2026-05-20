@@ -529,4 +529,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get incident_artifact_theft => "Artifact Theft";
+
+  @override
+  String get tel => "Phone";
 }

@@ -341,7 +341,7 @@ class _CreateUserState extends State<Create_User> {
                       TextFormField(
                         controller: telController,
                         decoration: InputDecoration(
-                          labelText: "Tel",
+                          labelText: loc.tel,
                           prefixIcon: const Icon(Icons.phone),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),

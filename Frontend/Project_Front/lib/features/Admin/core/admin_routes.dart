@@ -55,7 +55,7 @@ final adminRouter = GoRouter(
     return '/';
   },
   routes: [
-    GoRoute(path: '/', builder: (context, state) => Login()),
+    GoRoute(path: '/', builder: (context, state) => AdminDashboard()),
     GoRoute(path: '/agent', builder: (context, state) => agentDashboard()),
     GoRoute(path: '/supervisor', builder: (context, state) => SupervisorMenu()),
     GoRoute(

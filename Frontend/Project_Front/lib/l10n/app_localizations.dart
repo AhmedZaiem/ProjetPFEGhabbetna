@@ -1106,6 +1106,8 @@ abstract class AppLocalizations {
   String get incident_pollution;
   String get incident_artifact_theft;
 
+  String get tel;
+
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

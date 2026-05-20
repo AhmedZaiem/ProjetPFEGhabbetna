@@ -519,4 +519,7 @@ class AppLocalizationsAr extends AppLocalizations {
   
   @override
   String get incident_artifact_theft => "سرقة آثار";
+
+  @override
+  String get tel => "الهاتف";
 }
