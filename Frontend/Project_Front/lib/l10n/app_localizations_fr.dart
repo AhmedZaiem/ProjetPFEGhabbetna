@@ -532,4 +532,14 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get tel => "Téléphone";
+
+  @override
+  String get hectare => "hectare";
+
+  @override
+  String get accepted_incident => "accepté";
+  @override
+  String get not_accepted_incident => "refusé";
+  @override
+  String get pending_incident => "en attente";
 }

@@ -962,7 +962,7 @@ class _ForestListState extends State<ForestList> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
-                        "${forest.areaHectares.floor()} ha",
+                        "${forest.areaHectares.floor()} ${t.hectare}",
                         style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,

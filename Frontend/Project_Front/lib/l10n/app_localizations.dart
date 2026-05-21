@@ -1108,6 +1108,12 @@ abstract class AppLocalizations {
 
   String get tel;
 
+  String get hectare;
+
+  String get accepted_incident;
+  String get not_accepted_incident;
+  String get pending_incident;
+
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

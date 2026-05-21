@@ -101,7 +101,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get admin_age => 'العمر';
 
   @override
-  String get admin_region => 'المنطقة';
+  String get admin_region => 'الولاية';
 
   @override
   String get admin_role => 'اختيار الدور';
@@ -522,4 +522,14 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get tel => "الهاتف";
+
+  @override
+  String get hectare => "هكتار";
+
+  @override
+  String get accepted_incident => "مقبول";
+  @override
+  String get not_accepted_incident => "مرفوض";
+  @override
+  String get pending_incident => "قيد الانتظار";
 }
