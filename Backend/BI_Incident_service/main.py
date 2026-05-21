@@ -21,6 +21,7 @@ app.add_middleware(
 
 @app.on_event("startup")
 def startup():
+    Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
 
     try:

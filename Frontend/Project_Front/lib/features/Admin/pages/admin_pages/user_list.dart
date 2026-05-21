@@ -16,6 +16,9 @@ class _UserListState extends State<UserList> {
   late Future<List<UserModel>> _usersFuture;
   late Future<List<UserModel>> _supervisorsFuture;
 
+  final horizontalController = ScrollController();
+  final verticalController = ScrollController();
+
   List<String> tunisianStates = [
     "Tunis",
     "Ariana",
@@ -413,92 +416,103 @@ class _UserListState extends State<UserList> {
 
                     const SizedBox(height: 20),
 
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
+                    Scrollbar(
+                      controller: verticalController,
+                      thumbVisibility: true,
                       child: SingleChildScrollView(
+                        controller: verticalController,
                         scrollDirection: Axis.vertical,
-                        child: DataTable(
-                          columns: [
-                            DataColumn(label: Text(t.admin_username)),
-                            DataColumn(label: Text(t.admin_first_name)),
-                            DataColumn(label: Text(t.admin_last_name)),
-                            DataColumn(label: Text(t.admin_email)),
-                            DataColumn(label: Text(t.admin_cin)),
-                            DataColumn(label: Text(t.admin_age)),
-                            DataColumn(label: Text(t.admin_region)),
-                            DataColumn(label: Text(t.tel)),
-                            DataColumn(label: Text(t.admin_role_name)),
-                            DataColumn(label: Text(t.admin_verified)),
-                            DataColumn(label: Text(t.admin_actions)),
-                          ],
-                          rows: users.map((user) {
-                            return DataRow(
-                              cells: [
-                                DataCell(Text(user.username)),
-                                DataCell(Text(user.firstname)),
-                                DataCell(Text(user.lastname)),
-                                DataCell(Text(user.email)),
-                                DataCell(Text(user.cin)),
-                                DataCell(Text(user.age.toString())),
-                                DataCell(Text(user.region)),
-                                DataCell(Text(user.tel)),
-                                DataCell(Text(user.role_name)),
-                                DataCell(
-                                  Icon(
-                                    user.isVerified ? Icons.check : Icons.close,
-                                    color: user.isVerified
-                                        ? Colors.green
-                                        : Colors.red,
-                                  ),
-                                ),
-                                DataCell(
-                                  Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      IconButton(
-                                        padding: EdgeInsets.zero,
-                                        constraints: const BoxConstraints(),
-                                        icon: const Icon(
-                                          Icons.edit,
-                                          size: 18,
-                                          color: Colors.lightBlue,
-                                        ),
-                                        onPressed: () =>
-                                            _showUpdateDialog(user),
-                                      ),
-
-                                      const SizedBox(width: 6),
-
-                                      IconButton(
-                                        padding: EdgeInsets.zero,
-                                        constraints: const BoxConstraints(),
-                                        icon: Icon(
-                                          user.isBlocked
-                                              ? Icons.lock_open
-                                              : Icons.lock,
-                                          size: 18,
-                                          color: user.isBlocked
-                                              ? Colors.green
-                                              : Colors.red,
-                                        ),
-                                        onPressed: () async {
-                                          user.isBlocked
-                                              ? await userService.unblockUser(
-                                                  user.id,
-                                                )
-                                              : await userService.blockUser(
-                                                  user.id,
-                                                );
-
-                                          _refreshUsers();
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                        child: Scrollbar(
+                          controller: horizontalController,
+                          thumbVisibility: true,
+                          notificationPredicate: (notification) =>
+                              notification.metrics.axis == Axis.horizontal,
+                          child: SingleChildScrollView(
+                            controller: horizontalController,
+                            scrollDirection: Axis.horizontal,
+                            child: DataTable(
+                              columns: [
+                                DataColumn(label: Text(t.admin_username)),
+                                DataColumn(label: Text(t.admin_first_name)),
+                                DataColumn(label: Text(t.admin_last_name)),
+                                DataColumn(label: Text(t.admin_email)),
+                                DataColumn(label: Text(t.admin_cin)),
+                                DataColumn(label: Text(t.admin_age)),
+                                DataColumn(label: Text(t.admin_region)),
+                                DataColumn(label: Text(t.tel)),
+                                DataColumn(label: Text(t.admin_role_name)),
+                                DataColumn(label: Text(t.admin_verified)),
+                                DataColumn(label: Text(t.admin_actions)),
                               ],
-                            );
-                          }).toList(),
+                              rows: users.map((user) {
+                                return DataRow(
+                                  cells: [
+                                    DataCell(Text(user.username)),
+                                    DataCell(Text(user.firstname)),
+                                    DataCell(Text(user.lastname)),
+                                    DataCell(Text(user.email)),
+                                    DataCell(Text(user.cin)),
+                                    DataCell(Text(user.age.toString())),
+                                    DataCell(Text(user.region)),
+                                    DataCell(Text(user.tel)),
+                                    DataCell(Text(user.role_name)),
+                                    DataCell(
+                                      Icon(
+                                        user.isVerified
+                                            ? Icons.check
+                                            : Icons.close,
+                                        color: user.isVerified
+                                            ? Colors.green
+                                            : Colors.red,
+                                      ),
+                                    ),
+                                    DataCell(
+                                      Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          IconButton(
+                                            padding: EdgeInsets.zero,
+                                            constraints: const BoxConstraints(),
+                                            icon: const Icon(
+                                              Icons.edit,
+                                              size: 18,
+                                              color: Colors.lightBlue,
+                                            ),
+                                            onPressed: () =>
+                                                _showUpdateDialog(user),
+                                          ),
+                                          const SizedBox(width: 6),
+                                          IconButton(
+                                            padding: EdgeInsets.zero,
+                                            constraints: const BoxConstraints(),
+                                            icon: Icon(
+                                              user.isBlocked
+                                                  ? Icons.lock_open
+                                                  : Icons.lock,
+                                              size: 18,
+                                              color: user.isBlocked
+                                                  ? Colors.green
+                                                  : Colors.red,
+                                            ),
+                                            onPressed: () async {
+                                              user.isBlocked
+                                                  ? await userService
+                                                        .unblockUser(user.id)
+                                                  : await userService.blockUser(
+                                                      user.id,
+                                                    );
+
+                                              _refreshUsers();
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              }).toList(),
+                            ),
+                          ),
                         ),
                       ),
                     ),

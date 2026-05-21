@@ -113,6 +113,7 @@ services:
       - DATABASE_URL=postgresql://postgres:aaaa@bi_database:5432/bi_database
       - REDIS_HOST=redis
       - REDIS_PORT=6379
+      - ADMIN_SERVICE_URL=http://admin_service:8000
     depends_on:
       bi_database:
         condition: service_healthy

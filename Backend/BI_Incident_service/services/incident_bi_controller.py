@@ -6,6 +6,7 @@ from core.redis import redis_client
 import httpx
 from datetime import datetime
 import json
+from services.admin_client import get_supervisor_forests
 
 
 class IncidentBIController:
@@ -238,7 +239,82 @@ class IncidentBIController:
         ]
     
 
+    # supervisors Bi functions
+    @staticmethod
+    def supervisor_incidents_over_time(supervisor_id: int):
+        db: Session = SessionLocal()
+
+        forests = get_supervisor_forests(supervisor_id)
+        forest_ids = [f["id"] for f in forests]
+
+        if not forest_ids:
+            return []
+
+        data = db.query(
+            func.date(Incident.created_at),
+            func.count(Incident.id)
+        ).filter(
+            Incident.forest_id.in_(forest_ids)
+        ).group_by(
+            func.date(Incident.created_at)
+        ).all()
+
+        db.close()
+
+        return [
+            {"date": str(d[0]), "count": d[1]}
+            for d in data
+        ]
+    
+    @staticmethod
+    def supervisor_incidents_by_status(supervisor_id: int):
+        db: Session = SessionLocal()
+
+        forests = get_supervisor_forests(supervisor_id)
+        forest_ids = [f["id"] for f in forests]
+
+        if not forest_ids:
+            return []
+
+        data = db.query(
+            Incident.status,
+            func.count(Incident.id)
+        ).filter(
+            Incident.forest_id.in_(forest_ids)
+        ).group_by(
+            Incident.status
+        ).all()
+
+        db.close()
+
+        return [
+            {"status": str(d[0]), "count": d[1]}
+            for d in data
+        ]
     
 
-    # supervisors Bi functions
-    
+    @staticmethod
+    def supervisor_incidents_by_type(supervisor_id: int):
+        db: Session = SessionLocal()
+
+        forests = get_supervisor_forests(supervisor_id)
+        forest_ids = [f["id"] for f in forests]
+
+        if not forest_ids:
+            return []
+
+        data = db.query(
+            Incident.type,
+            func.count(Incident.id)
+        ).filter(
+            Incident.forest_id.in_(forest_ids)
+        ).group_by(
+            Incident.type
+        ).all()
+
+        db.close()
+
+        return [
+            {"type": str(d[0]), "count": d[1]}
+            for d in data
+        ]
