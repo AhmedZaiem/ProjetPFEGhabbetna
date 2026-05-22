@@ -22,8 +22,6 @@ class _SecurityPageState extends State<SecurityPage> {
   }
 
   Future<void> loadData() async {
-    final t = AppLocalizations.of(context)!;
-
     try {
       final events = await securityServices.getFailedLoginEvents();
       setState(() {
@@ -32,6 +30,7 @@ class _SecurityPageState extends State<SecurityPage> {
       });
     } catch (e) {
       setState(() => isLoading = false);
+      final t = AppLocalizations.of(context)!;
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text("$t.Error_loading_data: $e")));

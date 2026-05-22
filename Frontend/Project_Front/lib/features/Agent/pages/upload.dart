@@ -265,6 +265,18 @@ class _UploadState extends State<Upload> {
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
 
+    List<String> incidentTypeKeys = [
+      'Fire',
+      'Illegal Logging',
+      'Disease',
+      'Artifact Theft',
+      'Grazing',
+      'Pollution',
+      'Trash Dumping',
+      'Water Contamination',
+      'Other',
+    ];
+
     List<String> incidentTypes = [
       t.incident_fire,
       t.incident_illegal_logging,
@@ -366,11 +378,15 @@ class _UploadState extends State<Upload> {
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                               ),
-                              items: incidentTypes
+                              items: incidentTypeKeys
                                   .map(
-                                    (type) => DropdownMenuItem(
-                                      value: type,
-                                      child: Text(type),
+                                    (key) => DropdownMenuItem(
+                                      value: key,
+                                      child: Text(
+                                        incidentTypes[incidentTypeKeys.indexOf(
+                                          key,
+                                        )],
+                                      ),
                                     ),
                                   )
                                   .toList(),

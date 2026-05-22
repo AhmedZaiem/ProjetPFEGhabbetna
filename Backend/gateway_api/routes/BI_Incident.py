@@ -9,7 +9,8 @@ BI_SERVICE_URL = os.getenv("BI_INCIDENT_SERVICE_URL", "http://localhost:8004")
 
 @router.get("/over-time")
 async def incidents_over_time():
-    async with httpx.AsyncClient() as client:
+    custom_timeout = httpx.Timeout(30.0, connect=None)
+    async with httpx.AsyncClient(timeout=custom_timeout) as client:
         response = await client.get(f"{BI_SERVICE_URL}/bi_incidents/over-time")
 
     return JSONResponse(
@@ -20,7 +21,8 @@ async def incidents_over_time():
 
 @router.get("/by-status")
 async def incidents_by_status():
-    async with httpx.AsyncClient() as client:
+    custom_timeout = httpx.Timeout(30.0, connect=None)
+    async with httpx.AsyncClient(timeout=custom_timeout) as client:
         response = await client.get(f"{BI_SERVICE_URL}/bi_incidents/by-status")
 
     return JSONResponse(
@@ -31,7 +33,8 @@ async def incidents_by_status():
 
 @router.get("/by-region")
 async def incidents_by_region():
-    async with httpx.AsyncClient() as client:
+    custom_timeout = httpx.Timeout(30.0, connect=None)
+    async with httpx.AsyncClient(timeout=custom_timeout) as client:
         response = await client.get(f"{BI_SERVICE_URL}/bi_incidents/by-region")
 
     return JSONResponse(
@@ -41,7 +44,8 @@ async def incidents_by_region():
 
 @router.get("/top-forests")
 async def top_forests():
-    async with httpx.AsyncClient() as client:
+    custom_timeout = httpx.Timeout(30.0, connect=None)
+    async with httpx.AsyncClient(timeout=custom_timeout) as client:
         response = await client.get(f"{BI_SERVICE_URL}/bi_incidents/top-forests")
 
     return JSONResponse(
@@ -52,7 +56,8 @@ async def top_forests():
 
 @router.get("/top-agents")
 async def top_agents():
-    async with httpx.AsyncClient() as client:
+    custom_timeout = httpx.Timeout(30.0, connect=None)
+    async with httpx.AsyncClient(timeout=custom_timeout) as client:
         response = await client.get(f"{BI_SERVICE_URL}/bi_incidents/top-agents")
 
     return JSONResponse(
