@@ -8,6 +8,10 @@ router = APIRouter(prefix="/bi_incidents", tags=["Incident BI"])
 def over_time():
     return IncidentBIController.incidents_over_time()
 
+@router.get("/by-month")
+def by_month():
+    return IncidentBIController.incidents_by_month()
+
 
 @router.get("/by-status")
 def by_status():
@@ -17,6 +21,10 @@ def by_status():
 @router.get("/by-region")
 def by_region():
     return IncidentBIController.incidents_by_region()
+
+@router.get("/by-type")
+def by_type():
+    return IncidentBIController.incidents_by_type()
 
 
 @router.get("/top-forests")

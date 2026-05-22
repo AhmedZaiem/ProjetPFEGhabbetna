@@ -91,6 +91,23 @@ class IncidentBIController:
             {"date": str(d[0]), "count": d[1]}
             for d in data
         ]
+    
+    @staticmethod
+    def incidents_by_month():
+        db: Session = SessionLocal()
+
+        data = db.query(
+            func.extract('year', Incident.created_at).label('year'),
+            func.extract('month', Incident.created_at).label('month'),
+            func.count(Incident.id).label('count')
+        ).group_by('year', 'month').order_by('year', 'month').all()
+
+        db.close()
+
+        return [
+            {"year": int(d[0]), "month": int(d[1]), "count": d[2]}
+            for d in data
+        ]
 
 
     # Incidents by status
@@ -125,6 +142,23 @@ class IncidentBIController:
 
         return [
             {"region": d[0], "count": d[1]}
+            for d in data
+        ]
+    
+    # 📊 Incidents by region
+    @staticmethod
+    def incidents_by_type():
+        db: Session = SessionLocal()
+
+        data = db.query(
+            Incident.type,
+            func.count(Incident.id)
+        ).group_by(Incident.region).all()
+
+        db.close()
+
+        return [
+            {"type": d[0], "count": d[1]}
             for d in data
         ]
 
