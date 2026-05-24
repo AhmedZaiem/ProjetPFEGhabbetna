@@ -138,21 +138,22 @@ class _HomeState extends State<Home> {
     Color color;
     String text;
     IconData icon;
+    final t = AppLocalizations.of(context)!;
 
     switch (status) {
       case "accepted":
         color = Colors.green.shade600;
-        text = "Accepted";
+        text = t.accepted_incident;
         icon = Icons.check_circle_outline_rounded;
         break;
       case "pending":
         color = Colors.orange.shade700;
-        text = "Pending";
+        text = t.pending_incident;
         icon = Icons.hourglass_top_rounded;
         break;
       case "not_accepted":
         color = Colors.red.shade600;
-        text = "Rejected";
+        text = t.not_accepted_incident;
         icon = Icons.cancel_outlined;
         break;
       default:
