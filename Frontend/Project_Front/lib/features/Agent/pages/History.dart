@@ -71,10 +71,12 @@ class _HistotyState extends State<History> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text("Incident History"),
+        title: Text(t.agent_history),
 
         actions: [
           PopupMenuButton<String>(

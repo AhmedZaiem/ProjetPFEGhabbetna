@@ -89,8 +89,8 @@ class _ProfileState extends State<Profile> {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          Colors.blue.shade700,
-                          Colors.blue.shade400,
+                          const Color(0xFF1B5E20),
+                          const Color.fromARGB(255, 15, 56, 18),
                         ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
@@ -116,7 +116,7 @@ class _ProfileState extends State<Profile> {
                             child: Icon(
                               Icons.person_rounded,
                               size: 52,
-                              color: Colors.blue.shade600,
+                              color: const Color(0xFF1B5E20),
                             ),
                           ),
                         ),
@@ -186,7 +186,7 @@ class _ProfileState extends State<Profile> {
                               _Divider(),
                               _InfoRow(
                                 icon: Icons.phone_outlined,
-                                label: 'Tel',
+                                label: t.tel,
                                 value: userData!['tel']?.toString() ?? '—',
                               ),
                             ],
@@ -259,7 +259,7 @@ class _InfoRow extends StatelessWidget {
               color: Colors.blue.shade50,
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(icon, size: 18, color: Colors.blue.shade600),
+            child: Icon(icon, size: 18, color: const Color(0xFF1B5E20)),
           ),
           const SizedBox(width: 14),
           Expanded(
