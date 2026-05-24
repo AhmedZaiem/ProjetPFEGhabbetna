@@ -37,19 +37,20 @@ class _HistotyState extends State<History> {
   Widget _buildStatusChip(String? status) {
     Color color;
     String text;
+    final t = AppLocalizations.of(context)!;
 
     switch (status?.toLowerCase()) {
       case 'accepted':
         color = Colors.green;
-        text = "Accepted";
+        text = t.accepted_incident;
         break;
       case 'pending':
         color = Colors.orange;
-        text = "Pending";
+        text = t.pending_incident;
         break;
       case 'not_accepted':
         color = Colors.red;
-        text = "Rejected";
+        text = t.not_accepted_incident;
         break;
       default:
         color = Colors.grey;
@@ -131,6 +132,7 @@ class _HistotyState extends State<History> {
                     itemCount: incidents.length,
                     itemBuilder: (context, index) {
                       final incident = incidents[index];
+
                       return Padding(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 12,
@@ -147,14 +149,28 @@ class _HistotyState extends State<History> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                // 🔹 Content
+                                // Image
+                                if (incident.imageUrl != null &&
+                                    incident.imageUrl!.isNotEmpty)
+                                  ClipRRect(
+                                    borderRadius: const BorderRadius.vertical(
+                                      top: Radius.circular(16),
+                                    ),
+                                    child: Image.network(
+                                      incident.imageUrl!,
+                                      height: 180,
+                                      width: double.infinity,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+
                                 Padding(
                                   padding: const EdgeInsets.all(12),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      // Title + status
+                                      // Description + status
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
@@ -172,7 +188,49 @@ class _HistotyState extends State<History> {
                                         ],
                                       ),
 
-                                      const SizedBox(height: 6),
+                                      const SizedBox(height: 10),
+
+                                      // Type
+                                      Row(
+                                        children: [
+                                          const Icon(
+                                            Icons.category,
+                                            size: 16,
+                                            color: Color.fromARGB(255, 86, 53, 20),
+                                          ),
+                                          const SizedBox(width: 6),
+                                          Expanded(
+                                            child: Text(
+                                              incident.type,
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+
+                                      const SizedBox(height: 8),
+
+                                      // Region
+                                      Row(
+                                        children: [
+                                          const Icon(
+                                            Icons.map,
+                                            size: 16,
+                                            color: Colors.green,
+                                          ),
+                                          const SizedBox(width: 6),
+                                          Text(
+                                            incident.region,
+                                            style: const TextStyle(
+                                              color: Colors.black87,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+
+                                      const SizedBox(height: 8),
 
                                       // Location
                                       Row(
@@ -180,28 +238,77 @@ class _HistotyState extends State<History> {
                                           const Icon(
                                             Icons.location_on,
                                             size: 16,
-                                            color: Colors.grey,
+                                            color: Colors.red,
                                           ),
-                                          const SizedBox(width: 4),
-                                          Text(
-                                            incident.location ?? "",
-                                            style: const TextStyle(
-                                              color: Colors.grey,
+                                          const SizedBox(width: 6),
+                                          Expanded(
+                                            child: Text(
+                                              incident.location ?? "",
+                                              style: const TextStyle(
+                                                color: Colors.grey,
+                                              ),
                                             ),
                                           ),
                                         ],
                                       ),
 
-                                      const SizedBox(height: 6),
+                                      const SizedBox(height: 8),
 
-                                      // Comment (if exists)
+                                      // Coordinates
+                                      Row(
+                                        children: [
+                                          const Icon(
+                                            Icons.gps_fixed,
+                                            size: 16,
+                                            color: Colors.deepPurple,
+                                          ),
+                                          const SizedBox(width: 6),
+                                          Expanded(
+                                            child: Text(
+                                              "${incident.latitude.toStringAsFixed(5)}, "
+                                              "${incident.longitude.toStringAsFixed(5)}",
+                                              style: const TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.black54,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+
+                                      const SizedBox(height: 8),
+
+                                      
+
+                                      // Comment
                                       if (incident.comment != null &&
                                           incident.comment!.isNotEmpty)
-                                        Text(
-                                          "💬 ${incident.comment}",
-                                          style: const TextStyle(fontSize: 13),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
+                                        Container(
+                                          padding: const EdgeInsets.all(10),
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey.shade100,
+                                            borderRadius: BorderRadius.circular(
+                                              10,
+                                            ),
+                                          ),
+                                          child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              const Text("💬 "),
+                                              Expanded(
+                                                child: Text(
+                                                  incident.comment!,
+                                                  style: const TextStyle(
+                                                    fontSize: 13,
+                                                  ),
+                                                  maxLines: 3,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                     ],
                                   ),
