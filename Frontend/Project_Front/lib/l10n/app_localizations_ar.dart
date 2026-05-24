@@ -532,4 +532,14 @@ class AppLocalizationsAr extends AppLocalizations {
   String get not_accepted_incident => "مرفوض";
   @override
   String get pending_incident => "قيد الانتظار";
+
+  @override
+  String get agent_success_message => "تم إرسال الحادث بنجاح";
+  @override
+  String get agent_failed_message => "فشل في إرسال الحادث";
+  @override
+  String get agent_failed_loc_message => "فشل في استخراج الموقع من الصورة. يرجى التأكد من أن الصورة تحتوي على بيانات GPS";
+
+  @override
+  String get agent_failed_get_loc_message => "فشل في الحصول على الموقع";
 }

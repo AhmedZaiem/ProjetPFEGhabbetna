@@ -542,4 +542,14 @@ class AppLocalizationsFr extends AppLocalizations {
   String get not_accepted_incident => "refusé";
   @override
   String get pending_incident => "en attente";
+
+  @override
+  String get agent_success_message => "Incident soumis avec succès";
+  @override
+  String get agent_failed_message => "Échec de la soumission de l'incident";
+  @override
+  String get agent_failed_loc_message => "Impossible d'extraire la localisation de l'image. Veuillez vérifier que l'image contient des données GPS.";
+
+  @override
+  String get agent_failed_get_loc_message => "Impossible d'obtenir la localisation";
 }

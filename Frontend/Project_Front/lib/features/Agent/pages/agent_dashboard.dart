@@ -54,7 +54,7 @@ class _agentDashboardState extends State<agentDashboard> {
                 backgroundColor: const Color(0xFF1B5E20),
               ),
               BottomNavigationBarItem(
-                icon: const Icon(Icons.stacked_bar_chart),
+                icon: const Icon(Icons.history),
                 label: t.agent_history,
                 backgroundColor: const Color(0xFF1B5E20),
               ),

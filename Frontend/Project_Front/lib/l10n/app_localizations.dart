@@ -1114,6 +1114,11 @@ abstract class AppLocalizations {
   String get not_accepted_incident;
   String get pending_incident;
 
+  String get agent_success_message;
+  String get agent_failed_message;
+  String get agent_failed_loc_message;
+  String get agent_failed_get_loc_message;
+
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

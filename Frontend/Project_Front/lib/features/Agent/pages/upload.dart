@@ -126,6 +126,8 @@ class _UploadState extends State<Upload> {
   }
 
   Future<void> submitIncident() async {
+    final t = AppLocalizations.of(context)!;
+
     if (_formKey.currentState!.validate() && _imageFile != null) {
       showDialog(
         context: context,
@@ -143,9 +145,9 @@ class _UploadState extends State<Upload> {
           lon = position.longitude;
         } catch (e) {
           Navigator.pop(context); // Close the loading dialog
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text("Failed to get location: $e")));
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("${t.agent_failed_get_loc_message} $e")),
+          );
           return;
         }
       }
@@ -173,13 +175,9 @@ class _UploadState extends State<Upload> {
 
         if (lat == null || lon == null) {
           Navigator.pop(context); // Close the loading dialog
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text(
-                "Failed to extract location from image. Please ensure the image has GPS data.",
-              ),
-            ),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(t.agent_failed_loc_message)));
           return;
         }
       }
@@ -199,7 +197,12 @@ class _UploadState extends State<Upload> {
       );
 
       if (success) {
-        showSuccessDialog(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(t.agent_success_message),
+            backgroundColor: const Color.fromARGB(255, 24, 49, 25),
+          ),
+        );
         _formKey.currentState!.reset();
         setState(() {
           _imageFile = null;
@@ -208,9 +211,9 @@ class _UploadState extends State<Upload> {
           selectedRegion = null; // reset
         });
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Failed to submit incident")),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(t.agent_failed_message)));
       }
     }
   }

@@ -259,14 +259,14 @@ class _HomeState extends State<Home> {
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [Colors.blue.shade700, Colors.blue.shade400],
+                    colors: [const Color(0xFF1B5E20), const Color.fromARGB(255, 18, 62, 21)],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.blue.withOpacity(0.3),
+                      color: const Color.fromARGB(255, 25, 77, 28).withOpacity(0.3),
                       blurRadius: 16,
                       offset: const Offset(0, 6),
                     ),
@@ -405,7 +405,7 @@ class _HomeState extends State<Home> {
                     width: 4,
                     height: 20,
                     decoration: BoxDecoration(
-                      color: Colors.blue.shade600,
+                      color: const Color(0xFF1B5E20),
                       borderRadius: BorderRadius.circular(4),
                     ),
                   ),
@@ -430,7 +430,7 @@ class _HomeState extends State<Home> {
                     child: Text(
                       "${latestIncidents.length}",
                       style: TextStyle(
-                        color: Colors.blue.shade700,
+                        color: const Color(0xFF1B5E20),
                         fontWeight: FontWeight.w700,
                         fontSize: 13,
                       ),
@@ -475,7 +475,7 @@ class _HomeState extends State<Home> {
                               ),
                               child: Icon(
                                 Icons.report_outlined,
-                                color: Colors.blue.shade600,
+                                color: const Color.fromARGB(255, 21, 74, 25),
                                 size: 22,
                               ),
                             ),
