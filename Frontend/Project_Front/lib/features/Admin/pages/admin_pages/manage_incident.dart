@@ -16,6 +16,7 @@ class _ManageIncidentState extends State<ManageIncident> {
   late Future<List<IncidentOut>> _incidentsFuture;
   String? selectedType;
   String? selectedStatus;
+  List<IncidentOut> _allIncidents = [];
 
   @override
   void initState() {
@@ -117,15 +118,15 @@ class _ManageIncidentState extends State<ManageIncident> {
     final t = AppLocalizations.of(context)!;
 
     final incidentTypesMap = {
-      "incident_fire": t.incident_fire,
-      "incident_illegal_logging": t.incident_illegal_logging,
-      "incident_disease": t.incident_disease,
-      "incident_artifact_theft": t.incident_artifact_theft,
-      "incident_grazing": t.incident_grazing,
-      "incident_pollution": t.incident_pollution,
-      "incident_trash_dumping": t.incident_trash_dumping,
-      "incident_water_contamination": t.incident_water_contamination,
-      "incident_other": t.incident_other,
+      "Fire": t.incident_fire,
+      "Illegal Logging": t.incident_illegal_logging,
+      "Disease": t.incident_disease,
+      "Artifact Theft": t.incident_artifact_theft,
+      "Grazing": t.incident_grazing,
+      "Pollution": t.incident_pollution,
+      "Trash Dumping": t.incident_trash_dumping,
+      "Water Contamination": t.incident_water_contamination,
+      "Other": t.incident_other,
     };
 
     final statuses = [
@@ -165,8 +166,8 @@ class _ManageIncidentState extends State<ManageIncident> {
             return const Center(child: Text('No incidents found.'));
           }
 
-          final allIncidents = snapshot.data!;
-          final incidents = _applyFilters(allIncidents);
+          _allIncidents = snapshot.data!;
+          final incidents = _applyFilters(_allIncidents);
           final totalIncidents = incidents.length;
           final pendingIncidents = incidents
               .where((i) => i.status == "pending")
