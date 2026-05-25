@@ -1,10 +1,12 @@
+import 'package:authproject/features/Admin/models/coordinates.dart';
+
 import 'agent.dart';
 
 class Parcellewithagent {
   final int id;
   final String name;
   final double areaHectares;
-  final String boundary;
+  final List<Coordinates> boundary;
   final int forestId;
   final String region;
   final Agent? agent;
@@ -24,7 +26,9 @@ class Parcellewithagent {
       id: json['id'],
       name: json['name'],
       areaHectares: (json['area_hectares'] as num).toDouble(),
-      boundary: json['boundary'].toString(),
+      boundary: (json['boundary'] as List)
+          .map((c) => Coordinates.fromJson(c))
+          .toList(),
       forestId: json['forest_id'],
       region: json['region'],
       agent: json['agent'] != null ? Agent.fromJson(json['agent']) : null,

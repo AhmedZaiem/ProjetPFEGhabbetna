@@ -21,8 +21,8 @@ class _SupervisorMenuState extends State<SupervisorMenu> {
   final AuthService authService = AuthService();
 
   final List<Widget> _contentWidgets = [
-    IncidentList(),
     IncidentMap(),
+    IncidentList(),
     AgentList(),
     Profile(),
   ];
@@ -141,11 +141,12 @@ class _SupervisorMenuState extends State<SupervisorMenu> {
                         groupAlignment: -1.0,
                         minWidth: 220,
                         destinations: [
+                          _buildItem(t.supervisor_incident_map, Icons.map),
                           _buildItem(
                             t.supervisor_incident_list,
                             Icons.fireplace,
                           ),
-                          _buildItem(t.supervisor_incident_map, Icons.map),
+
                           _buildItem(t.supervisor_agent_list, Icons.person),
                           _buildItem(
                             t.supervisor_profile,

@@ -1,6 +1,7 @@
 import 'package:authproject/features/Admin/models/forest_model.dart';
 import 'package:authproject/features/Auth/services/auth_service.dart';
 import 'package:authproject/features/Supervisor/models/incidentOut.dart';
+import 'package:authproject/features/Supervisor/models/parcelleWithAgent.dart';
 import 'package:authproject/features/Supervisor/services/supervisor_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -22,6 +23,8 @@ class _IncidentMapState extends State<IncidentMap> {
   String? error;
   List<Forest>? forests;
   List<IncidentOut>? incidentData;
+  List<Parcellewithagent>? parcelles;
+  Parcellewithagent? hoveredParcelle;
   final MapController _mapController = MapController();
 
   final northTunisiaBounds = LatLngBounds(
@@ -35,6 +38,48 @@ class _IncidentMapState extends State<IncidentMap> {
   void initState() {
     super.initState();
     initData();
+  }
+
+  bool _isPointInsidePolygon(LatLng point, List<LatLng> polygon) {
+    bool inside = false;
+
+    for (int i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+      final xi = polygon[i].longitude;
+      final yi = polygon[i].latitude;
+
+      final xj = polygon[j].longitude;
+      final yj = polygon[j].latitude;
+
+      final intersect =
+          ((yi > point.latitude) != (yj > point.latitude)) &&
+          (point.longitude <
+              (xj - xi) * (point.latitude - yi) / (yj - yi) + xi);
+
+      if (intersect) {
+        inside = !inside;
+      }
+    }
+
+    return inside;
+  }
+
+  void _handleParcelHover(LatLng point) {
+    for (final parcelle in parcelles ?? []) {
+      final polygonPoints = parcelle.boundary
+          .map<LatLng>((c) => LatLng(c.lat, c.lng))
+          .toList();
+
+      if (_isPointInsidePolygon(point, polygonPoints)) {
+        if (hoveredParcelle?.id != parcelle.id) {
+          setState(() => hoveredParcelle = parcelle);
+        }
+        return;
+      }
+    }
+
+    if (hoveredParcelle != null) {
+      setState(() => hoveredParcelle = null);
+    }
   }
 
   Future<void> initData() async {
@@ -61,10 +106,15 @@ class _IncidentMapState extends State<IncidentMap> {
         forestIds,
       );
 
+      final fetchedParcelles = await supervisorServices.getParcellesByForestIds(
+        forestIds,
+      );
+
       setState(() {
         userData = user;
         forests = fetchedForests;
         incidentData = incidents;
+        parcelles = fetchedParcelles;
       });
     } catch (e) {
       setState(() => error = 'Failed to fetch forests: $e');
@@ -170,6 +220,9 @@ class _IncidentMapState extends State<IncidentMap> {
                 cameraConstraint: CameraConstraint.contain(
                   bounds: northTunisiaBounds,
                 ),
+                onPointerHover: (event, point) {
+                  _handleParcelHover(point);
+                },
                 minZoom: 8.5,
                 maxZoom: 18,
                 initialCenter: rasjbal_center,
@@ -195,6 +248,23 @@ class _IncidentMapState extends State<IncidentMap> {
                         2,
                       ).withOpacity(0.2),
                       borderColor: const Color.fromARGB(255, 255, 3, 3),
+                      borderStrokeWidth: 2,
+                    );
+                  }).toList(),
+                ),
+                PolygonLayer(
+                  polygons: (parcelles ?? []).map((parcelle) {
+                    return Polygon(
+                      points: parcelle.boundary
+                          .map((c) => LatLng(c.lat, c.lng))
+                          .toList(),
+                      color: const Color.fromARGB(
+                        255,
+                        251,
+                        247,
+                        27,
+                      ).withOpacity(0.15),
+                      borderColor: const Color.fromARGB(255, 240, 230, 55),
                       borderStrokeWidth: 2,
                     );
                   }).toList(),
@@ -253,6 +323,35 @@ class _IncidentMapState extends State<IncidentMap> {
               ),
             ),
           ),
+
+          if (hoveredParcelle != null)
+            Positioned(
+              top: 20,
+              right: 20,
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        hoveredParcelle!.name,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        "Nom: ${hoveredParcelle!.agent?.name ?? 'No agent assigned'}",
+                      ),
+                      Text(
+                        "Téléphone: ${hoveredParcelle!.agent?.tel ?? 'No phone number available'}",
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
     );
