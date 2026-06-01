@@ -134,7 +134,7 @@ def check_assigned_parcelle(user_id: int, db: Session = Depends(get_db)):
 
 @router.get("/byforest/")
 def get_parcelles_by_forest_ids(forest_ids: list[int]=Query(...), db: Session = Depends(get_db)):
-    parcelles = db.query(Parcelle).join(User, Parcelle.agent_id == User.id).filter(Parcelle.forest_id.in_(forest_ids)).all()
+    parcelles = db.query(Parcelle).outerjoin(User, Parcelle.agent_id == User.id).filter(Parcelle.forest_id.in_(forest_ids)).all()
     result = []
     for p in parcelles:
         result.append({
