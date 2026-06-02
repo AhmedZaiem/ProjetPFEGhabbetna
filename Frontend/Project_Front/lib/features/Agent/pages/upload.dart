@@ -196,6 +196,8 @@ class _UploadState extends State<Upload> {
         _imageFile!,
       );
 
+      Navigator.pop(context); // Close the loading dialog
+
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

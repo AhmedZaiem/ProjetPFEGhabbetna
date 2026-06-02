@@ -501,7 +501,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get Error_loading_data => "خطأ أثناء تحميل البيانات";
-  
+
   @override
   String get No_security_events_found => "لم يتم العثور على أحداث أمان";
 
@@ -512,11 +512,11 @@ class AppLocalizationsAr extends AppLocalizations {
   String get incident_grazing => "رعي غير قانوني";
 
   @override
-  String get incident_trash_dumping =>"رمي النفايات";
+  String get incident_trash_dumping => "رمي النفايات";
 
   @override
   String get incident_pollution => "تلوث";
-  
+
   @override
   String get incident_artifact_theft => "سرقة آثار";
 
@@ -538,8 +538,24 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get agent_failed_message => "فشل في إرسال الحادث";
   @override
-  String get agent_failed_loc_message => "فشل في استخراج الموقع من الصورة. يرجى التأكد من أن الصورة تحتوي على بيانات GPS";
+  String get agent_failed_loc_message =>
+      "فشل في استخراج الموقع من الصورة. يرجى التأكد من أن الصورة تحتوي على بيانات GPS";
 
   @override
   String get agent_failed_get_loc_message => "فشل في الحصول على الموقع";
+
+  @override
+  String get accept => "قبول";
+
+  @override
+  String get refuse => "رفض";
+
+  @override
+  String get comment => "تعليق";
+
+  @override
+  String get required => "مطلوب";
+
+  @override
+  String get incident_details => "تفاصيل الحادث";
 }

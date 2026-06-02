@@ -438,7 +438,7 @@ class _AddPolygonPageState extends State<AddPolygonPage> {
                           ),
                           minZoom: 8.5,
                           maxZoom: 18,
-                          initialCenter: LatLng(37.2, 10.12),
+                          initialCenter: LatLng(37.2, 9.94),
                           initialZoom: 13,
                           onTap: (tapPosition, point) => addPoint(point),
                         ),

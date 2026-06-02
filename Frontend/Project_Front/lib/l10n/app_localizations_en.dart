@@ -213,7 +213,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get error_role_empty => 'Role name is required';
 
   @override
-  String get error_role_both_required => 'Please enter both old and new role names';
+  String get error_role_both_required =>
+      'Please enter both old and new role names';
 
   @override
   String get admin_forest_parcel => 'Add Forest or Parcel';
@@ -501,7 +502,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get incident_grouped_by_region => 'Incidents Grouped by Region';
 
   @override
-  String get distribution_by_resolution_status => 'Distribution by Resolution Status';
+  String get distribution_by_resolution_status =>
+      'Distribution by Resolution Status';
 
   @override
   String get incident_reported_by_day => 'Incidents Reported by Day';
@@ -522,7 +524,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get incident_grazing => "Illegal Grazing";
 
   @override
-  String get incident_trash_dumping =>"Trash Dumping";
+  String get incident_trash_dumping => "Trash Dumping";
 
   @override
   String get incident_pollution => "Pollution";
@@ -548,8 +550,24 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get agent_failed_message => "Failed to submit incident";
   @override
-  String get agent_failed_loc_message => "Failed to extract location from image. Please ensure the image has GPS data.";
+  String get agent_failed_loc_message =>
+      "Failed to extract location from image. Please ensure the image has GPS data.";
 
   @override
   String get agent_failed_get_loc_message => "Failed to get location";
+
+  @override
+  String get accept => "Accept";
+
+  @override
+  String get refuse => "Refuse";
+
+  @override
+  String get comment => "Comment";
+
+  @override
+  String get required => "Required";
+
+  @override
+  String get incident_details => "Incident Details";
 }

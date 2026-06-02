@@ -1,6 +1,7 @@
 import 'package:authproject/features/Supervisor/services/supervisor_services.dart';
 import 'package:flutter/material.dart';
 import 'package:authproject/features/Supervisor/models/incidentOut.dart';
+import 'package:authproject/l10n/app_localizations.dart';
 
 SupervisorServices supervisorServices = SupervisorServices();
 
@@ -25,6 +26,7 @@ Widget buildIncidentDetails(
   TextEditingController commentController = TextEditingController(
     text: incident.comment ?? '',
   );
+  final t = AppLocalizations.of(context)!;
   return Column(
     mainAxisSize: MainAxisSize.min,
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,7 +44,7 @@ Widget buildIncidentDetails(
       SizedBox(height: 16),
 
       Text(
-        "Incident Details",
+        t.incident_details,
         style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
       ),
 
@@ -95,7 +97,7 @@ Widget buildIncidentDetails(
                     showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
-                        title: Text('Incident Accepted'),
+                        title: Text(t.accepted_incident),
                         content: Text('The incident has been accepted.'),
                         actions: [
                           TextButton(
@@ -112,7 +114,7 @@ Widget buildIncidentDetails(
                     );
                   }
                 },
-                child: Text("Accept"),
+                child: Text(t.accept),
               ),
             ),
             SizedBox(width: 10),
@@ -123,7 +125,7 @@ Widget buildIncidentDetails(
                   try {
                     if (commentController.text.trim().isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("Comment is required")),
+                        SnackBar(content: Text("${t.comment} ${t.required}")),
                       );
                       return;
                     }
@@ -138,12 +140,12 @@ Widget buildIncidentDetails(
                     showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
-                        title: Text('Incident Rejected'),
+                        title: Text(t.not_accepted_incident),
                         content: Text('The incident has been rejected.'),
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.pop(context),
-                            child: Text('OK'),
+                            child: Text(t.ok),
                           ),
                         ],
                       ),
@@ -155,7 +157,7 @@ Widget buildIncidentDetails(
                     );
                   }
                 },
-                child: Text("Reject"),
+                child: Text(t.refuse),
               ),
             ),
           ],
@@ -167,7 +169,7 @@ Widget buildIncidentDetails(
         enabled: true,
         maxLines: 3,
         decoration: InputDecoration(
-          labelText: 'Comment (required)',
+          labelText: '${t.comment} (${t.required})',
           border: OutlineInputBorder(),
         ),
         controller: commentController,

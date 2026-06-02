@@ -30,7 +30,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get error_password_required => 'Mot de passe requis';
 
   @override
-  String get error_password_length => 'Le mot de passe doit contenir au moins 8 caractères';
+  String get error_password_length =>
+      'Le mot de passe doit contenir au moins 8 caractères';
 
   @override
   String get ok => 'OK';
@@ -57,7 +58,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get auth_update_password => 'Mettre à jour le mot de passe';
 
   @override
-  String get error_invalid_password => 'Le mot de passe doit contenir au moins 8 caractères';
+  String get error_invalid_password =>
+      'Le mot de passe doit contenir au moins 8 caractères';
 
   @override
   String get success_reset_password => 'Mot de passe mis à jour avec succès';
@@ -108,7 +110,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get admin_create_button => 'Créer un compte';
 
   @override
-  String get error_fill_fields => 'Veuillez remplir tous les champs correctement';
+  String get error_fill_fields =>
+      'Veuillez remplir tous les champs correctement';
 
   @override
   String get error_first_name_required => 'Prénom requis';
@@ -213,7 +216,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get error_role_empty => 'Nom du rôle requis';
 
   @override
-  String get error_role_both_required => 'Veuillez entrer ancien et nouveau nom';
+  String get error_role_both_required =>
+      'Veuillez entrer ancien et nouveau nom';
 
   @override
   String get admin_forest_parcel => 'Ajouter Forêt ou Parcelle';
@@ -282,7 +286,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get admin_no_agents_assigned => 'Aucun agent affecté';
 
   @override
-  String get admin_assign_supervisor_title => 'Affecter un superviseur à une forêt';
+  String get admin_assign_supervisor_title =>
+      'Affecter un superviseur à une forêt';
 
   @override
   String get admin_assign_supervisor_forest => 'Sélectionner une forêt';
@@ -411,7 +416,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get incident_not_assigned => 'Vous n\'êtes pas assigné à une parcelle';
 
   @override
-  String get incident_camera_location => 'Assurez-vous que la localisation est activée';
+  String get incident_camera_location =>
+      'Assurez-vous que la localisation est activée';
 
   @override
   String get agent_home => 'Accueil';
@@ -501,7 +507,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get incident_grouped_by_region => 'Incidents groupés par région';
 
   @override
-  String get distribution_by_resolution_status => 'Répartition par statut de résolution';
+  String get distribution_by_resolution_status =>
+      'Répartition par statut de résolution';
 
   @override
   String get incident_reported_by_day => 'Incidents signalés par jour';
@@ -511,7 +518,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get Error_loading_data => "Erreur lors du chargement des données";
-  
+
   @override
   String get No_security_events_found => "Aucun événement de sécurité trouvé";
 
@@ -522,11 +529,11 @@ class AppLocalizationsFr extends AppLocalizations {
   String get incident_grazing => "Pâturage illégal";
 
   @override
-  String get incident_trash_dumping =>"Dépôt de déchets";
+  String get incident_trash_dumping => "Dépôt de déchets";
 
   @override
   String get incident_pollution => "Pollution";
-  
+
   @override
   String get incident_artifact_theft => "Vol d’artefacts";
 
@@ -548,8 +555,25 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get agent_failed_message => "Échec de la soumission de l'incident";
   @override
-  String get agent_failed_loc_message => "Impossible d'extraire la localisation de l'image. Veuillez vérifier que l'image contient des données GPS.";
+  String get agent_failed_loc_message =>
+      "Impossible d'extraire la localisation de l'image. Veuillez vérifier que l'image contient des données GPS.";
 
   @override
-  String get agent_failed_get_loc_message => "Impossible d'obtenir la localisation";
+  String get agent_failed_get_loc_message =>
+      "Impossible d'obtenir la localisation";
+
+  @override
+  String get accept => "Accepter";
+
+  @override
+  String get refuse => "Refuser";
+
+  @override
+  String get comment => "Commentaire";
+
+  @override
+  String get required => "Obligatoire";
+
+  @override
+  String get incident_details => "Détails de l'incident";
 }

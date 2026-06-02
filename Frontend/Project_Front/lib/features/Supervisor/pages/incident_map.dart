@@ -32,7 +32,7 @@ class _IncidentMapState extends State<IncidentMap> {
     LatLng(37.4, 12.0),
   );
 
-  final rasjbal_center = LatLng(37.2, 10.11);
+  final rasjbal_center = LatLng(37.2, 9.94);
 
   @override
   void initState() {
@@ -316,9 +316,9 @@ class _IncidentMapState extends State<IncidentMap> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _legendItem(Colors.green, 'Accepted'),
-                  _legendItem(Colors.orange, 'Pending'),
-                  _legendItem(Colors.red, 'Not Accepted'),
+                  _legendItem(Colors.green, t.accepted_incident),
+                  _legendItem(Colors.orange, t.pending_incident),
+                  _legendItem(Colors.red, t.not_accepted_incident),
                 ],
               ),
             ),
@@ -342,10 +342,10 @@ class _IncidentMapState extends State<IncidentMap> {
                         ),
                       ),
                       Text(
-                        "Nom: ${hoveredParcelle!.agent?.name ?? 'No agent assigned'}",
+                        "${t.admin_name}: ${hoveredParcelle!.agent?.name ?? 'No agent assigned'}",
                       ),
                       Text(
-                        "Téléphone: ${hoveredParcelle!.agent?.tel ?? 'No phone number available'}",
+                        "${t.tel}: ${hoveredParcelle!.agent?.tel ?? 'No phone number available'}",
                       ),
                     ],
                   ),
